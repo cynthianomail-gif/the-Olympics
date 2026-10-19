@@ -245,7 +245,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：不生 AI 圖（decisions 第 4b 步），圖示一律程式繪製（色塊＋中文名），場景純色漸層。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-art-2';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-art-5';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -385,6 +385,8 @@ const DEFAULT_TIMING = {
   wheelResult:      0.50,   // 轉盤結果停留（公版預設）
   wheelCollapse:    0.30,   // 轉盤收合（公版預設）；多個轉盤時全部轉完才一起收合一次
   nxFade:           0.30,   // LOGO 字樣淡出→倍數淡入（局結算完反向）；使用者 2026-10-19，待節奏組實測
+  wheelPop:         0.40,   // 轉盤停定：聖火＋選中格同時放大縮回彈一下（使用者 2026-10-19，待節奏組實測）
+  wheelSlow3:       2.00,   // 一局 3 個轉盤時，第 3 個減速段延長（使用者 2026-10-19：讓玩家集中期待乘號）
   winPause:         0.40,   // 停輪後中獎停頓（企劃 §節奏表 P7）
   winDisplay:       1.53,   // 圖示中獎演繹（§3 WIN 欄顯示 n=8）
   scoreHold:        1.00,   // 得分數字演繹（含跑分；企劃 §節奏表 P8）
@@ -394,6 +396,8 @@ const DEFAULT_TIMING = {
   bigRunMega:       11.0,
   bigRunEpic:       14.0,
   bigWinHold:       1.80,   // 大獎報獎停留
+  bigRunPre:        1.20,   // 大獎跑分：1 → BIG 門檻（之後才跳 BIG 版；使用者 2026-10-19）
+  bigSwap:          0.40,   // 大獎版切換：上一級縮小淡出＋下一級彈出
   fgIntroAnim:      0.60,   // 進入介面看板展開
   dealDelay:        1.37,   // 按轉動→宙斯抽籤開始轉（§8.4 n=8）
   dealSpin:         5.67,   // 宙斯抽籤轉動（§8.4 n=8）
@@ -422,18 +426,22 @@ const TIMING_META = [
     ['wheelSpin', '轉盤轉動', 0, 10, 0.05, { hint: '轉盤轉動、逐漸減速停下，指針指到的格即選中（每個轉盤各一次）' }],
     ['wheelResult', '轉盤結果停留', { hint: '正上方結果格亮起、其餘壓暗、LOGO 匾額倍數更新的停留；還有下一個轉盤時，這個維持放大停轉、接著開下一個（待節奏組實測）' }],
     ['wheelCollapse', '轉盤收合', { hint: '全部轉盤轉完後一起縮回一格大小的方塊留在原位（每局只播一次；待節奏組實測）' }],
-    ['nxFade', '倍數淡入淡出', { hint: '轉盤倍數出現時 LOGO 字樣淡出、同一匾額淡入倍數；該局結算完倍數淡出、LOGO 淡入（待節奏組實測）' }] ] },
+    ['nxFade', '倍數淡入淡出', { hint: '轉盤倍數出現時 LOGO 字樣淡出、同一匾額淡入倍數；該局結算完倍數淡出、LOGO 淡入（待節奏組實測）' }],
+    ['wheelPop', '轉盤停定彈跳', { hint: '轉盤停下時，中央聖火與選中倍數格同時放大再縮回彈一下的時間；乘號格彈得更大＋光效（幅度在特效分頁）' }],
+    ['wheelSlow3', '第3盤減速延長', { hint: '一局同時 3 個轉盤時，第 3 個快停前的減速段延長幾秒（讓玩家集中期待轉到乘號）；0＝不延長' }] ] },
   { group: '中獎／得分', items: [
     ['winPause', '中獎前停頓', { hint: '停輪（或轉盤收合）後到圖示中獎演繹前的停頓' }],
-    ['winDisplay', '圖示中獎演繹', { hint: '白線串起中獎圖示、未中獎壓暗、金額顯示在線上。預設＝競品 WIN 欄顯示 1.53s' }],
+    ['winDisplay', '圖示中獎演繹', { hint: '中獎圖示亮起／放大、未中獎壓暗（不畫得分線）。預設＝競品 WIN 欄顯示 1.53s' }],
     ['scoreHold', '得分數字演繹', { hint: '盤面中央得分數字（10 倍以上在這段跑分；<10 倍直接顯示）' }],
     ['scoreStay', '得分停留', { hint: '得分數字跑完後的停留；結束時下方 WIN 直接切換' }] ] },
   { group: '大獎', items: [
-    ['bigRunBig', 'BIG跑分', 0, 30, 0.1, { hint: '最終停在 BIG WIN 時的跑分總時長（星城公版 3s）' }],
-    ['bigRunSuper', 'SUPER跑分', 0, 30, 0.1, { hint: '最終停在 SUPER WIN 時的跑分總時長（爬階，星城公版 6s）' }],
-    ['bigRunMega', 'MEGA跑分', 0, 30, 0.1, { hint: '最終停在 MEGA WIN 時的跑分總時長（爬階，星城公版 11s）' }],
+    ['bigRunBig', 'BIG跑分', 0, 30, 0.1, { hint: '最終停在 BIG WIN 時的跑分總時長；也是跑到 SUPER 門檻的時點（星城公版 3s）' }],
+    ['bigRunSuper', 'SUPER跑分', 0, 30, 0.1, { hint: '最終停在 SUPER WIN 時的跑分總時長；也是跑到 MEGA 門檻的時點（爬階，星城公版 6s）' }],
+    ['bigRunMega', 'MEGA跑分', 0, 30, 0.1, { hint: '最終停在 MEGA WIN 時的跑分總時長；也是跑到 EPIC 門檻的時點（爬階，星城公版 11s）' }],
     ['bigRunEpic', 'EPIC跑分', 0, 30, 0.1, { hint: '最終停在 EPIC WIN 時的跑分總時長（爬階，星城公版 14s）' }],
-    ['bigWinHold', '大獎報獎停留', 0, 8, 0.1, { hint: '跑分結束後大獎畫面的停留' }] ] },
+    ['bigWinHold', '大獎報獎停留', 0, 8, 0.1, { hint: '跑分結束後大獎畫面的停留' }],
+    ['bigRunPre', '跑到BIG門檻', 0, 10, 0.1, { hint: '大獎從 1 起跑，跑到 BIG WIN 門檻的時間；到門檻才跳出 BIG 版（BIG／SUPER／MEGA／EPIC 跑分是「到下一級門檻／最終值」的累計時點）' }],
+    ['bigSwap', '大獎版切換', 0, 2, 0.05, { hint: '跑到下一級門檻時，上一級大獎版縮小淡出、下一級大獎版彈出的時間' }] ] },
   { group: '免費遊戲／抽籤', items: [
     ['fgIntroAnim', '進入介面展開', { hint: '進入介面看板展開（按鈕在展開後才能按）' }],
     ['dealDelay', '宙斯抽籤啟動', { hint: '按「轉動宙斯抽籤」到轉盤開始轉。預設＝競品實測 1.37s' }],
@@ -450,9 +458,9 @@ const TIMING_META = [
 const DEFAULT_TIMING_START = {
   reelStartDelay: 0, reelFirstStop: 0, reelStopInterval: 0.92, reelSpeed: 0,
   cellStagger: 0.92, spinClear: 0, spinDropIn: 0.70, landBounce: 0.92,
-  sixLand: 0, wheelIntro: 0.40, wheelSpin: 1.00, wheelResult: 4.60, wheelCollapse: 5.10, nxFade: 4.60,
+  sixLand: 0, wheelIntro: 0.40, wheelSpin: 1.00, wheelResult: 4.60, wheelCollapse: 5.10, nxFade: 4.60, wheelPop: 4.60, wheelSlow3: 3.40,
   winPause: 0, winDisplay: 0.40, scoreHold: 1.93, scoreStay: 2.93,
-  bigRunBig: 0, bigRunSuper: 0, bigRunMega: 0, bigRunEpic: 0, bigWinHold: 0,
+  bigRunBig: 0, bigRunSuper: 0, bigRunMega: 0, bigRunEpic: 0, bigWinHold: 0, bigRunPre: 0, bigSwap: 1.20,
   fgIntroAnim: 0, dealDelay: 0.6, dealSpin: 1.97, dealResult: 7.64, promoteHold: 0,
   fgEnterHold: 0, fgEndDelay: 0, fgTotalHold: 0.9, autoSpinDelay: 0,
 };
@@ -474,6 +482,8 @@ const DEFAULT_TIMING_TURBO = {
   wheelResult:      0.40,
   wheelCollapse:    0.25,
   nxFade:           0.20,
+  wheelPop:         0.30,
+  wheelSlow3:       1.20,
   winPause:         0.30,
   winDisplay:       1.00,
   scoreHold:        1.00,
@@ -483,6 +493,8 @@ const DEFAULT_TIMING_TURBO = {
   bigRunMega:       11.0,
   bigRunEpic:       14.0,
   bigWinHold:       1.80,
+  bigRunPre:        1.20,
+  bigSwap:          0.40,
   fgIntroAnim:      0.60,
   dealDelay:        1.37,
   dealSpin:         5.67,
@@ -512,8 +524,10 @@ const RHYTHM_MAP = [
   ['wheelResult',      '轉盤結果停留',     '正上方結果格亮起、LOGO 匾額倍數更新的停留時間；還有下一個轉盤時維持放大停轉、接著開下一個', null],
   ['wheelCollapse',    '轉盤收合演繹',     '全部轉盤轉完後一起縮回一格大小方塊的持續時間（每局一次）', null],
   ['nxFade',           '倍數淡入淡出',     'LOGO 字樣淡出、同一匾額淡入倍數的時間（該局結算完倍數淡出、LOGO 淡入）', null],
+  ['wheelPop',         '轉盤停定彈跳',     '轉盤停下時中央聖火與選中倍數格同時放大縮回彈一下的時間（乘號格更強＋光效）', null],
+  ['wheelSlow3',       '第3轉盤減速延長',  '一局 3 個轉盤時，第 3 個轉盤快停前減速段延長的時間', null],
   ['winPause',         '中獎前停頓',       '停輪後，到播放圖示中獎演繹前的停頓時間',                 '停頓時間(中獎)'],
-  ['winDisplay',       '圖示中獎演繹',     '圖示中獎（白線串起、未中獎壓暗、金額顯示在線上）的持續時間', '圖示演繹'],
+  ['winDisplay',       '圖示中獎演繹',     '圖示中獎（中獎圖示亮起、未中獎壓暗；不畫得分線）的持續時間', '圖示演繹'],
   ['scoreHold',        '得分數字演繹',     '播放得分數字演繹的持續時間（10 倍以上含跑分）',           '得分演繹'],
   ['scoreStay',        '得分停留',         '得分數字演繹後的停留時間，結束時公版 WIN 切換',           null],
   ['bigRunBig',        '大獎跑分(BIG)',    '大獎跑分演繹到 BIG WIN 的總時長',                         null],
@@ -521,6 +535,8 @@ const RHYTHM_MAP = [
   ['bigRunMega',       '大獎跑分(MEGA)',   '大獎跑分演繹爬階到 MEGA WIN 的總時長',                    null],
   ['bigRunEpic',       '大獎跑分(EPIC)',   '大獎跑分演繹爬階到 EPIC WIN 的總時長',                    null],
   ['bigWinHold',       '大獎演繹(停留)',   '大獎停留演繹的持續時間',                                 null],
+  ['bigRunPre',        '大獎跑分(到BIG門檻)', '大獎從 1 起跑到 BIG WIN 門檻的時間（到門檻才跳出 BIG 版）', null],
+  ['bigSwap',          '大獎版切換',       '上一級大獎版縮小淡出、下一級大獎版彈出的時間',           null],
   ['fgIntroAnim',      'FG進入介面登場',   '進入介面看板展開的持續時間',               null],
   ['dealDelay',        '宙斯抽籤啟動',     '玩家選擇轉動宙斯抽籤後，到轉盤開始轉動的時間',           null],
   ['dealSpin',         '宙斯抽籤轉動',     '宙斯抽籤轉動到停下的持續時間',                           null],
@@ -579,7 +595,8 @@ const RHYTHM_TIERS = [
   [200, Infinity, '200倍≦贏分',         14.0],
 ];
 // 大獎各階的演繹強度 [企劃 §得分層級演繹 F6:H9]：[盤面震動, 圖示放大, 介面背景演繹]
-const BIG_FX_LEVEL = [null, [1, 0, 0], [1, 1, 0], [2, 1, 1], [3, 2, 1]];
+// 盤面震動全部 0：使用者 2026-10-19「big win之類的大獎的時候 盤面不用一直震動」（企劃原為 1/1/2/3）
+const BIG_FX_LEVEL = [null, [0, 0, 0], [0, 1, 0], [0, 1, 1], [0, 2, 1]];
 const BIG_NAMES = [null, 'BIG WIN', 'SUPER WIN', 'MEGA WIN', 'EPIC WIN'];
 const BIG_COLORS = [null, '#fb923c', '#38bdf8', '#f472b6', '#a855f7'];   // 企劃 §美術 C56:C60
 
@@ -622,18 +639,16 @@ const LAYOUT_META = [
 // --- 特效強度 ---
 const DEFAULT_FX = {
   dimAlpha:   0.40,   // 未中獎圖示壓暗至
-  lineW:      4,      // 中獎白線線寬
-  lineGlow:   12,     // 中獎白線光暈
   bounceAmp:  35,     // 落定回彈深度：圖示 1/3（企劃 §節奏表 V13；105/3≈35）
   landPop:    0.25,   // 聖火炬落地演繹的放大幅度
   wheelBig:   2.0,    // 轉盤放大後約幾格寬（企劃 §美術 H26：約 2 格）
   wheelTurns: 4,      // 轉盤轉幾圈才停
+  wheelPopAmp: 0.18,  // 轉盤停定彈跳幅度（加法格／聖火格）
+  wheelPopMul: 0.40,  // 停在乘號格的彈跳幅度（更強烈）
+  wheelMulGlow: 1.0,  // 停在乘號格的光效強度（光暈＋放射光）
   anticip:    1,      // 觸發期待演出強度（0＝關）
   pubFx1:     0.5,    // 得分 10～20 倍：公版特效(1) 光暈強度
   pubFx2:     0.9,    // 得分 20～25 倍：公版特效(2)
-  shake1:     4,      // 盤面震動等級 1～3（px）
-  shake2:     8,
-  shake3:     14,
   zoom1:      1.12,   // 中獎圖示放大等級 1～2
   zoom2:      1.25,
   bgFx:       0.6,    // 介面背景演繹（放射光）強度
@@ -641,24 +656,22 @@ const DEFAULT_FX = {
 };
 const FX_META = [
   { group: '中獎演繹', items: [
-    ['dimAlpha', '未中獎壓暗', 0, 1, 0.05, { hint: '0～1，越小越暗（企劃：未中獎圖示壓暗）' }],
-    ['lineW', '中獎線寬', 1, 12, 0.5, { hint: '白線串起中獎圖示的線寬（px）' }],
-    ['lineGlow', '中獎線光暈', 0, 40, 1, { hint: '白線外光暈；風格選「白線＋光暈」時才畫' }] ] },
+    ['dimAlpha', '未中獎壓暗', 0, 1, 0.05, { hint: '0～1，越小越暗（企劃：未中獎圖示壓暗）；不畫得分線（使用者 2026-10-19）' }] ] },
   { group: '滾輪與轉盤', items: [
     ['bounceAmp', '落定回彈幅度', 0, 60, 1,
       { hint: '落定下沉再彈回的深度（px）；企劃：回彈深度＝圖示 1/3（35px）。時長在節奏分頁' }],
     ['landPop', '聖火炬落地放大', 0, 1, 0.05, { hint: '聖火炬落地演繹的放大幅度（0.25＝放大 25%）' }],
     ['wheelBig', '轉盤放大格數', 1, 4, 0.1, { hint: '轉盤放大後約幾格寬（企劃：約 2 格）' }],
     ['wheelTurns', '轉盤圈數', 1, 10, 1, { hint: '轉盤停下前轉幾圈（純視覺）' }],
+    ['wheelPopAmp', '停定彈跳幅度', 0, 1, 0.01, { hint: '轉盤停下時聖火＋選中格放大幅度（0.18＝放大 18%）；時長在節奏分頁' }],
+    ['wheelPopMul', '乘號彈跳幅度', 0, 1.5, 0.01, { hint: '停在乘號格時的彈跳幅度（要比一般大）' }],
+    ['wheelMulGlow', '乘號光效', 0, 2, 0.05, { hint: '停在乘號格時聖火與倍數格的光暈＋放射光強度；0＝關' }],
     ['anticip', '觸發期待強度', 0, 2, 0.1, { hint: '已有轉盤停在聖火格時，其餘轉盤的期待演出強度；0＝關' }],
     ['reelJitter', '各格速度差異', 0, 1.2, 0.05,
       { hint: '單格滾輪：0＝各格完全同步，越大越獨立', modes: ['cell'] }] ] },
   { group: '得分與大獎分級', items: [
     ['pubFx1', '公版特效1', 0, 2, 0.05, { hint: '10≦贏分＜20 倍：公版特效(1) 光暈強度（企劃得分層級 C4）' }],
     ['pubFx2', '公版特效2', 0, 2, 0.05, { hint: '20≦贏分＜25 倍：公版特效(2) 光暈強度（企劃得分層級 C5）' }],
-    ['shake1', '盤面震動1', 0, 40, 1, { hint: '盤面震動頻率等級 1 的幅度 px（BIG、SUPER）' }],
-    ['shake2', '盤面震動2', 0, 40, 1, { hint: '盤面震動等級 2 的幅度 px（MEGA）' }],
-    ['shake3', '盤面震動3', 0, 40, 1, { hint: '盤面震動等級 3 的幅度 px（EPIC）' }],
     ['zoom1', '圖示放大1', 1, 2, 0.01, { hint: '中獎圖示放大等級 1 的倍率（SUPER、MEGA）' }],
     ['zoom2', '圖示放大2', 1, 2, 0.01, { hint: '中獎圖示放大等級 2 的倍率（EPIC）' }],
     ['bgFx', '背景演繹', 0, 1, 0.05, { hint: '介面背景演繹（放射光）強度（MEGA、EPIC）' }] ] },
@@ -733,13 +746,8 @@ const ODDS_META = [
     ['epicRatio', 'EPIC門檻', 1, 5000, 1, { hint: '贏分 ≥ 此倍數 → EPIC WIN（企劃 200）' }] ] },
 ];
 
-// --- 單選型設定：中獎連線風格 ---
-const POP_STYLES = [
-  ['白線',       '白線串起中獎圖示（企劃，預設）'],
-  ['白線＋光暈', '白線外加光暈，較醒目'],
-  ['只框圖示',   '不畫線，只框中獎格'],
-];
-const DEFAULT_CHOICE = { popStyle: 0 };
+// 中獎連線風格選項已拿掉：使用者 2026-10-19「不需要得分線」，中獎只留圖示亮起／放大＋未中獎壓暗
+const DEFAULT_CHOICE = {};
 
 // --- 強開選單（繪製與命中共用同一份，順序＝索引）---
 // kind：'spin'＝持續生效的盤面強開（選了一直在）；'deal'＝下一次宙斯抽籤生效，用完清掉；
@@ -990,7 +998,7 @@ let showBuyMenu = false, buyConfirm = null;
 let stats = { spins: 0, hits: 0, totalBet: 0, fg: [0, 0, 0, 0], buys: 0, wheels: 0 };
 let hasHitThisSpin = false;
 let particles = [], floatTexts = [];
-let showPaylines = true, showScorePopup = true, showGridFrame = true;
+let showScorePopup = true, showGridFrame = true;
 let statToggleRects = [];
 let freezeForShot = false;           // 截圖預設用：畫面停在指定狀態
 
@@ -1400,13 +1408,14 @@ function postStopFrames() { return wheels.length ? TF(TIMING.sixLand) : 0; }
 function startWheel(i) {
   wheelIdx = i; wheelPhase = 'intro'; stateTimer = 0;
   const w = wheels[i];
-  w.angle = 0;
+  w.angle = 0; w.stopT = -1;
   // 箭頭固定朝上，滾輪轉到選中格在正上方：格 i 的中心角＝i×30°（順時針）
   w.toAngle = -(w.idx * 30 + 360 * Math.max(1, Math.round(FX.wheelTurns)));
   currentState = STATE.WHEEL;
 }
 function finishWheelSpin(w) {
   w.angle = w.toAngle;
+  w.stopT = 0;                                     // 停定彈跳從這一幀開始（聖火與選中格同一個計時）
   w.res = w.segs[w.idx];
   wheelAcc = applyWheelSeg(wheelAcc, w.res);
   if (w.res.type === 'start' && triggerAllowed()) startCount++;
@@ -1416,12 +1425,13 @@ function finishWheelSpin(w) {
 function updateWheel() {
   const w = wheels[wheelIdx];
   stateTimer++;
+  wheels.forEach(x => { if (x.stopT >= 0) x.stopT++; });
   if (wheelPhase === 'intro') {
     if (stateTimer >= TF(TIMING.wheelIntro)) { wheelPhase = 'spin'; stateTimer = 0; }
   } else if (wheelPhase === 'spin') {
-    const F = TF(TIMING.wheelSpin);
+    const F = wheelSpinFrames(w);
     const k = Math.min(1, stateTimer / F);
-    w.angle = w.toAngle * (1 - Math.pow(1 - k, 3));   // 逐漸減速停下
+    w.angle = w.toAngle * (1 - Math.pow(1 - k, wheelEaseP(w)));   // 逐漸減速停下（第 3 個轉盤減速段拉長）
     if (stateTimer >= F) finishWheelSpin(w);
   } else if (wheelPhase === 'result') {
     if (stateTimer >= TF(TIMING.wheelResult)) {
@@ -1437,6 +1447,23 @@ function updateWheel() {
     }
   }
 }
+// 一局 3 個轉盤時的第 3 個：減速段延長（使用者 2026-10-19「第三個輪盤快要停止前的轉速放慢時間要拉長」）
+function isSlowWheel(w) { return wheels.length >= 3 && w === wheels[wheels.length - 1] && TIMING.wheelSlow3 > 0; }
+function wheelSpinFrames(w) { return TF(TIMING.wheelSpin) + (isSlowWheel(w) ? TF(TIMING.wheelSlow3) : 0); }
+function wheelEaseP(w) { return isSlowWheel(w) ? 4.5 : 3; }        // 指數越大，尾段越慢越長
+// 停定回饋（使用者 2026-10-19）：中央聖火與選中格同幀放大→縮回彈一下；乘號格幅度更大＋光效
+function wheelPopInfo(w) {
+  if (!w || !w.res || !(w.stopT >= 0)) return { on: false, k: 0, s: 1, glow: 0, mul: false };
+  const k = Math.min(1, w.stopT / Math.max(1, TF(TIMING.wheelPop)));
+  const mul = w.res.type === 'mul';
+  const amp = mul ? FX.wheelPopMul : FX.wheelPopAmp;
+  const s = 1 + amp * Math.sin(Math.PI * 2 * k) * Math.pow(1 - k, 1.2);
+  const glow = mul ? FX.wheelMulGlow * (0.3 + 0.7 * Math.pow(1 - k, 0.8)) : 0;
+  return { on: k < 1, k: k, s: s, glow: glow, mul: mul };
+}
+// 停下後格子狀態：選中格 hi、其餘壓灰（使用者 2026-10-19「沒轉到的倍數那些要壓灰」）
+function wheelSegShade(hiIdx, i) { return (hiIdx === null || hiIdx === undefined) ? null : (i === hiIdx ? 'hi' : 'gray'); }
+let wheelPopNow = null;                            // drawWheels() 畫某個轉盤時的回饋狀態
 function afterWheels() {
   wheelWin = Math.round(ODDS.bet * wheelAcc * ODDS.payMul);
   winLines = evaluateLines();
@@ -1478,13 +1505,45 @@ function afterLines() {
     }
   } else roundDone();
 }
-function bigRunFrames() { return TF(bigRunSeconds(bigTier)); }
-function bigWinValue() {
-  const k = Math.min(1, stateTimer / Math.max(1, bigRunFrames()));
-  return bigTo * k;
+// 大獎逐級跑分（使用者 2026-10-19）：從 1 起跑，跑到 BIG 門檻才跳 BIG 版；跑到 SUPER 門檻時 BIG 版縮小淡出、SUPER 版彈出…
+// 跑分折線節點 [幀, 值]：BIG 門檻在 bigRunPre、SUPER 門檻在 bigRunBig、MEGA 門檻在 bigRunSuper、EPIC 門檻在 bigRunMega，
+// 最終值在 bigRunSeconds(最終級)（＝原本各級跑分總時長不變）
+function bigThreshold(k) { return [0, ODDS.bigWinRatio, ODDS.superRatio, ODDS.megaRatio, ODDS.epicRatio][k] * Math.max(1, ODDS.bet); }
+function bigKnots() {
+  const tt = [0, TIMING.bigRunPre, TIMING.bigRunBig, TIMING.bigRunSuper, TIMING.bigRunMega, TIMING.bigRunEpic];
+  const pts = [[0, Math.min(1, bigTo)]];   // 從 1 開始跑分（使用者原話、企劃書：贏分從 1 開始跑分）
+  let last = 0;
+  for (let k = 1; k <= bigTier; k++) {
+    const f = Math.max(last + 1, TF(tt[k]));
+    pts.push([f, Math.min(bigThreshold(k), bigTo)]);
+    last = f;
+  }
+  pts.push([Math.max(last + 1, TF(tt[bigTier + 1])), bigTo]);
+  return pts;
 }
-// 爬階：跑分中依目前數字顯示目前到哪一階（BIG → SUPER → MEGA → EPIC）
-function bigShownTier() { return Math.max(1, Math.min(bigTier, bigTierOf(bigWinValue()))); }
+function bigRunFrames() { const p = bigKnots(); return p[p.length - 1][0]; }
+function bigTierStartFrame(k) { return bigKnots()[k][0]; }
+function bigWinValue() {
+  const p = bigKnots(), f = stateTimer;
+  if (f >= p[p.length - 1][0]) return bigTo;
+  for (let i = 0; i < p.length - 1; i++) {
+    if (f < p[i + 1][0]) return p[i][1] + (p[i + 1][1] - p[i][1]) * (f - p[i][0]) / (p[i + 1][0] - p[i][0]);
+  }
+  return bigTo;
+}
+// 目前顯示哪一級：0＝還沒到 BIG 門檻（一般跑分）；1～4＝BIG～EPIC
+function bigShownTier() {
+  if (currentState !== STATE.BIGWIN) return Math.max(1, bigTier);
+  const p = bigKnots();
+  let k = 0;
+  for (let i = 1; i <= bigTier; i++) if (stateTimer >= p[i][0]) k = i;
+  return k;
+}
+// 各級版的切換進度 0～1（剛跳出＝0、彈出完成＝1）
+function bigSwapK(tier) {
+  const since = stateTimer - (tier > 0 ? bigTierStartFrame(tier) : 0);
+  return Math.max(0, Math.min(1, since / Math.max(1, TF(TIMING.bigSwap))));
+}
 function commitWin() {
   roundScore = spinWin;                     // 公版 WIN：一回合演完直接切換（不跑分）
   totalScore += spinWin;
@@ -1674,15 +1733,8 @@ function update() {
     return p.life < p.maxLife;
   });
   floatTexts = floatTexts.filter(f => { f.t++; return f.t < f.life; });
-  // 盤面震動：大獎各階等級 1～3 [企劃 §得分層級演繹 F6:F9]
+  // 盤面不震動：使用者 2026-10-19 拿掉大獎期間的盤面震動（大獎縮放、掃光、跑分照舊）
   shakeX = 0; shakeY = 0;
-  if (currentState === STATE.BIGWIN) {
-    const lv = BIG_FX_LEVEL[bigShownTier()][0];
-    const amp = lv ? FX['shake' + lv] : 0;
-    if (amp > 0 && stateTimer < bigRunFrames()) {
-      shakeX = (Math.random() * 2 - 1) * amp; shakeY = (Math.random() * 2 - 1) * amp * 0.6;
-    }
-  }
 
   switch (currentState) {
     case STATE.SPINNING: updateSpinning(); break;
@@ -1852,10 +1904,15 @@ function drawWheelDiscArt(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, gl
       ctx.fillStyle = 'rgba(245,158,11,.55)';
       ctx.beginPath(); ctx.arc(cx, cy, r1, a0, a1); ctx.arc(cx, cy, r0, a1, a0, true); ctx.closePath(); ctx.fill();
     }
-    if (hiIdx !== null && hiIdx !== undefined && i !== hiIdx) {
-      ctx.fillStyle = 'rgba(15,23,42,.55)';
-      ctx.beginPath(); ctx.arc(cx, cy, r1, a0, a1); ctx.arc(cx, cy, r0, a1, a0, true); ctx.closePath(); ctx.fill();
+    const shade = wheelSegShade(hiIdx, i);
+    if (shade === 'gray') {                          // 沒轉到的格：去飽和＋壓暗＝壓灰
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx, cy, r1, a0, a1); ctx.arc(cx, cy, r0, a1, a0, true); ctx.closePath();
+      ctx.globalCompositeOperation = 'saturation'; ctx.fillStyle = '#808080'; ctx.fill();
+      ctx.globalCompositeOperation = 'source-over'; ctx.fillStyle = 'rgba(30,30,30,.5)'; ctx.fill();
+      ctx.restore();
     }
+    if (shade === 'hi') continue;                    // 選中格最後再畫（要跟聖火一起彈）
     const am = (a0 + a1) / 2, rm = (r0 + r1) / 2;
     ctx.save();
     ctx.translate(cx + Math.cos(am) * rm, cy + Math.sin(am) * rm);
@@ -1865,21 +1922,56 @@ function drawWheelDiscArt(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, gl
       ctx.font = Math.max(10, Math.round(R * 0.2)) + 'px ' + EMOJI_FONT; ctx.fillStyle = '#000'; ctx.fillText('🔥', 0, 0);
     } else {
       ctx.font = 'bold ' + Math.max(9, Math.round(R * 0.15)) + 'px sans-serif';
-      textOutline(sg.type === 'add' ? sg.v + 'x' : sg.label, 0, 0, '#ffffff', 'rgba(0,0,0,.6)', 3);
+      textOutline(sg.type === 'add' ? sg.v + 'x' : sg.label, 0, 0, hiIdx !== null && hiIdx !== undefined ? '#a3a3a3' : '#ffffff', 'rgba(0,0,0,.6)', 3);
     }
     ctx.restore();
   }
-  if (hiIdx !== null && hiIdx !== undefined) {       // 選中格亮框
+  const pop = wheelPopNow || { s: 1, glow: 0 };
+  if (hiIdx !== null && hiIdx !== undefined) {       // 選中格：亮起，與聖火同一幀放大縮回彈一下
+    const sg = segs[hiIdx];
     const a0 = (wheelSegCenterDeg(hiIdx, angleDeg) - 15) * Math.PI / 180, a1 = a0 + Math.PI / 6;
+    const am = (a0 + a1) / 2, rm = (r0 + r1) / 2, mx = cx + Math.cos(am) * rm, my = cy + Math.sin(am) * rm;
+    if (pop.glow > 0) {                              // 乘號：光暈＋放射光
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, pop.glow);
+      const rg = ctx.createRadialGradient(mx, my, 4, mx, my, R * 0.7);
+      rg.addColorStop(0, 'rgba(255,244,180,.95)'); rg.addColorStop(1, 'rgba(253,224,71,0)');
+      ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(mx, my, R * 0.7, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(253,224,71,.55)';
+      for (let q = 0; q < 12; q++) {
+        const ra = q * Math.PI / 6 + t * 0.04;
+        ctx.beginPath(); ctx.moveTo(mx, my); ctx.arc(mx, my, R * 0.95, ra, ra + 0.13); ctx.closePath(); ctx.fill();
+      }
+      ctx.restore();
+    }
     ctx.save();
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(3, R * 0.04); ctx.shadowColor = '#fff'; ctx.shadowBlur = 18;
-    ctx.beginPath(); ctx.arc(cx, cy, r1, a0, a1); ctx.arc(cx, cy, r0, a1, a0, true); ctx.closePath(); ctx.stroke();
+    ctx.translate(mx, my); ctx.scale(pop.s, pop.s); ctx.translate(-mx, -my);
+    ctx.beginPath(); ctx.arc(cx, cy, r1, a0, a1); ctx.arc(cx, cy, r0, a1, a0, true); ctx.closePath();
+    ctx.save(); ctx.clip();                          // 這一格的盤面圖也一起放大
+    ctx.translate(cx, cy); ctx.rotate(angleDeg * Math.PI / 180);
+    ctx.drawImage(A.base, -A.geo.cx * sc, -A.geo.cy * sc, A.base.width * sc, A.base.height * sc);
+    ctx.restore();
+    if (sg.type === 'start') { ctx.fillStyle = 'rgba(245,158,11,.55)'; ctx.fill(); }
+    ctx.fillStyle = 'rgba(255,255,255,.14)'; ctx.fill();
+    ctx.strokeStyle = pop.glow > 0 ? '#fde047' : '#fff'; ctx.lineWidth = Math.max(3, R * 0.04);
+    ctx.shadowColor = pop.glow > 0 ? '#fde047' : '#fff'; ctx.shadowBlur = 18 + 30 * pop.glow; ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.translate(mx, my); ctx.rotate(am + Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    if (sg.type === 'start') {
+      ctx.font = Math.max(10, Math.round(R * 0.2)) + 'px ' + EMOJI_FONT; ctx.fillStyle = '#000'; ctx.fillText('🔥', 0, 0);
+    } else {
+      ctx.font = 'bold ' + Math.max(9, Math.round(R * 0.17)) + 'px sans-serif';
+      textOutline(sg.type === 'add' ? sg.v + 'x' : sg.label, 0, 0, pop.glow > 0 ? '#fde047' : '#ffffff', 'rgba(0,0,0,.7)', 3);
+    }
     ctx.restore();
   }
-  // 手握聖火：固定朝正上方，不跟著轉（火焰尖端＝指針）
+  // 手握聖火：固定朝正上方，不跟著轉（火焰尖端＝指針）；停定時與選中格同幀彈跳，乘號時發光
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate(TORCH_FIXED_DEG * Math.PI / 180);
+  ctx.scale(pop.s, pop.s);
+  if (pop.glow > 0) { ctx.shadowColor = '#fde047'; ctx.shadowBlur = 45 * Math.min(1.5, pop.glow); }
   ctx.drawImage(A.torch, -A.geo.cx * sc, -A.geo.cy * sc, A.torch.width * sc, A.torch.height * sc);
   ctx.restore();
   ctx.restore();
@@ -2051,39 +2143,77 @@ function drawFGTotalArt() {
 }
 // 大獎：bigwin_01～04 標題圖（文字縮放＋掃光），跑分數字寫在圖下方的空白匾；在公版面板之下
 let _sweepCanvas = null;
-function drawBigWinArt() {
-  const tier = bigShownTier(), img = artImg('big' + tier);
-  if (!img) return false;
-  const fxl = BIG_FX_LEVEL[tier], t = nowT();
-  ctx.fillStyle = 'rgba(2,6,23,.55)'; ctx.fillRect(0, 0, W, H);
-  if (fxl[2] && FX.bgFx > 0) {                       // 介面背景演繹（放射光）
-    ctx.save();
-    ctx.translate(640, 300); ctx.globalAlpha = FX.bgFx * 0.6;
-    for (let i = 0; i < 24; i++) {
-      const a = i * Math.PI / 12 + t / 1800;
-      ctx.fillStyle = i % 2 ? BIG_COLORS[tier] : '#fde047';
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, 820, a, a + 0.12); ctx.closePath(); ctx.fill();
-    }
-    ctx.restore();
+function drawBigRays(tier, alpha) {                  // 介面背景演繹（放射光）
+  const fxl = BIG_FX_LEVEL[tier];
+  if (!fxl || !fxl[2] || FX.bgFx <= 0 || alpha <= 0) return;
+  const t = nowT();
+  ctx.save();
+  ctx.translate(640, 300); ctx.globalAlpha = FX.bgFx * 0.6 * alpha;
+  for (let i = 0; i < 24; i++) {
+    const a = i * Math.PI / 12 + t / 1800;
+    ctx.fillStyle = i % 2 ? BIG_COLORS[tier] : '#fde047';
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, 820, a, a + 0.12); ctx.closePath(); ctx.fill();
   }
-  const sc = 1 + 0.04 * Math.sin(t / 160);
-  const dw = 760 * sc, dh = dw * img.height / img.width;
-  const pf = ART_GEO.big[tier];
-  const top = 470 - dh * pf[1], left = 640 - dw / 2;
-  if (!_sweepCanvas) _sweepCanvas = document.createElement('canvas');
-  const oc = _sweepCanvas;
-  oc.width = Math.ceil(dw); oc.height = Math.ceil(dh);
-  const o = oc.getContext('2d');
-  o.drawImage(img, 0, 0, dw, dh);
-  const sweep = ((t / 900) % 1.6) - 0.3;              // 掃光
-  const gx = dw * sweep;
-  const gr = o.createLinearGradient(gx - 80, 0, gx + 80, dh * 0.3);
-  gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.5, 'rgba(255,255,255,.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
-  o.globalCompositeOperation = 'source-atop';
-  o.fillStyle = gr; o.fillRect(0, 0, dw, dh);
-  ctx.drawImage(oc, left, top);
-  textCenter(fmtNum(bigWinValue()), 640, top + dh * pf[1], 'bold ' + Math.round(Math.min(68, dh * 0.13)) + 'px Arial, sans-serif', '#7c2d12', '#fff7ed', 6);
-  return true;
+  ctx.restore();
+}
+// 一張大獎版：scaleMul＝彈出／縮小倍率、alpha＝淡入淡出、val＝null 時不寫數字（正在淡出的上一級）
+function drawBigPanel(tier, scaleMul, alpha, val) {
+  if (alpha <= 0 || scaleMul <= 0.02) return;
+  const img = artImg('big' + tier), t = nowT();
+  ctx.save();
+  ctx.globalAlpha = Math.min(1, alpha);
+  if (img) {
+    const sc = (1 + 0.04 * Math.sin(t / 160)) * scaleMul;
+    const dw = 760 * sc, dh = dw * img.height / img.width;
+    const pf = ART_GEO.big[tier];
+    const top = 470 - dh * pf[1], left = 640 - dw / 2;
+    if (!_sweepCanvas) _sweepCanvas = document.createElement('canvas');
+    const oc = _sweepCanvas;
+    oc.width = Math.ceil(dw); oc.height = Math.ceil(dh);
+    const o = oc.getContext('2d');
+    o.drawImage(img, 0, 0, dw, dh);
+    const sweep = ((t / 900) % 1.6) - 0.3;            // 掃光
+    const gx = dw * sweep;
+    const gr = o.createLinearGradient(gx - 80, 0, gx + 80, dh * 0.3);
+    gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.5, 'rgba(255,255,255,.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    o.globalCompositeOperation = 'source-atop';
+    o.fillStyle = gr; o.fillRect(0, 0, dw, dh);
+    ctx.drawImage(oc, left, top);
+    if (val !== null) textCenter(fmtNum(val), 640, top + dh * pf[1], 'bold ' + Math.round(Math.min(68, dh * 0.13)) + 'px Arial, sans-serif', '#7c2d12', '#fff7ed', 6);
+  } else {                                            // 沒有素材：程式繪製字樣＋掃光
+    ctx.translate(640, 230);
+    const sc = (1 + 0.06 * Math.sin(t / 160)) * scaleMul;
+    ctx.scale(sc, sc);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = 'bold 104px Arial Black, Arial, sans-serif';
+    const name = BIG_NAMES[tier];
+    const tw = ctx.measureText(name).width;
+    const sweep = ((t / 900) % 1.6) - 0.3;
+    const grd = ctx.createLinearGradient(-tw / 2, 0, tw / 2, 0);
+    const s0 = Math.max(0, Math.min(1, sweep - 0.08)), s1 = Math.max(0, Math.min(1, sweep)), s2 = Math.max(0, Math.min(1, sweep + 0.08));
+    grd.addColorStop(0, BIG_COLORS[tier]); grd.addColorStop(s0, BIG_COLORS[tier]);
+    grd.addColorStop(s1, '#ffffff'); grd.addColorStop(s2, BIG_COLORS[tier]); grd.addColorStop(1, BIG_COLORS[tier]);
+    ctx.lineJoin = 'round'; ctx.strokeStyle = '#1e1b4b'; ctx.lineWidth = 12; ctx.strokeText(name, 0, 0);
+    ctx.fillStyle = grd; ctx.fillText(name, 0, 0);
+    if (val !== null) { ctx.font = 'bold 80px Arial, sans-serif'; textOutline(fmtNum(val), 0, 240 / sc, '#fde047', '#1e1b4b', 10); }
+  }
+  ctx.restore();
+}
+// 還沒到 BIG 門檻：盤面中央一般得分面板樣式跑分（跳出 BIG 版時放大淡出）
+function drawBigPreRun(val, alpha, scaleMul) {
+  if (alpha <= 0) return;
+  const cx = GRID_X + GRID_W / 2, cy = GRID_Y + GRID_H / 2;
+  ctx.save();
+  ctx.globalAlpha = Math.min(1, alpha);
+  ctx.translate(cx, cy); ctx.scale(scaleMul, scaleMul);
+  const rg = ctx.createRadialGradient(0, 0, 10, 0, 0, 200);
+  rg.addColorStop(0, 'rgba(253,224,71,.85)'); rg.addColorStop(1, 'rgba(253,224,71,0)');
+  ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(0, 0, 200, 0, Math.PI * 2); ctx.fill();
+  roundRect(-170, -48, 340, 96, 26, 'rgba(15,23,42,.72)', '#fde047', 3);
+  ctx.font = 'bold 60px Arial, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 24;
+  textOutline(fmtNum(val), 0, 2, '#fde047', '#1e293b', 6);
+  ctx.restore();
 }
 
 // 程式繪製的圖示（沒有合適 emoji 的）：四位神祇頭像、豐饒角、豎琴、標槍、聖火炬
@@ -2350,8 +2480,8 @@ function drawWheelDisc(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, glow)
     ctx.fillStyle = fill;
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, Ri, a0, a1); ctx.closePath(); ctx.fill();
     ctx.strokeStyle = 'rgba(255,255,255,.55)'; ctx.lineWidth = 1.5; ctx.stroke();
-    if (hiIdx !== null && hiIdx !== undefined && i !== hiIdx) {
-      ctx.fillStyle = 'rgba(15,23,42,.55)';
+    if (wheelSegShade(hiIdx, i) === 'gray') {        // 沒轉到的格壓灰
+      ctx.fillStyle = 'rgba(115,115,115,.72)';
       ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, Ri, a0, a1); ctx.closePath(); ctx.fill();
     }
     const am = (a0 + a1) / 2;
@@ -2436,7 +2566,9 @@ function drawWheels() {
     ctx.fillStyle = 'rgba(0,0,0,.25)';
     ctx.beginPath(); ctx.ellipse(cx, cy + R * 0.95, R * 0.8, R * 0.12, 0, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
+    wheelPopNow = d.hi !== null ? wheelPopInfo(w) : null;
     drawWheelDisc(cx, cy, R, w.kind, w.segs, w.angle, d.hi, t, d.cur && wheelPhase === 'spin', antic);
+    wheelPopNow = null;
     if (d.label) {
       ctx.save();
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -2655,34 +2787,8 @@ function drawBoard() {
       ctx.restore();
     }
   }
-  if (showWin && showPaylines && currentState !== STATE.BIGWIN) drawWinLines();   // 大獎畫面只留壓暗＋圖示放大
+  // 不畫得分線（連線線條與線上金額）：使用者 2026-10-19「不需要得分線」；中獎只留圖示亮起／放大＋未中獎壓暗
   ctx.restore();
-}
-// 中獎演繹：以白線串起中獎圖示、未中獎圖示壓暗、贏分金額顯示在連線上 [企劃 §美術 H4]
-function drawWinLines() {
-  const style = CHOICE.popStyle;
-  winLines.forEach(l => {
-    const pts = l.cells.map(([c, r]) => [GRID_X + c * CELL_SIZE + CELL_SIZE / 2, GRID_Y + r * CELL_SIZE + CELL_SIZE / 2]);
-    ctx.save();
-    if (style === 2) {
-      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = FX.lineW;
-      l.cells.forEach(([c, r]) => {
-        ctx.beginPath(); ctx.roundRect(GRID_X + c * CELL_SIZE + 4, GRID_Y + r * CELL_SIZE + 4, CELL_SIZE - 8, CELL_SIZE - 8, CELL_R); ctx.stroke();
-      });
-    } else {
-      if (style === 1) { ctx.shadowColor = '#ffffff'; ctx.shadowBlur = FX.lineGlow; }
-      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = FX.lineW; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-      ctx.beginPath();
-      pts.forEach((p, i) => { if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
-      ctx.stroke();
-    }
-    ctx.restore();
-    const mid = pts[Math.floor((pts.length - 1) / 2)];
-    ctx.save();
-    ctx.font = 'bold 26px Arial, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    textOutline(fmtNum(l.score), (pts[0][0] + pts[pts.length - 1][0]) / 2, mid[1] - 2, '#ffffff', '#0e7490', 6);
-    ctx.restore();
-  });
 }
 // 盤面中央得分：<10 倍＝等級 1 直接顯示；10 倍起＝等級 2 跑分＋公版特效(1)(2) [企劃 §得分層級演繹 C3:E5]
 function drawScorePanel() {
@@ -2991,43 +3097,21 @@ function drawFGTotal() {
   textOutline('點擊任意處繼續', 0, 150, '#e2e8f0', null);
   ctx.restore();
 }
-// 公版大獎：爬階 BIG → SUPER → MEGA → EPIC，文字縮放＋掃光；震動／圖示放大／背景演繹依階 [企劃 §美術 H56～H60、§得分層級演繹]
+// 公版大獎：逐級跑分（1 → BIG 門檻才跳 BIG 版 → SUPER 門檻時 BIG 版縮小淡出、SUPER 版彈出 …），文字縮放＋掃光；
+// 圖示放大／背景演繹依階；盤面不震動 [企劃 §美術 H56～H60、§得分層級演繹；使用者 2026-10-19]
 function drawBigWin() {
   if (currentState !== STATE.BIGWIN) return;
-  if (drawBigWinArt()) return;
-  const tier = bigShownTier(), fxl = BIG_FX_LEVEL[tier];
-  ctx.fillStyle = 'rgba(2,6,23,.55)'; ctx.fillRect(0, 0, W, H);
-  const t = nowT();
-  if (fxl[2] && FX.bgFx > 0) {                          // 介面背景演繹
-    ctx.save();
-    ctx.translate(640, 260); ctx.globalAlpha = FX.bgFx * 0.6;
-    for (let i = 0; i < 24; i++) {
-      const a = i * Math.PI / 12 + t / 1800;
-      ctx.fillStyle = i % 2 ? BIG_COLORS[tier] : '#fde047';
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, 820, a, a + 0.12); ctx.closePath(); ctx.fill();
-    }
-    ctx.restore();
+  const tier = bigShownTier(), val = bigWinValue();
+  if (tier === 0) { drawBigPreRun(val, 1, 1); return; }
+  const k = bigSwapK(tier), ov = tier === 1 ? k : 1;
+  ctx.save(); ctx.globalAlpha = ov; ctx.fillStyle = 'rgba(2,6,23,.55)'; ctx.fillRect(0, 0, W, H); ctx.restore();
+  if (tier > 1 && k < 1) drawBigRays(tier - 1, 1 - k);
+  drawBigRays(tier, k);
+  if (k < 1) {
+    if (tier === 1) drawBigPreRun(val, 1 - k, 1 + 0.35 * k);        // 一般跑分面板放大淡出
+    else drawBigPanel(tier - 1, 1 - 0.45 * k, 1 - k, null);          // 上一級縮小淡出
   }
-  ctx.save();
-  const sc = 1 + 0.06 * Math.sin(t / 160);
-  ctx.translate(640, 230); ctx.scale(sc, sc);
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.font = 'bold 104px Arial Black, Arial, sans-serif';
-  const name = BIG_NAMES[tier];
-  const tw = ctx.measureText(name).width;
-  const sweep = ((t / 900) % 1.6) - 0.3;                // 掃光
-  const grd = ctx.createLinearGradient(-tw / 2, 0, tw / 2, 0);
-  const s0 = Math.max(0, Math.min(1, sweep - 0.08)), s1 = Math.max(0, Math.min(1, sweep)), s2 = Math.max(0, Math.min(1, sweep + 0.08));
-  grd.addColorStop(0, BIG_COLORS[tier]); grd.addColorStop(s0, BIG_COLORS[tier]);
-  grd.addColorStop(s1, '#ffffff'); grd.addColorStop(s2, BIG_COLORS[tier]); grd.addColorStop(1, BIG_COLORS[tier]);
-  ctx.lineJoin = 'round'; ctx.strokeStyle = '#1e1b4b'; ctx.lineWidth = 12; ctx.strokeText(name, 0, 0);
-  ctx.fillStyle = grd; ctx.fillText(name, 0, 0);
-  ctx.restore();
-  ctx.save();
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.font = 'bold 80px Arial, sans-serif';
-  textOutline(fmtNum(bigWinValue()), 640, 470, '#fde047', '#1e1b4b', 10);
-  ctx.restore();
+  drawBigPanel(tier, Math.max(0.05, easeOutBack(k)), Math.min(1, 0.15 + k * 1.6), val);   // 這一級彈出
 }
 
 function drawStatsBar() {
@@ -3057,7 +3141,6 @@ function drawStatsBar() {
   ctx.fillStyle = '#64748b'; ctx.font = '11px Arial'; ctx.textAlign = 'right';
   ctx.fillText('BUILD ' + APP_BUILD + '｜RTP 未校準（機率為 demo 預設值，非競品實值）', W - 8, o.y + 56);
   const toggles = [
-    { key: 'paylines', label: '中獎線',   on: showPaylines },
     { key: 'popup',    label: '得分浮字', on: showScorePopup },
     { key: 'frame',    label: '盤面外框', on: showGridFrame },
   ];
@@ -3359,7 +3442,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 6;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
+const TUNE_VERSION = 8;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
@@ -3420,9 +3503,6 @@ function loadTuning() {
           const v = d.layout[k][p];
           if (typeof v === 'number' && isFinite(v)) LAYOUT[k][p] = v;
         }
-      }
-      if (d.choice && typeof d.choice.popStyle === 'number') {
-        CHOICE.popStyle = Math.min(POP_STYLES.length - 1, Math.max(0, d.choice.popStyle));
       }
     }
   } catch (e) { /* 資料損毀：靜默退回預設 */ }
@@ -3556,30 +3636,6 @@ function buildGanttRow(key, label, min, max, step, color, timelineMax, hint) {
   return row;
 }
 
-// --- 控制項 3：單選（風格切換）---
-function buildChoiceRows() {
-  const wrap = document.createElement('div');
-  POP_STYLES.forEach((st, i) => {
-    const row = document.createElement('div'); row.className = 'tune-row';
-    const lab = document.createElement('label');
-    lab.style.flex = '0 0 auto';
-    const rb = document.createElement('input');
-    rb.type = 'radio'; rb.name = 'popStyle'; rb.checked = (CHOICE.popStyle === i);
-    rb.style.marginRight = '6px';
-    lab.append(rb, document.createTextNode(st[0]));
-    const d = document.createElement('span');
-    d.style.cssText = 'color:#94a3b8;font-size:11px;';
-    d.textContent = st[1];
-    rb.addEventListener('change', () => {
-      if (!rb.checked) return;
-      CHOICE.popStyle = i; saveTuning();
-      setTuneStatus('中獎連線：' + st[0]);
-    });
-    row.append(lab, d);
-    wrap.appendChild(row);
-  });
-  return wrap;
-}
 
 function buildTimingTab() {
   tuneBody.innerHTML = '';
@@ -3746,13 +3802,7 @@ function refreshTuneBody() {
   if (tuneTab === 'timing') buildTimingTab();
   else if (tuneTab === 'layout') buildLayoutTab();
   else if (tuneTab === 'fx') buildSliderTab(FX, FX_META, FX_RANGE, setFxValue,
-    '特效強度：門檻類（÷押注）決定該次演繹採用哪一級。', () => {
-      const h = document.createElement('div');
-      h.className = 'tune-group'; h.textContent = '中獎連線風格';
-      const w = document.createElement('div');
-      w.append(h, buildChoiceRows());
-      return w;
-    });
+    '特效強度：門檻類（÷押注）決定該次演繹採用哪一級。');
   else buildSliderTab(ODDS, ODDS_META, ODDS_RANGE, setOddsValue,
     '機率與賠率：改動後於下一局生效。調 RTP 先動「全域賠率乘數」。');
 }
@@ -4226,9 +4276,9 @@ function rhythmTimeline(T, kind, tier) {
   return { segs: segs, marks: marks, skips: skips, notes: notes, total: t };
 }
 
-// 連線型的時間軸：停輪 →（轉盤）→ 中獎停頓 → 圖示中獎演繹（白線）→ 得分數字（10 倍以上跑分）→ 停留 →（大獎）→ 局間
+// 連線型的時間軸：停輪 →（轉盤）→ 中獎停頓 → 圖示中獎演繹（不畫得分線）→ 得分數字（10 倍以上跑分）→ 停留 →（大獎）→ 局間
 function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
-  const nW = kind === 'wheel3' ? 3 : kind === 'wheel2' ? 2 : kind === 'wheel' ? 1 : 0;
+  const nW = kind === 'wheel3' ? 3 : kind === 'wheel2' ? 2 : kind === 'wheel' ? 1 : 0;   // wheel3 情境：第 3 個停乘號
   if (nW) {
     segs.push({ t0: t, dur: T.sixLand, text: '聖火炬落地演繹(' + R1(T.sixLand) + 's)', fill: 'symbol' });
     t += T.sixLand;
@@ -4239,8 +4289,15 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       t += T.wheelIntro;
       segs.push({ t0: t, dur: T.wheelSpin, text: tag + '轉盤轉動(' + R1(T.wheelSpin) + 's)', fill: 'reel' });
       t += T.wheelSpin;
-      marks.push({ t: t, text: tag + '轉盤停定＋倍數' + (i ? '累加' : '顯示') });
+      if (nW >= 3 && i === nW - 1 && T.wheelSlow3 > 0) {
+        segs.push({ t0: t, dur: T.wheelSlow3, text: '第3個減速延長(' + R1(T.wheelSlow3) + 's)', fill: 'stop' });
+        t += T.wheelSlow3;
+        notes.push('一局 3 個轉盤：第 3 個轉盤快停前的減速段延長 ' + R1(T.wheelSlow3) + 's，讓玩家集中期待轉到乘號。');
+      }
+      const mulHere = kind === 'wheel3' && i === nW - 1;
+      marks.push({ t: t, text: tag + '轉盤停定＋倍數' + (i ? '累加' : '顯示') + (mulHere ? '（停乘號：強回饋）' : '') });
       skips.push(t);
+      segs.push({ t0: t, dur: T.wheelPop, text: (mulHere ? '乘號強回饋：聖火＋倍數格大彈＋光效(' : '停定彈跳：聖火＋倍數格(') + R1(T.wheelPop) + 's)', fill: mulHere ? 'big' : 'symbol' });
       if (i === 0) segs.push({ t0: t, dur: T.nxFade, text: 'LOGO淡出→倍數淡入(' + R1(T.nxFade) + 's)', fill: 'score' });
       segs.push({ t0: t, dur: T.wheelResult, text: tag + '結果停留' + (i < nW - 1 ? '（維持放大）' : '') + '(' + R1(T.wheelResult) + 's)', fill: 'lineHold' });
       t += T.wheelResult;
@@ -4258,10 +4315,9 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
     for (let g = 0; g < groups; g++) {
       const g0 = winStart + g * SYMBOL_GAP;
       segs.push({ t0: g0, dur: T.winDisplay, text: '圖示中獎演繹(' + R1(T.winDisplay) + 's)', fill: 'symbol' });
-      segs.push({ t0: g0, dur: T.winDisplay, text: '連線演繹(' + R1(T.winDisplay) + 's)', fill: 'line' });
     }
     if (groups > 1) {
-      segs.push({ t0: winStart, dur: SYMBOL_GAP, text: '連線同時顯示（多線）', fill: 'gap' });
+      segs.push({ t0: winStart, dur: SYMBOL_GAP, text: '多組中獎圖示同時演繹', fill: 'gap' });
     }
     t = winStart + T.winDisplay;
   }
@@ -4277,11 +4333,19 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
     marks.push({ t: t, text: '公版分數切換' });
   } else {
     const ti = tier[0] >= 200 ? 4 : tier[0] >= 101 ? 3 : tier[0] >= 51 ? 2 : 1;
-    const run = [0, T.bigRunBig, T.bigRunSuper, T.bigRunMega, T.bigRunEpic][ti];
-    segs.push({ t0: t, dur: run, text: BIG_NAMES[ti] + ' 跑分(' + R1(run) + 's)', fill: 'big' });
-    marks.push({ t: t, text: '大獎跑分開始' });
+    // 逐級跑分（使用者 2026-10-19）：1 → BIG 門檻（一般跑分）→ 跳 BIG 版 → SUPER 門檻時 BIG 版縮小淡出、SUPER 版彈出 …
+    const tt = [0, T.bigRunPre, T.bigRunBig, T.bigRunSuper, T.bigRunMega, T.bigRunEpic];
+    const t0 = t;
+    segs.push({ t0: t, dur: T.bigRunPre, text: '跑分 1→BIG門檻(' + R1(T.bigRunPre) + 's)', fill: 'score' });
+    marks.push({ t: t, text: '大獎跑分開始（從 0 跑）' });
     skips.push(t);
-    t += run;
+    for (let k = 1; k <= ti; k++) {
+      const a = t0 + tt[k], b = t0 + Math.max(tt[k], tt[k + 1]);
+      marks.push({ t: a, text: k === 1 ? '跳出 BIG 版' : BIG_NAMES[k - 1] + ' 版縮小淡出→' + BIG_NAMES[k] + ' 版彈出' });
+      segs.push({ t0: a, dur: T.bigSwap, text: (k === 1 ? 'BIG 版彈出(' : '換版(') + R1(T.bigSwap) + 's)', fill: 'gap' });
+      segs.push({ t0: a, dur: Math.max(0.1, b - a), text: BIG_NAMES[k] + ' 版跑分(' + R1(b - a) + 's)', fill: 'big' });
+    }
+    t = t0 + Math.max(tt[ti], tt[ti + 1]);
     segs.push({ t0: t, dur: T.bigWinHold, text: '大獎報獎停留(' + R1(T.bigWinHold) + 's)', fill: 'big' });
     t += T.bigWinHold;
     marks.push({ t: t, text: '公版分數切換' });
@@ -4292,6 +4356,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
   t += T.autoSpinDelay;
   marks.push({ t: t, text: '下局自動啟動', red: true });
   notes.push('同時啟動、依序停輪（AUTO）／同時停輪（TURBO）、按 STOP 同時停止。');
+  notes.push('中獎不畫得分線（只有圖示亮起／放大＋未中獎壓暗）；大獎期間盤面不震動。');
   notes.push('點擊跳過：滾輪齊停、轉盤直接停在結果、得分直接顯示最終分數。');
   return { segs: segs, marks: marks, skips: skips, notes: notes, total: t };
 }
@@ -4318,6 +4383,8 @@ function sheetGantt() {
       title: m[0] + ' 一般：1 個藍輪（停加法格、無連線）' });
     scenarios.push({ T: m[1], kind: 'wheel2', tier: RHYTHM_TIERS[0],
       title: m[0] + ' 一般：2 個藍輪（第 1 個停轉維持放大→開第 2 個→一起收合）' });
+    scenarios.push({ T: m[1], kind: 'wheel3', tier: RHYTHM_TIERS[0],
+      title: m[0] + ' 一般：3 個藍輪（第 3 個減速延長、停乘號強回饋）' });
   });
 
   scenarios.forEach(sc => {
@@ -4610,8 +4677,7 @@ window.addEventListener('mouseup', () => { if (layoutDrag) { layoutDrag = null; 
 function handleClick(mx, my) {
   for (const t of statToggleRects) {
     if (hit(t, mx, my)) {
-      if (t.key === 'paylines') showPaylines = !showPaylines;
-      else if (t.key === 'popup') showScorePopup = !showScorePopup;
+      if (t.key === 'popup') showScorePopup = !showScorePopup;
       else if (t.key === 'frame') showGridFrame = !showGridFrame;
       return 'toggle';
     }
@@ -4747,7 +4813,7 @@ function toFG(level, force) {
   forceSpinType = force || null;
 }
 const atWheel = (i, ph, frac) => () => currentState === STATE.WHEEL && wheelIdx === i && wheelPhase === ph
-  && (frac === undefined || stateTimer >= Math.round(frac * ({ intro: TF(TIMING.wheelIntro), spin: TF(TIMING.wheelSpin),
+  && (frac === undefined || stateTimer >= Math.round(frac * ({ intro: TF(TIMING.wheelIntro), spin: wheelSpinFrames(wheels[i]),
     result: TF(TIMING.wheelResult), collapse: TF(TIMING.wheelCollapse) })[ph]));
 const SHOT_PRESETS = {
   idle:          () => {},
@@ -4757,6 +4823,12 @@ const SHOT_PRESETS = {
   wheelSpin:     () => spinWith('ng1add', atWheel(0, 'spin', 0.5)),
   wheelResult:   () => spinWith('ng1add', atWheel(0, 'result', 0.5)),
   wheelMul:      () => spinWith('ng1mul', atWheel(0, 'result', 0.5)),
+  wheelStopPop:  () => spinWith('ng1add', atWheel(0, 'result', 0.2)),   // 停定彈跳最大：聖火＋選中格同時放大、其餘壓灰
+  wheelMulPop:   () => spinWith('ng1mul', atWheel(0, 'result', 0.2)),   // 停在乘號：彈更大＋光效
+  wheel3Slow:    () => spinWith('ng3mix', atWheel(2, 'spin', 0.85)),    // 第 3 個轉盤減速延長中
+  bigPreRun:     () => spinWith('big2', () => currentState === STATE.BIGWIN && stateTimer >= Math.round(bigTierStartFrame(1) * 0.6)),   // 還沒到 BIG 門檻：一般跑分
+  bigPop:        () => spinWith('big2', () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(1) + Math.round(TF(TIMING.bigSwap) * 0.35)),   // 跳出 BIG 版
+  bigToSuper:    () => spinWith('big2', () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(2) + Math.round(TF(TIMING.bigSwap) * 0.4)),   // BIG 版縮小淡出、SUPER 版彈出
   wheelCollapse: () => spinWith('ng1add', atWheel(0, 'collapse', 0.5)),
   wheel2Result:  () => spinWith('ng2am', atWheel(1, 'result', 0.5)),
   wheel3Result:  () => spinWith('ng3mix', atWheel(2, 'result', 0.5)),
