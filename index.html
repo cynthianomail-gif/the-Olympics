@@ -245,7 +245,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：不生 AI 圖（decisions 第 4b 步），圖示一律程式繪製（色塊＋中文名），場景純色漸層。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-art-5';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-art-6';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -387,6 +387,12 @@ const DEFAULT_TIMING = {
   nxFade:           0.30,   // LOGO 字樣淡出→倍數淡入（局結算完反向）；使用者 2026-10-19，待節奏組實測
   wheelPop:         0.40,   // 轉盤停定：聖火＋選中格同時放大縮回彈一下（使用者 2026-10-19，待節奏組實測）
   wheelSlow3:       2.00,   // 一局 3 個轉盤時，第 3 個減速段延長（使用者 2026-10-19：讓玩家集中期待乘號）
+  redBurst:         0.60,   // 紅輪彈出時聖火在轉盤周圍炸開（docs/fx_中獎演繹_20261019.md）
+  zoomIn:           1.00,   // 拉近段：停下前鏡頭朝轉盤拉近的時間
+  zoomHold:         0.60,   // 拉近段：停下後維持拉近（格子燃火）的時間
+  zoomOut:          0.40,   // 拉近段：畫面退回一般大小的時間
+  plantGrow:        0.60,   // 倍數欄位旁植栽長出的時間
+  nxShake:          0.40,   // 倍數 >200：一次性畫面震動的時間
   winPause:         0.40,   // 停輪後中獎停頓（企劃 §節奏表 P7）
   winDisplay:       1.53,   // 圖示中獎演繹（§3 WIN 欄顯示 n=8）
   scoreHold:        1.00,   // 得分數字演繹（含跑分；企劃 §節奏表 P8）
@@ -428,7 +434,13 @@ const TIMING_META = [
     ['wheelCollapse', '轉盤收合', { hint: '全部轉盤轉完後一起縮回一格大小的方塊留在原位（每局只播一次；待節奏組實測）' }],
     ['nxFade', '倍數淡入淡出', { hint: '轉盤倍數出現時 LOGO 字樣淡出、同一匾額淡入倍數；該局結算完倍數淡出、LOGO 淡入（待節奏組實測）' }],
     ['wheelPop', '轉盤停定彈跳', { hint: '轉盤停下時，中央聖火與選中倍數格同時放大再縮回彈一下的時間；乘號格彈得更大＋光效（幅度在特效分頁）' }],
-    ['wheelSlow3', '第3盤減速延長', { hint: '一局同時 3 個轉盤時，第 3 個快停前的減速段延長幾秒（讓玩家集中期待轉到乘號）；0＝不延長' }] ] },
+    ['wheelSlow3', '第3盤減速延長', { hint: '一局同時 3 個轉盤時，第 3 個快停前的減速段延長幾秒（讓玩家集中期待轉到乘號）；0＝不延長' }],
+    ['redBurst', '紅輪聖火炸開', { hint: '紅輪彈出時，聖火在轉盤周圍炸開的時間（藍輪只有一般彈出）' }],
+    ['zoomIn', '鏡頭拉近', { hint: '拉近段倍數（加法 250／500、×15／×20）：停下前鏡頭朝轉盤拉近的時間；拉近倍率在特效分頁' }],
+    ['zoomHold', '拉近停留', { hint: '拉近段：停下後維持拉近、格子燃火的時間' }],
+    ['zoomOut', '鏡頭退回', { hint: '拉近段：畫面退回一般大小的時間' }],
+    ['plantGrow', '植栽長出', { hint: '倍數欄位旁植栽長出的時間（25 倍起翠綠、101 倍起金色）' }],
+    ['nxShake', '倍數震動', { hint: '累計倍數 >200 時一次性畫面震動的時間（只在倍數出現那一下；大獎期間盤面不震動照舊）' }] ] },
   { group: '中獎／得分', items: [
     ['winPause', '中獎前停頓', { hint: '停輪（或轉盤收合）後到圖示中獎演繹前的停頓' }],
     ['winDisplay', '圖示中獎演繹', { hint: '中獎圖示亮起／放大、未中獎壓暗（不畫得分線）。預設＝競品 WIN 欄顯示 1.53s' }],
@@ -458,7 +470,7 @@ const TIMING_META = [
 const DEFAULT_TIMING_START = {
   reelStartDelay: 0, reelFirstStop: 0, reelStopInterval: 0.92, reelSpeed: 0,
   cellStagger: 0.92, spinClear: 0, spinDropIn: 0.70, landBounce: 0.92,
-  sixLand: 0, wheelIntro: 0.40, wheelSpin: 1.00, wheelResult: 4.60, wheelCollapse: 5.10, nxFade: 4.60, wheelPop: 4.60, wheelSlow3: 3.40,
+  sixLand: 0, wheelIntro: 0.40, wheelSpin: 1.00, wheelResult: 4.60, wheelCollapse: 5.10, nxFade: 4.60, wheelPop: 4.60, wheelSlow3: 3.40, redBurst: 0, zoomIn: 3.60, zoomHold: 4.60, zoomOut: 5.20, plantGrow: 4.60, nxShake: 4.60,
   winPause: 0, winDisplay: 0.40, scoreHold: 1.93, scoreStay: 2.93,
   bigRunBig: 0, bigRunSuper: 0, bigRunMega: 0, bigRunEpic: 0, bigWinHold: 0, bigRunPre: 0, bigSwap: 1.20,
   fgIntroAnim: 0, dealDelay: 0.6, dealSpin: 1.97, dealResult: 7.64, promoteHold: 0,
@@ -484,6 +496,12 @@ const DEFAULT_TIMING_TURBO = {
   nxFade:           0.20,
   wheelPop:         0.30,
   wheelSlow3:       1.20,
+  redBurst:         0.50,
+  zoomIn:           0.70,
+  zoomHold:         0.40,
+  zoomOut:          0.30,
+  plantGrow:        0.50,
+  nxShake:          0.30,
   winPause:         0.30,
   winDisplay:       1.00,
   scoreHold:        1.00,
@@ -526,6 +544,12 @@ const RHYTHM_MAP = [
   ['nxFade',           '倍數淡入淡出',     'LOGO 字樣淡出、同一匾額淡入倍數的時間（該局結算完倍數淡出、LOGO 淡入）', null],
   ['wheelPop',         '轉盤停定彈跳',     '轉盤停下時中央聖火與選中倍數格同時放大縮回彈一下的時間（乘號格更強＋光效）', null],
   ['wheelSlow3',       '第3轉盤減速延長',  '一局 3 個轉盤時，第 3 個轉盤快停前減速段延長的時間', null],
+  ['redBurst',         '紅輪聖火炸開',     '紅輪彈出時聖火在轉盤周圍炸開的持續時間（藍輪無）',     null],
+  ['zoomIn',           '鏡頭拉近',         '高倍數（加法 250／500、×15／×20）停下前鏡頭朝轉盤拉近的時間', null],
+  ['zoomHold',         '拉近停留(燃火)',   '停下後維持拉近、該格周圍燃起火焰的時間',                 null],
+  ['zoomOut',          '鏡頭退回',         '畫面退回一般大小的時間',                                 null],
+  ['plantGrow',        '倍數植栽長出',     '倍數欄位旁植栽長出的時間（25 倍起翠綠、101 倍起金色、>200 加紅果）', null],
+  ['nxShake',          '倍數畫面震動',     '累計倍數 >200 時一次性畫面震動的時間',                   null],
   ['winPause',         '中獎前停頓',       '停輪後，到播放圖示中獎演繹前的停頓時間',                 '停頓時間(中獎)'],
   ['winDisplay',       '圖示中獎演繹',     '圖示中獎（中獎圖示亮起、未中獎壓暗；不畫得分線）的持續時間', '圖示演繹'],
   ['scoreHold',        '得分數字演繹',     '播放得分數字演繹的持續時間（10 倍以上含跑分）',           '得分演繹'],
@@ -640,12 +664,25 @@ const LAYOUT_META = [
 const DEFAULT_FX = {
   dimAlpha:   0.40,   // 未中獎圖示壓暗至
   bounceAmp:  35,     // 落定回彈深度：圖示 1/3（企劃 §節奏表 V13；105/3≈35）
-  landPop:    0.25,   // 聖火炬落地演繹的放大幅度
+  landPop:    0.30,   // 聖火炬落地（出現）時整體放大 30%（使用者 2026-10-19）
   wheelBig:   2.0,    // 轉盤放大後約幾格寬（企劃 §美術 H26：約 2 格）
   wheelTurns: 4,      // 轉盤轉幾圈才停
   wheelPopAmp: 0.18,  // 轉盤停定彈跳幅度（加法格／聖火格）
   wheelPopMul: 0.40,  // 停在乘號格的彈跳幅度（更強烈）
   wheelMulGlow: 1.0,  // 停在乘號格的光效強度（光暈＋放射光）
+  spinDim:    0.40,   // 盤面旋轉時，聖火炬以外的圖示壓暗到（透明度）
+  burstAmt:   1.0,    // 紅輪聖火炸開強度
+  fireAmt:    1.0,    // 高倍數格燃火強度
+  zoomMax:    1.8,    // 拉近倍率上限（實際取「轉盤不出畫面」的最大值）
+  fireAdd:    25,     // 加法格 ≥ 此值 → 燃火段
+  zoomAdd:    250,    // 加法格 ≥ 此值 → 拉近段
+  fireMul:    10,     // 乘法格 ≥ 此值 → 燃火段
+  zoomMul:    15,     // 乘法格 ≥ 此值 → 拉近段（×15 兩段都有寫，歸較高的拉近段）
+  nxT1:       25,     // 倍數欄位：累計 ≥ 此值 → 彈出＋翠綠植栽
+  nxT2:       101,    // 累計 ≥ 此值 → 彈出放大＋金色植栽
+  nxT3:       201,    // 累計 ≥ 此值（>200）→ 再加畫面震動＋小紅果
+  nxBigScale: 1.30,   // 101 倍起倍數放大到
+  nxShakeAmp: 10,     // 倍數 >200 畫面震動幅度（px）
   anticip:    1,      // 觸發期待演出強度（0＝關）
   pubFx1:     0.5,    // 得分 10～20 倍：公版特效(1) 光暈強度
   pubFx2:     0.9,    // 得分 20～25 倍：公版特效(2)
@@ -660,15 +697,30 @@ const FX_META = [
   { group: '滾輪與轉盤', items: [
     ['bounceAmp', '落定回彈幅度', 0, 60, 1,
       { hint: '落定下沉再彈回的深度（px）；企劃：回彈深度＝圖示 1/3（35px）。時長在節奏分頁' }],
-    ['landPop', '聖火炬落地放大', 0, 1, 0.05, { hint: '聖火炬落地演繹的放大幅度（0.25＝放大 25%）' }],
+    ['landPop', '聖火炬落地放大', 0, 1, 0.05, { hint: '聖火炬出現（落地）時整體放大幅度（0.30＝放大 30%，使用者 2026-10-19）' }],
     ['wheelBig', '轉盤放大格數', 1, 4, 0.1, { hint: '轉盤放大後約幾格寬（企劃：約 2 格）' }],
     ['wheelTurns', '轉盤圈數', 1, 10, 1, { hint: '轉盤停下前轉幾圈（純視覺）' }],
     ['wheelPopAmp', '停定彈跳幅度', 0, 1, 0.01, { hint: '轉盤停下時聖火＋選中格放大幅度（0.18＝放大 18%）；時長在節奏分頁' }],
     ['wheelPopMul', '乘號彈跳幅度', 0, 1.5, 0.01, { hint: '停在乘號格時的彈跳幅度（要比一般大）' }],
     ['wheelMulGlow', '乘號光效', 0, 2, 0.05, { hint: '停在乘號格時聖火與倍數格的光暈＋放射光強度；0＝關' }],
-    ['anticip', '觸發期待強度', 0, 2, 0.1, { hint: '已有轉盤停在聖火格時，其餘轉盤的期待演出強度；0＝關' }],
+    ['spinDim', '旋轉壓暗', 0, 1, 0.05, { hint: '盤面旋轉時聖火炬以外的圖示壓暗到多少（1＝不壓暗；使用者 2026-10-19 凸顯聖火）' }],
+    ['burstAmt', '紅輪炸開強度', 0, 2, 0.05, { hint: '紅輪彈出時聖火在轉盤周圍炸開的強度；0＝關' }],
+    ['fireAmt', '高倍燃火強度', 0, 2, 0.05, { hint: '燃火段／拉近段停下後，該格周圍火焰的強度' }],
+    ['zoomMax', '拉近倍率', 1, 3, 0.05, { hint: '拉近段鏡頭倍率上限；實際取轉盤不會跑出畫面的最大值' }],
     ['reelJitter', '各格速度差異', 0, 1.2, 0.05,
       { hint: '單格滾輪：0＝各格完全同步，越大越獨立', modes: ['cell'] }] ] },
+  { group: '高倍數演出門檻', items: [
+    ['fireAdd', '燃火加法≥', 1, 1000, 1, { hint: '加法格 ≥ 此值 → 停下後該格燃火（使用者：25～100）' }],
+    ['zoomAdd', '拉近加法≥', 1, 1000, 1, { hint: '加法格 ≥ 此值 → 停下前拉近＋燃火（使用者：250、500）' }],
+    ['fireMul', '燃火乘法≥', 1, 50, 1, { hint: '乘法格 ≥ 此值 → 燃火（使用者：×10）' }],
+    ['zoomMul', '拉近乘法≥', 1, 50, 1, { hint: '乘法格 ≥ 此值 → 拉近＋燃火（使用者：×15、×20；×15 歸拉近段）' }],
+    ['nxT1', '倍數綠植≥', 1, 1000, 1, { hint: '累計倍數 ≥ 此值 → 倍數彈出＋翠綠植栽（以下為縮放出現）' }],
+    ['nxT2', '倍數金植≥', 1, 2000, 1, { hint: '累計倍數 ≥ 此值 → 彈出放大＋金色植栽（使用者：101～200）' }],
+    ['nxT3', '倍數震動≥', 1, 5000, 1, { hint: '累計倍數 ≥ 此值 → 再加畫面震動＋小紅果（使用者：200 以上）' }],
+    ['nxBigScale', '倍數放大', 1, 2, 0.05, { hint: '101 倍起倍數放大到（使用者：130%）' }],
+    ['nxShakeAmp', '倍數震幅', 0, 40, 1, { hint: '累計 >200 時畫面震動幅度（px）' }],
+    ['anticip', '觸發期待強度', 0, 2, 0.1, { hint: '已有轉盤停在聖火格時，其餘轉盤的期待演出強度；0＝關' }],
+ ] },
   { group: '得分與大獎分級', items: [
     ['pubFx1', '公版特效1', 0, 2, 0.05, { hint: '10≦贏分＜20 倍：公版特效(1) 光暈強度（企劃得分層級 C4）' }],
     ['pubFx2', '公版特效2', 0, 2, 0.05, { hint: '20≦贏分＜25 倍：公版特效(2) 光暈強度（企劃得分層級 C5）' }],
@@ -762,6 +814,15 @@ function forceMenuOptions() {
     { label: 'NG2輪加乘',  value: 'ng2am',  kind: 'spin', color: '#7dd3fc', mode: 'NG' },
     { label: 'NG2輪乘加',  value: 'ng2ma',  kind: 'spin', color: '#7dd3fc', mode: 'NG' },
     { label: 'NG3輪混合',  value: 'ng3mix', kind: 'spin', color: '#7dd3fc', mode: 'NG' },
+    { label: '停10倍',     value: 'v10',    kind: 'spin', color: '#c4b5fd', mode: '皆可' },
+    { label: '停50倍',     value: 'v50',    kind: 'spin', color: '#c4b5fd', mode: '皆可' },
+    { label: '停100倍',    value: 'v100',   kind: 'spin', color: '#c4b5fd', mode: '皆可' },
+    { label: '停×10',      value: 'vx10',   kind: 'spin', color: '#c4b5fd', mode: '皆可' },
+    { label: '停250倍',    value: 'v250',   kind: 'spin', color: '#f0abfc', mode: '皆可' },
+    { label: '停500倍',    value: 'v500',   kind: 'spin', color: '#f0abfc', mode: '皆可' },
+    { label: '停×15',      value: 'vx15',   kind: 'spin', color: '#f0abfc', mode: '皆可' },
+    { label: '停×20',      value: 'vx20',   kind: 'spin', color: '#f0abfc', mode: '皆可' },
+    { label: '累計150倍',  value: 'nx150',  kind: 'spin', color: '#f0abfc', mode: '皆可' },
     { label: '進FG',       value: 'fg',     kind: 'spin', color: '#34d399', mode: 'NG' },
     { label: '進SFG',      value: 'sfg',    kind: 'spin', color: '#34d399', mode: 'NG' },
     { label: '進UFG',      value: 'ufg',    kind: 'spin', color: '#34d399', mode: 'NG' },
@@ -982,7 +1043,7 @@ let spinTimer = 0, stateTimer = 0;
 let landT = [];            // 各輪聖火炬落地演繹計時（-1＝沒有）
 let winLines = [], winCells = null;
 let wheels = [], wheelIdx = 0, wheelPhase = 'intro', wheelAcc = 0, nxPopT = -1, startCount = 0;
-let nxFadeK = 0, nxShownVal = 0;   // LOGO 匾額：0＝顯示 LOGO、1＝顯示倍數（中間＝交叉淡入淡出）
+let nxFadeK = 0, nxShownVal = 0, nxTierCur = 0, nxPlantT = -1, nxShakeT = -1, nxStale = true;   // nxStale：新的一局，下一個倍數要重新長植栽   // LOGO 匾額：0＝顯示 LOGO、1＝顯示倍數（中間＝交叉淡入淡出）
 let lineWin = 0, wheelWin = 0, spinWin = 0;
 let roundScore = 0, totalScore = 0;
 let scorePanel = null, bigTier = 0, bigTo = 0;
@@ -1145,6 +1206,17 @@ function blueAt(c, type) {
   return wheelPlan(c, 'blue', key, idx >= 0 ? idx : pickSeg(key));
 }
 function goldAt(c) { const k = pickWheelBoard('gold'); return wheelPlan(c, 'gold', k, pickSeg(k)); }
+// 強開「停在指定倍數」：先找藍輪盤面有沒有這格，沒有（250／500／×15／×20 只在紅輪）才用紅輪；測試演出用，兩個模式都生效
+function segPlan(c, str) {
+  const keys = (inFG ? [BLUE_FG_BOARD] : BLUE_NG_BOARDS).concat(GOLD_BOARDS);
+  for (const k of keys) {
+    const i = WHEEL_BOARDS[k].indexOf(str);
+    if (i >= 0) return wheelPlan(c, GOLD_BOARDS.indexOf(k) >= 0 ? 'gold' : 'blue', k, i);
+  }
+  return null;
+}
+const SEG_FORCES = { v10: ['10'], v50: ['50'], v100: ['100'], vx10: ['x10'], v250: ['250'], v500: ['500'],
+  vx15: ['x15'], vx20: ['x20'], nx150: ['15', 'x10'], nx250: ['25', 'x10'] };   // nx250：25 → ×10 ＝ 250（不拉近）     // nx150：15 倍 → ×10 ＝ 累計 150
 
 /* ★ 強開的作用範圍：每個選項先決定「哪個模式下才有意義」再寫條件（SKILL.md「強開的作用範圍」）
  *   NG 類（含進FG／SFG／UFG）：只在 !inFG 生效 → FG 內不再種聖火格，FG 不會失控
@@ -1152,6 +1224,11 @@ function goldAt(c) { const k = pickWheelBoard('gold'); return wheelPlan(c, 'gold
  *   BET×50 啟用中不出藍輪（規則優先），NG 轉盤類強開不生效 */
 function forcedWheels(force) {
   if (!force) return null;
+  if (SEG_FORCES[force] && activeBuy !== 'b50') {
+    const v = SEG_FORCES[force], cs = v.length === 1 ? [2] : [0, 4];
+    const plans = v.map((str, i) => segPlan(cs[i], str));
+    if (plans.every(p => p)) return plans;
+  }
   if (!inFG && activeBuy !== 'b50') {
     switch (force) {
       case 'ng1add': return [blueAt(2, 'add')];
@@ -1409,6 +1486,7 @@ function startWheel(i) {
   wheelIdx = i; wheelPhase = 'intro'; stateTimer = 0;
   const w = wheels[i];
   w.angle = 0; w.stopT = -1;
+  w.burstT = w.kind === 'gold' ? 0 : -1;           // 紅輪彈出時聖火炸開；藍輪一般彈出
   // 箭頭固定朝上，滾輪轉到選中格在正上方：格 i 的中心角＝i×30°（順時針）
   w.toAngle = -(w.idx * 30 + 360 * Math.max(1, Math.round(FX.wheelTurns)));
   currentState = STATE.WHEEL;
@@ -1425,7 +1503,7 @@ function finishWheelSpin(w) {
 function updateWheel() {
   const w = wheels[wheelIdx];
   stateTimer++;
-  wheels.forEach(x => { if (x.stopT >= 0) x.stopT++; });
+  wheels.forEach(x => { if (x.stopT >= 0) x.stopT++; if (x.burstT >= 0) x.burstT++; });
   if (wheelPhase === 'intro') {
     if (stateTimer >= TF(TIMING.wheelIntro)) { wheelPhase = 'spin'; stateTimer = 0; }
   } else if (wheelPhase === 'spin') {
@@ -1434,7 +1512,7 @@ function updateWheel() {
     w.angle = w.toAngle * (1 - Math.pow(1 - k, wheelEaseP(w)));   // 逐漸減速停下（第 3 個轉盤減速段拉長）
     if (stateTimer >= F) finishWheelSpin(w);
   } else if (wheelPhase === 'result') {
-    if (stateTimer >= TF(TIMING.wheelResult)) {
+    if (stateTimer >= wheelResultFrames(w)) {
       // 使用者 2026-10-19：「第一個輪盤轉完後不用縮小 就維持停轉的狀態 開啟第二個輪盤」
       // → 還有下一個轉盤：這個維持放大停轉（結果格亮著），直接開下一個；最後一個停完才一起收合
       if (wheelIdx + 1 < wheels.length) startWheel(wheelIdx + 1);
@@ -1451,6 +1529,47 @@ function updateWheel() {
 function isSlowWheel(w) { return wheels.length >= 3 && w === wheels[wheels.length - 1] && TIMING.wheelSlow3 > 0; }
 function wheelSpinFrames(w) { return TF(TIMING.wheelSpin) + (isSlowWheel(w) ? TF(TIMING.wheelSlow3) : 0); }
 function wheelEaseP(w) { return isSlowWheel(w) ? 4.5 : 3; }        // 指數越大，尾段越慢越長
+/* --- 高倍數演出（使用者 2026-10-19，docs/fx_中獎演繹_20261019.md）---
+   0＝一般（加法 5～20、×2～×5）；1＝燃火（加法 25～100、×10）；2＝拉近＋燃火（加法 250／500、×15／×20） */
+function segTier(sg) {
+  if (!sg || sg.type === 'start') return 0;
+  if (sg.type === 'add') return sg.v >= FX.zoomAdd ? 2 : (sg.v >= FX.fireAdd ? 1 : 0);
+  return sg.v >= FX.zoomMul ? 2 : (sg.v >= FX.fireMul ? 1 : 0);
+}
+function wheelResultFrames(w) {             // 拉近段要等「維持拉近＋退回」播完才往下走
+  const base = TF(TIMING.wheelResult);
+  return segTier(w.segs[w.idx]) === 2 ? Math.max(base, TF(TIMING.zoomHold) + TF(TIMING.zoomOut)) : base;
+}
+function wheelBurstK(w) {                   // 紅輪炸開進度 0～1；-1＝沒有在炸
+  if (!w || !(w.burstT >= 0)) return -1;           // 只有紅輪在 startWheel() 設 burstT＝0
+  const F = Math.max(1, TF(TIMING.redBurst));
+  return w.burstT <= F ? w.burstT / F : -1;
+}
+function wheelFireK(w) {                    // 該格燃火強度 0～1（停下後 0.2 秒燃起，持續到收合）
+  if (!w || !w.res || !(w.stopT >= 0) || segTier(w.res) < 1) return 0;
+  return Math.min(1, w.stopT / 12) * FX.fireAmt;
+}
+function easeInOut(k) { return k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; }
+// 鏡頭：拉近段轉盤停下前朝它拉近（以轉盤中心為軸，倍率取「不跑出畫面」的最大值），停下後維持再退回
+function cameraNow() {
+  const none = { z: 1, cx: W / 2, cy: H / 2, k: 0, wheel: null };
+  if (currentState !== STATE.WHEEL || wheelPhase === 'intro' || wheelPhase === 'collapse') return none;
+  const w = wheels[wheelIdx];
+  if (!w || segTier(w.segs[w.idx]) !== 2) return none;
+  const g = wheelGeom(w), bottom = LAYOUT.bottomUI.y;
+  const zFit = Math.min(g.cx1 / g.R1, (W - g.cx1) / g.R1, g.cy1 / g.R1, (bottom - g.cy1) / g.R1);
+  const zMax = Math.max(1, Math.min(FX.zoomMax, zFit));
+  let k = 0;
+  if (wheelPhase === 'spin') {
+    const F = wheelSpinFrames(w), zi = Math.max(1, TF(TIMING.zoomIn));
+    k = Math.max(0, Math.min(1, (stateTimer - (F - zi)) / zi));
+  } else {
+    const h = TF(TIMING.zoomHold), o = Math.max(1, TF(TIMING.zoomOut));
+    k = stateTimer < h ? 1 : Math.max(0, 1 - (stateTimer - h) / o);
+  }
+  const e = easeInOut(k);
+  return { z: 1 + (zMax - 1) * e, cx: g.cx1, cy: g.cy1, k: k, wheel: w, zMax: zMax };
+}
 // 停定回饋（使用者 2026-10-19）：中央聖火與選中格同幀放大→縮回彈一下；乘號格幅度更大＋光效
 function wheelPopInfo(w) {
   if (!w || !w.res || !(w.stopT >= 0)) return { on: false, k: 0, s: 1, glow: 0, mul: false };
@@ -2527,6 +2646,65 @@ function drawWheelDisc(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, glow)
   drawTorchHand(mx, my, ra, Rh * 0.3);            // 手握聖火
   ctx.restore();
 }
+// 紅輪聖火炸開：一圈火焰從轉盤邊緣往外噴、火星飛散（front＝只畫最外層火星）
+function drawRedBurst(cx, cy, R, k, t, front) {
+  const amt = FX.burstAmt;
+  if (amt <= 0) return;
+  ctx.save();
+  if (!front) {
+    ctx.globalAlpha = Math.min(1, (1 - k) * 1.2) * Math.min(1, amt);
+    const rg = ctx.createRadialGradient(cx, cy, R * 0.8, cx, cy, R * (1.3 + 0.7 * k));
+    rg.addColorStop(0, 'rgba(255,170,40,.75)'); rg.addColorStop(1, 'rgba(255,80,0,0)');
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, R * (1.3 + 0.7 * k), 0, Math.PI * 2); ctx.fill();
+    const n = 16;
+    for (let i = 0; i < n; i++) {
+      const a = i * Math.PI * 2 / n + 0.2;
+      const rr = R * (0.95 + 0.55 * k), h = R * (0.55 * (1 - k) + 0.12) * amt * (0.8 + 0.3 * Math.sin(i * 1.7 + t * 0.4));
+      ctx.save();
+      ctx.translate(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); ctx.rotate(a + Math.PI / 2);
+      drawFlame(0, 0, h, false, t + i);
+      ctx.restore();
+    }
+  } else {
+    ctx.globalAlpha = Math.max(0, 1 - k);
+    for (let i = 0; i < 28; i++) {
+      const a = i * 2.39996, rr = R * (1.0 + 1.1 * k * (0.6 + 0.4 * ((i * 37) % 10) / 10));
+      ctx.fillStyle = i % 3 ? '#fdba74' : '#fef08a';
+      ctx.beginPath(); ctx.arc(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, 3 + 3 * (1 - k), 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+// 高倍數格燃火：選中格外緣一排火焰往外燒＋兩側小火（停下後燃起，持續到收合）
+function drawSegFire(cx, cy, R, segDeg, k, t) {
+  const r1 = R * ART_GEO.wheel.band[1], r0 = R * ART_GEO.wheel.band[0];
+  const a0 = (segDeg - 15) * Math.PI / 180, a1 = (segDeg + 15) * Math.PI / 180;
+  ctx.save();
+  ctx.globalAlpha = Math.min(1, k);
+  const am = (a0 + a1) / 2, mx = cx + Math.cos(am) * (r0 + r1) / 2, my = cy + Math.sin(am) * (r0 + r1) / 2;
+  const rg = ctx.createRadialGradient(mx, my, 4, mx, my, R * 0.55);
+  rg.addColorStop(0, 'rgba(255,190,60,.55)'); rg.addColorStop(1, 'rgba(255,90,0,0)');
+  ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(mx, my, R * 0.55, 0, Math.PI * 2); ctx.fill();
+  ctx.save();                                        // 格框燒紅＋外光
+  ctx.strokeStyle = '#fb923c'; ctx.lineWidth = Math.max(3, R * 0.035); ctx.shadowColor = '#f97316'; ctx.shadowBlur = 26;
+  ctx.beginPath(); ctx.arc(cx, cy, r1, a0, a1); ctx.arc(cx, cy, r0, a1, a0, true); ctx.closePath(); ctx.stroke();
+  ctx.restore();
+  for (let i = 0; i <= 8; i++) {                     // 外緣
+    const a = a0 + (a1 - a0) * i / 8;
+    const h = R * 0.36 * Math.min(1.4, k) * (0.7 + 0.3 * Math.sin(t * 0.5 + i * 1.3));
+    ctx.save(); ctx.translate(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1); ctx.rotate(a + Math.PI / 2);
+    drawFlame(0, 0, h, false, t + i * 3); ctx.restore();
+  }
+  [a0, a1].forEach((a, j) => {                       // 兩側
+    for (let i = 0; i < 4; i++) {
+      const rr = r0 + (r1 - r0) * (i + 0.5) / 4, side = j ? 1 : -1;
+      const h = R * 0.22 * Math.min(1.4, k) * (0.75 + 0.25 * Math.sin(t * 0.6 + i * 2 + j));
+      ctx.save(); ctx.translate(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); ctx.rotate(a + side * Math.PI / 2 + Math.PI / 2);
+      drawFlame(0, 0, h, false, t + i * 5 + j); ctx.restore();
+    }
+  });
+  ctx.restore();
+}
 // 畫面上的轉盤：已轉完的維持放大停轉（結果格亮著、結果字留著），目前這個依階段登場／轉動；收合時全部一起縮回
 function wheelDrawList() {
   if (currentState !== STATE.WHEEL) return [];
@@ -2566,9 +2744,14 @@ function drawWheels() {
     ctx.fillStyle = 'rgba(0,0,0,.25)';
     ctx.beginPath(); ctx.ellipse(cx, cy + R * 0.95, R * 0.8, R * 0.12, 0, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
+    const bk = wheelBurstK(w);
+    if (bk >= 0) drawRedBurst(cx, cy, R, bk, t);       // 紅輪：彈出同時聖火在周圍炸開（先畫在轉盤後面）
     wheelPopNow = d.hi !== null ? wheelPopInfo(w) : null;
     drawWheelDisc(cx, cy, R, w.kind, w.segs, w.angle, d.hi, t, d.cur && wheelPhase === 'spin', antic);
     wheelPopNow = null;
+    const fk = d.hi !== null ? wheelFireK(w) : 0;
+    if (fk > 0) drawSegFire(cx, cy, R, wheelSegCenterDeg(w.idx, w.angle), fk, t);   // 高倍數：該格周圍燃火
+    if (bk >= 0) drawRedBurst(cx, cy, R, bk, t, true);  // 炸開的火星蓋在轉盤上
     if (d.label) {
       ctx.save();
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -2673,9 +2856,18 @@ function drawCharacters() {
 const NX_SHOW_STATES = [STATE.WHEEL, STATE.WIN_SHOW, STATE.SCORE, STATE.BIGWIN];   // 轉盤停下 → 該局結算完
 function nxVisible() { return wheelAcc > 0 && NX_SHOW_STATES.indexOf(currentState) >= 0; }
 function updateNxFade() {
-  if (wheelAcc > 0) nxShownVal = wheelAcc;           // 淡出時還顯示最後的倍數（下一局歸零也不變成 0X）
+  if (wheelAcc === 0) nxStale = true;
+  if (wheelAcc > 0) {
+    if (nxStale) { nxTierCur = -1; nxStale = false; }
+    nxShownVal = wheelAcc;                           // 淡出時還顯示最後的倍數（下一局歸零也不變成 0X）
+    const nt = nxTierOf(wheelAcc);
+    if (nt !== nxTierCur) { nxTierCur = nt; nxPlantT = nt >= 1 ? 0 : -1; if (nt >= 3) nxShakeT = 0; }
+  }
+  if (nxPlantT >= 0) nxPlantT++;
+  if (nxShakeT >= 0) { nxShakeT++; if (nxShakeT > TF(TIMING.nxShake)) nxShakeT = -1; }
   const step = 1 / Math.max(1, TF(TIMING.nxFade));
   nxFadeK = nxVisible() ? Math.min(1, nxFadeK + step) : Math.max(0, nxFadeK - step);
+  if (nxFadeK === 0 && wheelAcc === 0) { nxTierCur = 0; nxPlantT = -1; }
   if (nxPopT >= 0) { nxPopT++; if (nxPopT > 24) nxPopT = -1; }
 }
 function drawLogo() {
@@ -2695,13 +2887,74 @@ function drawLogo() {
     ctx.fillText(LOGO_SUB, o.x, o.y + 24);
   }
   if (k > 0 && nxShownVal > 0) {                                               // 倍數：同一匾額中央淡入、更新時就地跳動
-    const pop = nxPopT >= 0 ? 1 + 0.35 * Math.sin(Math.PI * Math.min(1, nxPopT / 24)) : 1;
+    const fx = nxLogoFx();
+    if (fx.plant !== 'none') drawNxPlants(o.x, o.y, fx.plant === 'gold', fx.berries, fx.grow, k);
+    const pk = nxPopT >= 0 ? Math.min(1, nxPopT / 24) : 1;
+    const pop = fx.tier === 0
+      ? (0.55 + 0.45 * k) * (nxPopT >= 0 ? 1 + 0.12 * Math.sin(Math.PI * pk) : 1)       // <25：縮放出現
+      : fx.scale * (nxPopT >= 0 ? 1 + 0.35 * Math.sin(Math.PI * pk) : 1);              // 25 起：彈出（101 起放大 130%）
     ctx.globalAlpha = k;
     ctx.translate(o.x, o.y); ctx.scale(pop, pop);
     ctx.font = 'bold ' + NX_FONT_PX + 'px Arial, sans-serif';
     ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 16;
     textOutline(nxShownVal + 'X', 0, 0, '#fde047', '#7c2d12', 7);
   }
+  ctx.restore();
+}
+// 倍數欄位分級（使用者 2026-10-19，看當下累計倍數）：0＝<25 縮放出現；1＝25～100 彈出＋翠綠植栽；
+// 2＝101～200 彈出放大 130%＋金色植栽；3＝>200 再加一次性畫面震動＋小紅果
+function nxTierOf(v) { return v >= FX.nxT3 ? 3 : v >= FX.nxT2 ? 2 : v >= FX.nxT1 ? 1 : 0; }
+function nxLogoFx() {
+  const tier = nxTierCur;
+  return { tier: tier, plant: tier >= 2 ? 'gold' : tier === 1 ? 'green' : 'none', berries: tier >= 3,
+    scale: tier >= 2 ? FX.nxBigScale : 1, shaking: nxShakeT >= 0,
+    grow: nxPlantT >= 0 ? Math.min(1, nxPlantT / Math.max(1, TF(TIMING.plantGrow))) : 0 };
+}
+function nxShakeOffset() {
+  if (nxShakeT < 0 || FX.nxShakeAmp <= 0) return [0, 0];
+  const k = nxShakeT / Math.max(1, TF(TIMING.nxShake)), a = FX.nxShakeAmp * (1 - k);
+  return [Math.sin(nxShakeT * 1.9) * a, Math.cos(nxShakeT * 2.7) * a * 0.6];
+}
+// 匾額兩側植栽：枝條從匾額外側（月桂葉之外）往外上方長出、葉片左右交錯展開；金色版＋小紅果串（程式繪製，不用 AI 素材）
+function drawNxPlants(x, y, gold, berries, grow, alpha) {
+  if (grow <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = Math.min(1, alpha);
+  const stem = gold ? '#a16207' : '#15803d', leaf = gold ? '#facc15' : '#22c55e';
+  const vein = gold ? '#fef9c3' : '#bbf7d0', edge = gold ? '#854d0e' : '#14532d';
+  [-1, 1].forEach(side => {
+    const p0 = [x + side * 176, y + 38], pc = [x + side * 262, y + 44], p1 = [x + side * 268, y - 34];
+    const B = f => [(1 - f) * (1 - f) * p0[0] + 2 * (1 - f) * f * pc[0] + f * f * p1[0],
+                    (1 - f) * (1 - f) * p0[1] + 2 * (1 - f) * f * pc[1] + f * f * p1[1]];
+    const tan = f => { const a = B(Math.max(0, f - 0.02)), b = B(Math.min(1, f + 0.02)); return Math.atan2(b[1] - a[1], b[0] - a[0]); };
+    ctx.strokeStyle = stem; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (let q = 0; q <= 20; q++) { const f = grow * q / 20, b = B(f); if (q) ctx.lineTo(b[0], b[1]); else ctx.moveTo(b[0], b[1]); }
+    ctx.stroke();
+    [0.16, 0.3, 0.44, 0.58, 0.72, 0.86, 1.0].forEach((f, i) => {
+      if (f > grow + 0.001) return;
+      const lk = Math.min(1, (grow - f) * 5 + 0.35), L = 17 * lk, Wd = 7 * lk;
+      const b = B(f), ang = tan(f) + (i % 2 ? 1 : -1) * 0.95 * side;
+      ctx.save(); ctx.translate(b[0], b[1]); ctx.rotate(ang);
+      ctx.fillStyle = leaf; ctx.strokeStyle = edge; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.ellipse(L * 0.55, 0, L * 0.6, Wd, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = vein; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(L * 0.05, 0); ctx.lineTo(L * 1.05, 0); ctx.stroke();
+      ctx.restore();
+    });
+    if (berries) {                                    // 小紅果串（>200 倍）
+      [0.5, 0.78, 1.0].forEach((f, n) => {
+        if (f > grow + 0.001) return;
+        const b = B(f);
+        [[0, 9], [-5, 14], [5, 14]].forEach(o => {
+          const bx = b[0] + o[0] * side, by = b[1] + o[1];
+          ctx.fillStyle = '#dc2626'; ctx.strokeStyle = '#7f1d1d'; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.arc(bx, by, 5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+          ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(bx - 1.6, by - 1.8, 1.6, 0, Math.PI * 2); ctx.fill();
+        });
+      });
+    }
+  });
   ctx.restore();
 }
 const NX_FONT_PX = 46;                                                         // 匾額內倍數字高（不超出匾額）
@@ -2711,6 +2964,15 @@ function activeWheelCell() {
   const keys = {};
   wheelDrawList().forEach(d => { keys[d.w.c + ',' + d.w.r] = 1; });
   return keys;
+}
+// 凸顯聖火（使用者 2026-10-19）：盤面旋轉時聖火炬以外的圖示壓暗；聖火炬出現時整體放大 30%
+function spinDimAlpha(id, used) {
+  if (currentState !== STATE.SPINNING) return 1;
+  return (id >= SIX_ID && !used) ? 1 : FX.spinDim;
+}
+function sixLandScale(c) {
+  if (landT[c] < 0) return 1;
+  return 1 + FX.landPop * Math.sin(Math.PI * Math.min(1, landT[c] / Math.max(1, TF(TIMING.sixLand))));
 }
 function winPhaseOn() {
   return (currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause))
@@ -2732,7 +2994,9 @@ function drawBoard() {
     for (let c = 0; c < COLS; c++) for (let r = 0; r < ROWS; r++) {
       const old = spinOldBoard[c] && spinOldBoard[c][r];
       if (!old) continue;
+      ctx.save(); ctx.globalAlpha = spinDimAlpha(old.id, old.used);
       drawReelSymbol(old.id, GRID_X + c * CELL_SIZE, GRID_Y + r * CELL_SIZE + (spinOldDrops[c] || 0), 1, old.used);
+      ctx.restore();
     }
   }
   const skipKeys = activeWheelCell();
@@ -2756,12 +3020,10 @@ function drawBoard() {
       const y = top + colOff + cellOff + cell.yOffset + bnc;
       const isWin = showWin && winCells.has(c + ',' + r);
       let sc = cell.scale;
-      if (landT[c] >= 0 && cell.id >= SIX_ID && !cell.used) {     // 聖火炬落地演繹
-        sc *= 1 + FX.landPop * Math.sin(Math.PI * Math.min(1, landT[c] / TF(TIMING.sixLand)));
-      }
+      if (landT[c] >= 0 && cell.id >= SIX_ID && !cell.used) sc *= sixLandScale(c);   // 聖火炬出現：整體放大 30%
       if (isWin && zoom > 1) sc *= 1 + (zoom - 1) * (0.6 + 0.4 * Math.sin(nowT() / 90));
       ctx.save();
-      ctx.globalAlpha = showWin && !isWin ? FX.dimAlpha : 1;
+      ctx.globalAlpha = Math.min(showWin && !isWin ? FX.dimAlpha : 1, spinDimAlpha(cell.id, cell.used));
       if (spinning || (REEL_MODE === 'cell' && bnc > 0.5)) {
         ctx.beginPath(); ctx.rect(x, top, CELL_SIZE, CELL_SIZE); ctx.clip();
       }
@@ -3262,7 +3524,7 @@ function drawUI() {
 function forceMenuRect() {
   const ux = LAYOUT.bottomUI.x, uy = LAYOUT.bottomUI.y;
   const opts = forceMenuOptions();
-  const cols = 4, itemH = 30, itemW = 124, gap = 4;
+  const cols = 5, itemH = 30, itemW = 116, gap = 4;
   const rows = Math.ceil(opts.length / cols);
   const totalH = rows * (itemH + gap) + 30;
   const mx0 = 12 + ux, my0 = (uy + 13) - totalH - 4;
@@ -3374,11 +3636,16 @@ function draw() {
   const bgImg = isFGScene()
     ? ((lvScene === 3 && sceneImgs.bgUFG) || (lvScene === 2 && sceneImgs.bgSFG) || sceneImgs.bgFG || sceneImgs.bg)
     : sceneImgs.bg;
+  const cam = cameraNow(), shk = nxShakeOffset();
+  ctx.save();                                   // 拉近鏡頭＋倍數 >200 一次性震動：只套場景層（公版面板、選單不動）
+  ctx.translate(shk[0], shk[1]);
+  if (cam.z > 1) { ctx.translate(cam.cx, cam.cy); ctx.scale(cam.z, cam.z); ctx.translate(-cam.cx, -cam.cy); }
   if (!drawArtCell(bgImg, 0, 0, W, H, 0)) drawScene();
   drawCharacters();
   drawBoard();
   drawLogo();
   drawWheels();
+  ctx.restore();
   drawScorePanel();
   drawFGCounter();
   drawBuyBtn();
@@ -3442,7 +3709,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 8;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
+const TUNE_VERSION = 9;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
@@ -4278,16 +4545,19 @@ function rhythmTimeline(T, kind, tier) {
 
 // 連線型的時間軸：停輪 →（轉盤）→ 中獎停頓 → 圖示中獎演繹（不畫得分線）→ 得分數字（10 倍以上跑分）→ 停留 →（大獎）→ 局間
 function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
-  const nW = kind === 'wheel3' ? 3 : kind === 'wheel2' ? 2 : kind === 'wheel' ? 1 : 0;   // wheel3 情境：第 3 個停乘號
+  const nW = kind === 'wheel3' ? 3 : kind === 'wheel2' ? 2 : (kind === 'wheel' || kind === 'wheelZoom') ? 1 : 0;   // wheel3：第 3 個停乘號；wheelZoom：紅輪停 250
+  const zoomSc = kind === 'wheelZoom';
   if (nW) {
     segs.push({ t0: t, dur: T.sixLand, text: '聖火炬落地演繹(' + R1(T.sixLand) + 's)', fill: 'symbol' });
     t += T.sixLand;
     for (let i = 0; i < nW; i++) {
       const tag = nW > 1 ? '第' + (i + 1) + '個' : '';
       if (i > 0) marks.push({ t: t, text: '前一個轉盤維持放大停轉，開' + tag + '轉盤' });
-      segs.push({ t0: t, dur: T.wheelIntro, text: tag + '轉盤登場(' + R1(T.wheelIntro) + 's)', fill: 'line' });
+      segs.push({ t0: t, dur: T.wheelIntro, text: tag + (zoomSc ? '紅輪' : '轉盤') + '登場(' + R1(T.wheelIntro) + 's)', fill: 'line' });
+      if (zoomSc) segs.push({ t0: t, dur: T.redBurst, text: '紅輪聖火炸開(' + R1(T.redBurst) + 's)', fill: 'big' });
       t += T.wheelIntro;
       segs.push({ t0: t, dur: T.wheelSpin, text: tag + '轉盤轉動(' + R1(T.wheelSpin) + 's)', fill: 'reel' });
+      if (zoomSc) segs.push({ t0: t + T.wheelSpin - T.zoomIn, dur: T.zoomIn, text: '鏡頭拉近(' + R1(T.zoomIn) + 's)', fill: 'gap' });
       t += T.wheelSpin;
       if (nW >= 3 && i === nW - 1 && T.wheelSlow3 > 0) {
         segs.push({ t0: t, dur: T.wheelSlow3, text: '第3個減速延長(' + R1(T.wheelSlow3) + 's)', fill: 'stop' });
@@ -4299,6 +4569,17 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       skips.push(t);
       segs.push({ t0: t, dur: T.wheelPop, text: (mulHere ? '乘號強回饋：聖火＋倍數格大彈＋光效(' : '停定彈跳：聖火＋倍數格(') + R1(T.wheelPop) + 's)', fill: mulHere ? 'big' : 'symbol' });
       if (i === 0) segs.push({ t0: t, dur: T.nxFade, text: 'LOGO淡出→倍數淡入(' + R1(T.nxFade) + 's)', fill: 'score' });
+      if (zoomSc) {
+        segs.push({ t0: t, dur: T.zoomHold, text: '維持拉近＋該格燃火(' + R1(T.zoomHold) + 's)', fill: 'big' });
+        segs.push({ t0: t + T.zoomHold, dur: T.zoomOut, text: '鏡頭退回(' + R1(T.zoomOut) + 's)', fill: 'gap' });
+        segs.push({ t0: t, dur: T.plantGrow, text: '倍數>200：彈出130%＋震動＋金植栽紅果(' + R1(T.plantGrow) + 's)', fill: 'score' });
+        const rs = Math.max(T.wheelResult, T.zoomHold + T.zoomOut);
+        segs.push({ t0: t, dur: rs, text: '結果停留(' + R1(rs) + 's)', fill: 'lineHold' });
+        t += rs;
+        notes.push('高倍數：加法 25～100、×10 停下後該格燃火；加法 250／500、×15／×20 停下前鏡頭拉近、停後燃火再退回。');
+        notes.push('倍數欄位：<25 縮放出現；25～100 彈出＋翠綠植栽；101～200 放大 130%＋金色植栽；>200 再加一次性畫面震動＋紅果。');
+        continue;
+      }
       segs.push({ t0: t, dur: T.wheelResult, text: tag + '結果停留' + (i < nW - 1 ? '（維持放大）' : '') + '(' + R1(T.wheelResult) + 's)', fill: 'lineHold' });
       t += T.wheelResult;
     }
@@ -4385,6 +4666,8 @@ function sheetGantt() {
       title: m[0] + ' 一般：2 個藍輪（第 1 個停轉維持放大→開第 2 個→一起收合）' });
     scenarios.push({ T: m[1], kind: 'wheel3', tier: RHYTHM_TIERS[0],
       title: m[0] + ' 一般：3 個藍輪（第 3 個減速延長、停乘號強回饋）' });
+    scenarios.push({ T: m[1], kind: 'wheelZoom', tier: RHYTHM_TIERS[0],
+      title: m[0] + ' FG：1 個紅輪停 250 倍（聖火炸開→鏡頭拉近→燃火→退回）' });
   });
 
   scenarios.forEach(sc => {
@@ -4814,7 +5097,7 @@ function toFG(level, force) {
 }
 const atWheel = (i, ph, frac) => () => currentState === STATE.WHEEL && wheelIdx === i && wheelPhase === ph
   && (frac === undefined || stateTimer >= Math.round(frac * ({ intro: TF(TIMING.wheelIntro), spin: wheelSpinFrames(wheels[i]),
-    result: TF(TIMING.wheelResult), collapse: TF(TIMING.wheelCollapse) })[ph]));
+    result: wheelResultFrames(wheels[i]), collapse: TF(TIMING.wheelCollapse) })[ph]));
 const SHOT_PRESETS = {
   idle:          () => {},
   spinning:      () => { forceSpinType = null; startSpin(); for (let i = 0; i < 26; i++) update(); },
@@ -4823,6 +5106,17 @@ const SHOT_PRESETS = {
   wheelSpin:     () => spinWith('ng1add', atWheel(0, 'spin', 0.5)),
   wheelResult:   () => spinWith('ng1add', atWheel(0, 'result', 0.5)),
   wheelMul:      () => spinWith('ng1mul', atWheel(0, 'result', 0.5)),
+  spinDim:       () => spinWith('ng3mix', () => currentState === STATE.SPINNING && landT[2] >= 4),   // 旋轉中：聖火炬以外壓暗
+  sixPop:        () => spinWith('ng3mix', () => currentState === STATE.SPINNING && landT[2] >= Math.round(TF(TIMING.sixLand) / 2)),   // 聖火炬出現放大 30%
+  redBurst:      () => { toFG(1, 'fgG1'); startSpin(); runUntil(atWheel(0, 'intro', 0.5)); },   // 紅輪彈出聖火炸開
+  wheelFire:     () => spinWith('v100', atWheel(0, 'result', 0.8)),     // 燃火段：該格燃火
+  wheelZoomIn:   () => spinWith('v250', atWheel(0, 'spin', 0.85)),      // 拉近段：停下前鏡頭拉近中
+  wheelZoomFire: () => spinWith('v250', atWheel(0, 'result', 0.3)),     // 拉近＋燃火
+  nxTier0:       () => spinWith('v10', atWheel(0, 'result', 0.9)),      // 倍數 <25：縮放出現
+  nxTier1:       () => spinWith('v50', atWheel(0, 'result', 0.95)),     // 25～100：彈出＋翠綠植栽
+  nxTier2:       () => spinWith('nx150', () => currentState === STATE.WHEEL && wheelIdx === 1 && wheelPhase === 'result' && stateTimer >= 28),   // 101～200：放大 130%＋金色植栽
+  nxTier3:       () => spinWith('nx250', () => currentState === STATE.WHEEL && wheelIdx === 1 && wheelPhase === 'result' && stateTimer >= 29),   // >200：金植栽＋紅果（震動已過）
+  nxShakeMid:    () => spinWith('nx250', () => currentState === STATE.WHEEL && wheelIdx === 1 && wheelPhase === 'result' && stateTimer >= 6),    // >200：震動中
   wheelStopPop:  () => spinWith('ng1add', atWheel(0, 'result', 0.2)),   // 停定彈跳最大：聖火＋選中格同時放大、其餘壓灰
   wheelMulPop:   () => spinWith('ng1mul', atWheel(0, 'result', 0.2)),   // 停在乘號：彈更大＋光效
   wheel3Slow:    () => spinWith('ng3mix', atWheel(2, 'spin', 0.85)),    // 第 3 個轉盤減速延長中
