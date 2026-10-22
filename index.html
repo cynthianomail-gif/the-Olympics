@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-31';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-37';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -300,14 +300,14 @@ let REEL_MODE = DEFAULT_REEL_MODE;
 const SYMBOLS = [
   // 圖示：emoji（＋小配件 sub）或程式繪製（draw）；不顯示名稱。武器副色為金黃，聖物為銀藍。
   { name: '白鴿',       emoji: '🕊️', color: '#4f8ec9', tier: 'hi', bg: ['#1e3a5f', '#0b172b'] },   // 最高分：展翅白鴿（2026-10-22）
-  { name: '天使之劍',   emoji: '🗡️', color: '#b58b33', tier: 'hi' },   // 15 倍武器組（2026-10-21 天使版圖示）
-  { name: '天使之書',   emoji: '📖', color: '#b58b33', tier: 'hi' },   // 15 倍武器組（2026-10-22 愛心弓箭→僧侶書→天使之書；組名待使用者決定）
+  { name: '天使之劍',   emoji: '🗡️', color: '#b58b33', tier: 'hi' },   // 15 倍武器組（2026-10-21 天使版圖示）；2026-10-22 換銀大劍愛心版（嘗試/天使之劍_銀大劍愛心.png，水平翻轉）
+  { name: '天使之書',   emoji: '📖', color: '#b58b33', tier: 'hi' },   // 15 倍武器組（2026-10-22 愛心弓箭→僧侶書→天使之書；組名待使用者決定）；2026-10-22 換銀魔法書愛心版（嘗試/天使之書_銀魔法書愛心.png）
   { name: '聖盾',       emoji: '🛡️', color: '#64748b', tier: 'hi' },   // 10 倍聖物組
   { name: '聖水瓶',     emoji: '🧴', color: '#64748b', tier: 'hi' },   // 10 倍聖物組
   { name: '羽毛',       emoji: '🪶', color: '#8a7f6e', tier: 'lo' },   // 低分：土棕灰低飽和（配暖色低分圖示；2026-10-22 橄欖樹枝換羽毛）
   { name: '卷軸',       emoji: '📜', color: '#7c6f5d', tier: 'lo' },
   { name: '蠟燭',       emoji: '🕯️', color: '#8b7765', tier: 'lo' },
-  { name: '愛心髮夾',   emoji: '💗', color: '#7a6a58', tier: 'lo' },   // 2026-10-22 雙耳陶瓶換愛心髮夾
+  { name: '皮帶',       emoji: '🪢', color: '#7a6a58', tier: 'lo' },   // 2026-10-22 雙耳陶瓶換愛心髮夾 → 再換皮帶（嘗試/L_皮帶C_歪斜.png 逆轉 27.5° 轉正、圓形銅扣，對應兩位天使的腰帶）
   { name: '小皮靴',     emoji: '👢', color: '#6f6a60', tier: 'lo' },   // 2026-10-22 書本換小皮靴
   { name: '紫十字架',   emoji: '✝️', color: '#1d4ed8', wheel: 'blue' },   // 觸發圖示（落地後變藍輪）；程式退回版 emoji ✝️（2026-10-22 由寶石之翼換成）
   { name: '金十字架',   emoji: '✝️', color: '#7c3aed', wheel: 'gold' },   // 觸發圖示（kind 'gold'＝紅輪）；程式退回版 emoji ✝️（2026-10-22 由寶石之翼換成）
@@ -725,7 +725,7 @@ const ICON_META = [
     ['iconGold', '白鴿', 0.5, 2.0, 0.01, { hint: '最高分：白鴿（盤面與賠率表一起套用）' }],
     ['iconHigh', '武器組', 0.5, 2.0, 0.01, { hint: '15 倍武器組：天使之劍／天使之書' }],
     ['iconMid', '聖物組', 0.5, 2.0, 0.01, { hint: '10 倍聖物組：聖盾／聖水瓶' }],
-    ['iconLow', '低分', 0.5, 2.0, 0.01, { hint: '低分 5 個：羽毛／卷軸／蠟燭／愛心髮夾／小皮靴' }],
+    ['iconLow', '低分', 0.5, 2.0, 0.01, { hint: '低分 5 個：羽毛／卷軸／蠟燭／皮帶／小皮靴' }],
     ['iconSix', '十字架', 0.5, 2.0, 0.01, { hint: '金／紫十字架（落地放大 30% 疊在這個之上）' }] ] },
 ];
 function iconTierKey(id) { return id === 0 ? 'iconGold' : id <= 2 ? 'iconHigh' : id <= 4 ? 'iconMid' : id <= 9 ? 'iconLow' : 'iconSix'; }
@@ -1069,7 +1069,7 @@ function syncLayoutDerived() {
  * 區塊 3：美術載入（assets 圖檔優先；缺件時使用程式退回版）
  * ========================================================== */
 const ART = {
-  sym: SYMBOLS.map((s, i) => 'assets/icon_' + i + '.png?v=holy-15'),
+  sym: SYMBOLS.map((s, i) => 'assets/icon_' + i + '.png?v=holy-37'),
   bg:  'assets/bg.png',
   bgFG: 'assets/bg_fg.png',
   frame: 'assets/frame.png',
@@ -1138,8 +1138,8 @@ function loadTintArt() {
   const jobs = [];
   TINT_SLOTS.forEach(t => t.ids.forEach(id => {
     const o = TINT_ART[id] = {};
-    jobs.push(_loadImg('assets/tint/icon_' + id + '_gray.png?v=holy-12').then(im => { o.gray = im; }));
-    jobs.push(_loadImg('assets/tint/icon_' + id + '_mask.png?v=holy-12').then(im => { o.mask = im; }));
+    jobs.push(_loadImg('assets/tint/icon_' + id + '_gray.png?v=holy-37').then(im => { o.gray = im; }));
+    jobs.push(_loadImg('assets/tint/icon_' + id + '_mask.png?v=holy-37').then(im => { o.mask = im; }));
   }));
   return Promise.all(jobs);
 }
@@ -1450,7 +1450,7 @@ function forcedWheels(force) {
   }
   return null;
 }
-// 固定牌型（得分級距測試用，兩個模式都生效）：第 1 輪用 {羽毛,卷軸,蠟燭,愛心髮夾}、第 3 輪起用別的圖示
+// 固定牌型（得分級距測試用，兩個模式都生效）：第 1 輪用 {羽毛,卷軸,蠟燭,皮帶}、第 3 輪起用別的圖示
 // → 除了刻意種的線之外，任何線都湊不到 3 連（結果可重現）
 const LINE_FORCES = {
   small: [[1, 1, 3]],                 // 天使之劍 3 連（第 2 列）＝2 倍：得分數字等級 1，不跑分
