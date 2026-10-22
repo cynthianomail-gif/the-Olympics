@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-28';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-31';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -383,6 +383,8 @@ const DEFAULT_TIMING = {
   landBounce:       0.12,   // 每輪停止後 0.2s 回彈（企劃 §節奏表 M28）
   sixLand:      0.55,   // 十字架落地演繹（公版預設）；沒有連線得分時＝停輪→展開輪盤
   wheelAfterWin:    0.55,   // 有連線得分時：連線得分跑完→展開輪盤（含最後 0.25 十字架脈動；使用者 2026-10-22）
+  sixPopTime:       0.18,   // 十字架落地快速縮放一下的時長（使用者 2026-10-22：原本綁 sixLand 0.55 太慢）
+  wheelLeave:       0.80,   // 下一局開轉：上一局轉盤往下掉出＋縮小淡出的時長（每輪；使用者 2026-10-22 要比舊圖示慢）
   wheelIntro:       0.40,   // 轉盤登場（變一格→放大）；與 wheelSpin 合計 4.2（§8.4 紅盤 n=5）
   wheelSpin:        4.18,   // 轉盤轉動到停
   wheelResult:      1.31,   // 轉盤結果停留（公版預設）
@@ -440,7 +442,9 @@ const TIMING_META = [
     ['spinDropIn', '新圖示掉入', { hint: '掉落式：新圖示由上往下掉入落定。預設＝競品實測 0.22s', modes: ['drop'] }],
     ['landBounce', '落定回彈', { hint: '每輪停止後回彈時長（企劃節奏表：0.2s）；深度在特效分頁' }] ] },
   { group: '轉盤', items: [
-    ['sixLand', '無得分：停輪→輪盤', { hint: '沒有連線得分時：全部輪停後→十字架脈動結束、展開輪盤（等 0.30＋脈動 0.25；競品實測 0.55）。也是十字架落地放大的時長' }],
+    ['sixLand', '無得分：停輪→輪盤', { hint: '沒有連線得分時：全部輪停後→十字架脈動結束、展開輪盤（等 0.30＋脈動 0.25；競品實測 0.55）' }],
+    ['sixPopTime', '十字架落地縮放', 0, 1, 0.01, { hint: '十字架掉下來落地時快速放大縮回一下的時長；縮完接「停輪→輪盤」的間隔，再展開輪盤' }],
+    ['wheelLeave', '轉盤掉出', 0, 3, 0.05, { hint: '下一局開轉時，上一局的轉盤跟著該輪往下掉出盤面、同時縮小淡出的時長（每輪；左到右照滾輪啟動錯開）' }],
     ['wheelAfterWin', '有得分：結算→輪盤', { hint: '有連線得分時：先演連線得分＋跑連線分數，跑完→十字架脈動結束、展開輪盤（最後 0.25 是十字架脈動；使用者 2026-10-22）' }],
     ['wheelIntro', '轉盤登場', { hint: '十字架變成一格大小的轉盤→放大到約 2 格（與轉動合計＝競品實測 4.2s）' }],
     ['wheelSpin', '轉盤轉動', 0, 10, 0.05, { hint: '轉盤轉動、逐漸減速停下，指針指到的格即選中（每個轉盤各一次）' }],
@@ -494,7 +498,7 @@ const TIMING_META = [
 const DEFAULT_TIMING_START = {
   reelStartDelay: 0, reelFirstStop: 0, reelStopInterval: 0.86, reelSpeed: 0,
   cellStagger: 0.86, spinClear: 0, spinDropIn: 0.64, landBounce: 0.86,
-  sixLand: 0, wheelAfterWin: 0, wheelIntro: 0.55, wheelSpin: 0.95, wheelResult: 5.13, nxFade: 6.44, wheelNextGap: 6.44, buySixLand: 0, buyWheelIntro: 0.62, buyWheelSpin: 0.98, buyWheelResult: 1.33, buyWheelPop: 1.78, buyWheelGap: 0.37, buyWheelEnd: 2.21, wheelPop: 6.44, wheelSlow3: 5.13, redBurst: 0.55, zoomIn: 4.13, zoomHold: 6.44, zoomOut: 7.04, plantGrow: 6.44, nxShake: 6.44,
+  sixLand: 0, wheelAfterWin: 0, wheelLeave: 0, sixPopTime: 0, wheelIntro: 0.55, wheelSpin: 0.95, wheelResult: 5.13, nxFade: 6.44, wheelNextGap: 6.44, buySixLand: 0, buyWheelIntro: 0.62, buyWheelSpin: 0.98, buyWheelResult: 1.33, buyWheelPop: 1.78, buyWheelGap: 0.37, buyWheelEnd: 2.21, wheelPop: 6.44, wheelSlow3: 5.13, redBurst: 0.55, zoomIn: 4.13, zoomHold: 6.44, zoomOut: 7.04, plantGrow: 6.44, nxShake: 6.44,
   winPause: 0, winDisplay: 0.00, scoreHold: 0.90, scoreStay: 2.37,
   bigRunBig: 0, bigRunSuper: 0, bigRunMega: 0, bigRunEpic: 0, bigWinHold: 7.10, bigRunPre: 0, bigSwap: 3.48,
   fgIntroAnim: 0, dealDelay: 0.6, dealSpin: 1.37, dealResult: 7.04, promoteHold: 0,
@@ -514,6 +518,8 @@ const DEFAULT_TIMING_TURBO = {
   landBounce:       0.15,
   sixLand:      0.30,
   wheelAfterWin:    0.30,
+  wheelLeave:       0.40,
+  sixPopTime:       0.15,
   wheelIntro:       0.40,
   wheelSpin:        2.40,
   wheelResult:      0.40,
@@ -573,6 +579,8 @@ const RHYTHM_MAP = [
   ['spinDropIn',       '掉入',             '掉落式：新圖示由上往下掉入落定的持續時間',               null],
   ['landBounce',       '滾輪回彈時間',     '圖示落定後回彈到完全停止的持續時間（深度＝圖示 1/3）',   null],
   ['sixLand',      '無得分：停輪→輪盤',   '沒有連線得分時：全部輪停後→十字架脈動結束、展開輪盤（等 0.30＋脈動 0.25）', null],
+  ['sixPopTime',   '十字架落地縮放',    '十字架落地時快速放大縮回的持續時間', null],
+  ['wheelLeave',   '轉盤掉出',          '下一局開轉時，上一局的轉盤往下掉出盤面並縮小淡出的持續時間（每輪）', null],
   ['wheelAfterWin', '有得分：結算→輪盤',  '有連線得分時：連線得分跑完→十字架脈動結束、展開輪盤（最後 0.25 是十字架脈動）', null],
   ['wheelIntro',       '轉盤登場演繹',     '十字架變成轉盤並放大到約 2 格寬的持續時間',             null],
   ['wheelSpin',        '轉盤轉動演繹',     '轉盤轉動到停下的持續時間（每個轉盤）',       null],
@@ -1533,6 +1541,8 @@ function startSpin() {
   }
   roundScore = 0;
   winLines = []; winCells = null; scorePanel = null;
+  leavingWheels = wheelsSettled() ? wheelDrawList().map(d => Object.assign({}, d, { col: d.w.c })) : [];   // 上一局的轉盤：往下掉出（wheelLeave）
+  leaveT = 0;
   wheels = []; wheelIdx = 0; wheelAcc = 0; nxPopT = -1; startCount = 0;
   lineWin = 0; wheelWin = 0; spinWin = 0; bigTier = 0; hasHitThisSpin = false;
   particles = []; floatTexts = [];
@@ -2163,7 +2173,7 @@ function update() {
       colBounceT[c]++;
       if (colBounceT[c] > TF(TIMING.landBounce)) { colBounceT[c] = -1; colBounce[c] = 0; }
     } else colBounce[c] = 0;
-    if (landT[c] >= 0) { landT[c]++; if (landT[c] > TF(TIMING.sixLand)) landT[c] = -1; }
+    if (landT[c] >= 0) { landT[c]++; if (landT[c] > TF(TIMING.sixPopTime)) landT[c] = -1; }
   }
   updateNxFade();
   updateShakes();
@@ -2180,6 +2190,7 @@ function update() {
     return p.life < p.maxLife;
   });
   floatTexts = floatTexts.filter(f => { f.t++; return f.t < f.life; });
+  if (leavingWheels.length) leaveT++;
   // 盤面不震動：使用者 2026-10-19 拿掉大獎期間的盤面震動（大獎縮放、掃光、跑分照舊）
   shakeX = 0; shakeY = 0;
 
@@ -3150,30 +3161,35 @@ function drawAnticGlow(cx, cy, R, lv, t) {
 }
 // 紅輪聖火炸開：一圈火焰從轉盤邊緣往外噴、火星飛散（front＝只畫最外層火星）
 const BURST_MIN_R = 0.95;                         // 紅輪炸開火焰最內圈（相對 R，在格區外、不擋倍數字）
-function drawRedBurst(cx, cy, R, k, t, front) {
+function drawRedBurst(cx, cy, R, k, t, front) {   // 金輪彈出：金光擴散（使用者 2026-10-22 由火焰炸開換成）；front＝蓋在轉盤上的星光
   const amt = FX.burstAmt;
   if (amt <= 0) return;
+  const a = Math.min(1, (1 - k) * 1.3) * Math.min(1, amt);
   ctx.save();
   if (!front) {
-    ctx.globalAlpha = Math.min(1, (1 - k) * 1.2) * Math.min(1, amt);
-    const rg = ctx.createRadialGradient(cx, cy, R * 0.8, cx, cy, R * (1.3 + 0.7 * k));
-    rg.addColorStop(0, 'rgba(255,170,40,.75)'); rg.addColorStop(1, 'rgba(255,80,0,0)');
-    ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, R * (1.3 + 0.7 * k), 0, Math.PI * 2); ctx.fill();
-    const n = 16;
-    for (let i = 0; i < n; i++) {
-      const a = i * Math.PI * 2 / n + 0.2;
-      const rr = R * (BURST_MIN_R + 0.55 * k), h = R * (0.55 * (1 - k) + 0.12) * amt * (0.8 + 0.3 * Math.sin(i * 1.7 + t * 0.4));
-      ctx.save();
-      ctx.translate(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); ctx.rotate(a + Math.PI / 2);
-      drawFlame(0, 0, h, false, t + i);
-      ctx.restore();
+    const rOut = R * (1.2 + 1.0 * k);                // 柔光：由轉盤邊往外擴散
+    ctx.globalAlpha = a;
+    const rg = ctx.createRadialGradient(cx, cy, R * 0.6, cx, cy, rOut);
+    rg.addColorStop(0, 'rgba(255,248,200,.9)'); rg.addColorStop(0.5, 'rgba(253,224,71,.45)'); rg.addColorStop(1, 'rgba(253,224,71,0)');
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, rOut, 0, Math.PI * 2); ctx.fill();
+    ctx.globalCompositeOperation = 'lighter';         // 放射光束
+    ctx.fillStyle = 'rgba(255,236,150,' + (0.35 * a) + ')';
+    for (let i = 0; i < 16; i++) {
+      const ang = i * Math.PI * 2 / 16 + t * 0.01, len = R * (1.1 + 1.2 * k);
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, len, ang - 0.06, ang + 0.06); ctx.closePath(); ctx.fill();
     }
+    ctx.globalCompositeOperation = 'source-over';     // 擴散光環
+    ctx.strokeStyle = 'rgba(255,236,150,' + a + ')'; ctx.lineWidth = Math.max(2, R * 0.06 * (1 - k));
+    ctx.shadowColor = '#fde047'; ctx.shadowBlur = 20;
+    ctx.beginPath(); ctx.arc(cx, cy, R * (1.0 + 1.1 * k), 0, Math.PI * 2); ctx.stroke();
   } else {
-    ctx.globalAlpha = Math.max(0, 1 - k);
-    for (let i = 0; i < 28; i++) {
-      const a = i * 2.39996, rr = R * (1.0 + 1.1 * k * (0.6 + 0.4 * ((i * 37) % 10) / 10));
-      ctx.fillStyle = i % 3 ? '#fdba74' : '#fef08a';
-      ctx.beginPath(); ctx.arc(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, 3 + 3 * (1 - k), 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = Math.max(0, 1 - k);             // 金色四角星光往外飛
+    for (let i = 0; i < 24; i++) {
+      const ang = i * 2.39996, rr = R * (0.95 + 1.2 * k * (0.6 + 0.4 * ((i * 37) % 10) / 10));
+      const x = cx + Math.cos(ang) * rr, y = cy + Math.sin(ang) * rr, sz = Math.max(3, R * 0.05) * (0.6 + 0.6 * (1 - k));
+      ctx.fillStyle = i % 3 ? '#fde047' : '#fffbe6';
+      ctx.beginPath(); ctx.moveTo(x, y - sz); ctx.lineTo(x + sz * 0.28, y - sz * 0.28); ctx.lineTo(x + sz, y); ctx.lineTo(x + sz * 0.28, y + sz * 0.28);
+      ctx.lineTo(x, y + sz); ctx.lineTo(x - sz * 0.28, y + sz * 0.28); ctx.lineTo(x - sz, y); ctx.lineTo(x - sz * 0.28, y - sz * 0.28); ctx.closePath(); ctx.fill();
     }
   }
   ctx.restore();
@@ -3254,10 +3270,32 @@ function wheelDrawList() {
   }
   return out;
 }
+// 下一局開轉時上一局的轉盤（使用者 2026-10-22：不要秒收）：跟著該輪舊圖示一起往下掉出盤面，同時縮小、淡出
+let leavingWheels = [], leaveT = 0;               // leaveT：開轉後經過的幀數（update 裡累加）
+function leaveWheelP(col) {                       // 0～1：該輪轉盤掉出進度；時長＝TIMING.wheelLeave，左到右照滾輪啟動錯開
+  return Math.max(0, Math.min(1, (leaveT - FR(TIMING.reelStartDelay) * col) / Math.max(1, TF(TIMING.wheelLeave))));
+}
+function drawLeavingWheels(t) {
+  if ((currentState !== STATE.SPINNING && currentState !== STATE.POSTSTOP) || !leavingWheels.length) { leavingWheels = []; return; }
+  if (leavingWheels.every(d => leaveWheelP(d.col) >= 1)) { leavingWheels = []; return; }
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0, 0, ctx.canvas.width, GRID_Y + GRID_H); ctx.clip();   // 掉到盤面下緣就看不到
+  leavingWheels.forEach(d => {
+    const p = leaveWheelP(d.col);
+    if (p >= 1) return;
+    const dy = (GRID_H + CELL_SIZE) * p * p;          // 跟舊圖示同樣的加速掉落曲線
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, 1 - p);
+    drawWheelDisc(d.cx, d.cy + dy, d.R * (1 - 0.45 * p), d.w.kind, d.w.segs, d.w.angle, d.hi, t, false, 0);
+    ctx.restore();
+  });
+  ctx.restore();
+}
 function drawWheels() {
+  const t = nowT() / 60;
+  drawLeavingWheels(t);
   const list = wheelDrawList();
   if (!list.length) return;
-  const t = nowT() / 60;
   list.forEach(d => {
     const w = d.w, cx = d.cx, cy = d.cy, R = d.R;
     // 觸發期待：已有轉盤停在聖火格，其餘藍輪轉動中 [企劃 §美術 E54]
@@ -3280,14 +3318,14 @@ function drawWheels() {
     ctx.beginPath(); ctx.ellipse(cx, cy + R * 0.95, R * 0.8, R * 0.12, 0, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
     const bk = wheelBurstK(w);
-    if (bk >= 0) drawRedBurst(cx, cy, R, bk, t);       // 紅輪：彈出同時聖火在周圍炸開（先畫在轉盤後面）
+    if (bk >= 0) drawRedBurst(cx, cy, R, bk, t);       // 金輪：彈出同時金光擴散（先畫在轉盤後面）
     wheelPopNow = d.hi !== null ? wheelPopInfo(w) : null;
     wheelAnticNow = anticLv;
     const fk = d.hi !== null ? wheelFireK(w) : 0;      // 高倍數：格邊框＋外圈燃燒（在 drawWheelDiscArt 裡、結果字之前畫）
     wheelBurnNow = fk > 0 ? { k: fk, kind: w.kind } : null;
     drawWheelDisc(cx, cy, R, w.kind, w.segs, w.angle, d.hi, t, d.cur && wheelPhase === 'spin', antic);
     wheelPopNow = null; wheelBurnNow = null; wheelAnticNow = 0;
-    if (bk >= 0) drawRedBurst(cx, cy, R, bk, t, true);  // 炸開的火星蓋在轉盤上
+    if (bk >= 0) drawRedBurst(cx, cy, R, bk, t, true);  // 金色星光蓋在轉盤上
     // 轉盤下方的「聖火！」與倍數字樣：使用者 2026-10-22 拿掉（倍數看 LOGO 匾額的 NX）
   });
 }
@@ -3526,7 +3564,7 @@ function activeWheelCell() {
 // 凸顯聖火（使用者 2026-10-19）：十字架出現時整體放大 30%。旋轉中壓暗其他圖示的功能已拿掉（使用者 2026-10-22）
 function sixLandScale(c) {
   if (landT[c] < 0) return 1;
-  return 1 + FX.landPop * Math.sin(Math.PI * Math.min(1, landT[c] / Math.max(1, TF(TIMING.sixLand))));
+  return 1 + FX.landPop * Math.sin(Math.PI * Math.min(1, landT[c] / Math.max(1, TF(TIMING.sixPopTime))));
 }
 // 圖示中獎演繹（美術需求 4H～9H）：白鴿／武器組／聖物組放大 20%、低分 10%；白鴿左右晃動＋雙翼刷光一次＋刷光；
 // 武器組（天使之劍／天使之書）、聖物組（聖盾／聖水瓶）＝通用放大＋刷光（2026-10-21 天使版：原本綁角色的抖動拿掉）；低分外框微光暈
@@ -3641,7 +3679,7 @@ function drawBoard() {
       if (wfx && wfx.sweep >= 0) drawIconSweep(cell.id, x, y, sc, wfx.sweep);
       if (wfx && wfx.flash > 0) drawIconFlash(x, y, sc * iconScaleOf(cell.id), wfx.flash);
       if (landT[c] >= 0 && cell.id >= SIX_ID && !cell.used) {     // 聖火登場：火焰猛烈燃燒一次（變亮；美術需求 15H／17H）
-        const fk = Math.sin(Math.PI * Math.min(1, landT[c] / Math.max(1, TF(TIMING.sixLand))));
+        const fk = Math.sin(Math.PI * Math.min(1, landT[c] / Math.max(1, TF(TIMING.sixPopTime))));
         ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.55 * fk * FX.sixFlare;
         drawReelSymbol(cell.id, x, y, sc, cell.used); ctx.restore();
       }
@@ -3655,7 +3693,7 @@ function drawBoard() {
     for (let r = 0; r < ROWS; r++) {
       const cell = board[c][r];
       if (!cell || cell.id < SIX_ID || cell.used) continue;
-      const k = Math.min(1, landT[c] / TF(TIMING.sixLand));
+      const k = Math.min(1, landT[c] / Math.max(1, TF(TIMING.sixPopTime)));
       ctx.save();
       ctx.globalAlpha = 1 - k;
       ctx.strokeStyle = cell.id === GOLD_ID ? '#fde047' : '#ffffff'; ctx.lineWidth = 4;
@@ -4367,7 +4405,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 22;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
+const TUNE_VERSION = 24;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
@@ -5972,7 +6010,8 @@ const SHOT_PRESETS = {
   wheelSpin:     () => spinWith('ng1add', atWheel(0, 'spin', 0.5)),
   wheelResult:   () => spinWith('ng1add', atNX(0, 5)),
   wheelMul:      () => spinWith('ng1mul', atNX(0, 5)),
-  sixPop:        () => spinWith('ng3mix', () => currentState === STATE.SPINNING && landT[2] >= Math.round(TF(TIMING.sixLand) / 2)),   // 十字架出現放大 30%
+  sixPop:        () => spinWith('ng3mix', () => currentState === STATE.SPINNING && landT[2] >= Math.round(TF(TIMING.sixPopTime) / 2)),   // 十字架出現放大 30%
+  wheelLeave:    () => { spinWith('ng3mix', () => currentState === STATE.IDLE); forceSpinType = null; startSpin(); for (let i = 0; i < 24; i++) update(); },   // 下一局開轉：上一局轉盤跟著舊盤面掉出、縮小淡出
   redBurst:      () => { toFG(1, 'fgG1'); startSpin(); runUntil(atWheel(0, 'intro', 0.5)); },   // 紅輪彈出聖火炸開
   wheelFire:     () => spinWith('v100', afterWheelsFor(20)),     // 燃火段：該格燃火
   wheelZoomIn:   () => spinWith('v250', atWheel(0, 'spin', 0.85)),      // 拉近段：停下前鏡頭拉近中
