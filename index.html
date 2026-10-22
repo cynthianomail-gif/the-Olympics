@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-37';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-38';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -308,7 +308,7 @@ const SYMBOLS = [
   { name: '卷軸',       emoji: '📜', color: '#7c6f5d', tier: 'lo' },
   { name: '蠟燭',       emoji: '🕯️', color: '#8b7765', tier: 'lo' },
   { name: '皮帶',       emoji: '🪢', color: '#7a6a58', tier: 'lo' },   // 2026-10-22 雙耳陶瓶換愛心髮夾 → 再換皮帶（嘗試/L_皮帶C_歪斜.png 逆轉 27.5° 轉正、圓形銅扣，對應兩位天使的腰帶）
-  { name: '小皮靴',     emoji: '👢', color: '#6f6a60', tier: 'lo' },   // 2026-10-22 書本換小皮靴
+  { name: '小皮靴',     emoji: '👢', color: '#6f6a60', tier: 'lo' },   // 2026-10-22 書本換小皮靴；同日拿掉腳踝扣環（嘗試/L_小皮靴_無扣環.png，和皮帶的銅扣區隔）
   { name: '紫十字架',   emoji: '✝️', color: '#1d4ed8', wheel: 'blue' },   // 觸發圖示（落地後變藍輪）；程式退回版 emoji ✝️（2026-10-22 由寶石之翼換成）
   { name: '金十字架',   emoji: '✝️', color: '#7c3aed', wheel: 'gold' },   // 觸發圖示（kind 'gold'＝紅輪）；程式退回版 emoji ✝️（2026-10-22 由寶石之翼換成）
 ];
@@ -1069,7 +1069,7 @@ function syncLayoutDerived() {
  * 區塊 3：美術載入（assets 圖檔優先；缺件時使用程式退回版）
  * ========================================================== */
 const ART = {
-  sym: SYMBOLS.map((s, i) => 'assets/icon_' + i + '.png?v=holy-37'),
+  sym: SYMBOLS.map((s, i) => 'assets/icon_' + i + '.png?v=holy-38'),
   bg:  'assets/bg.png',
   bgFG: 'assets/bg_fg.png',
   frame: 'assets/frame.png',
