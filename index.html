@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-38';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-42';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -305,10 +305,10 @@ const SYMBOLS = [
   { name: '聖盾',       emoji: '🛡️', color: '#64748b', tier: 'hi' },   // 10 倍聖物組
   { name: '聖水瓶',     emoji: '🧴', color: '#64748b', tier: 'hi' },   // 10 倍聖物組
   { name: '羽毛',       emoji: '🪶', color: '#8a7f6e', tier: 'lo' },   // 低分：土棕灰低飽和（配暖色低分圖示；2026-10-22 橄欖樹枝換羽毛）
-  { name: '卷軸',       emoji: '📜', color: '#7c6f5d', tier: 'lo' },
+  { name: '卷軸',       emoji: '📜', color: '#7c6f5d', tier: 'lo' },   // 2026-10-22 換使用者給的 L5_卷軸.png（暖黃版）
   { name: '蠟燭',       emoji: '🕯️', color: '#8b7765', tier: 'lo' },
-  { name: '皮帶',       emoji: '🪢', color: '#7a6a58', tier: 'lo' },   // 2026-10-22 雙耳陶瓶換愛心髮夾 → 再換皮帶（嘗試/L_皮帶C_歪斜.png 逆轉 27.5° 轉正、圓形銅扣，對應兩位天使的腰帶）
-  { name: '小皮靴',     emoji: '👢', color: '#6f6a60', tier: 'lo' },   // 2026-10-22 書本換小皮靴；同日拿掉腳踝扣環（嘗試/L_小皮靴_無扣環.png，和皮帶的銅扣區隔）
+  { name: '小鈴鐺',     emoji: '🔔', color: '#7a6a58', tier: 'lo' },   // 2026-10-22 雙耳陶瓶→愛心髮夾→皮帶→小鈴鐺（使用者給的 L2_小鈴鐺.png）
+  { name: '蝴蝶結',     emoji: '🎀', color: '#6f6a60', tier: 'lo' },   // 2026-10-22 書本→小皮靴→蝴蝶結（使用者給的 L3_蝴蝶結.png）
   { name: '紫十字架',   emoji: '✝️', color: '#1d4ed8', wheel: 'blue' },   // 觸發圖示（落地後變藍輪）；程式退回版 emoji ✝️（2026-10-22 由寶石之翼換成）
   { name: '金十字架',   emoji: '✝️', color: '#7c3aed', wheel: 'gold' },   // 觸發圖示（kind 'gold'＝紅輪）；程式退回版 emoji ✝️（2026-10-22 由寶石之翼換成）
 ];
@@ -725,7 +725,7 @@ const ICON_META = [
     ['iconGold', '白鴿', 0.5, 2.0, 0.01, { hint: '最高分：白鴿（盤面與賠率表一起套用）' }],
     ['iconHigh', '武器組', 0.5, 2.0, 0.01, { hint: '15 倍武器組：天使之劍／天使之書' }],
     ['iconMid', '聖物組', 0.5, 2.0, 0.01, { hint: '10 倍聖物組：聖盾／聖水瓶' }],
-    ['iconLow', '低分', 0.5, 2.0, 0.01, { hint: '低分 5 個：羽毛／卷軸／蠟燭／皮帶／小皮靴' }],
+    ['iconLow', '低分', 0.5, 2.0, 0.01, { hint: '低分 5 個：羽毛／卷軸／蠟燭／小鈴鐺／蝴蝶結' }],
     ['iconSix', '十字架', 0.5, 2.0, 0.01, { hint: '金／紫十字架（落地放大 30% 疊在這個之上）' }] ] },
 ];
 function iconTierKey(id) { return id === 0 ? 'iconGold' : id <= 2 ? 'iconHigh' : id <= 4 ? 'iconMid' : id <= 9 ? 'iconLow' : 'iconSix'; }
@@ -1069,7 +1069,7 @@ function syncLayoutDerived() {
  * 區塊 3：美術載入（assets 圖檔優先；缺件時使用程式退回版）
  * ========================================================== */
 const ART = {
-  sym: SYMBOLS.map((s, i) => 'assets/icon_' + i + '.png?v=holy-38'),
+  sym: SYMBOLS.map((s, i) => 'assets/icon_' + i + '.png?v=holy-42'),
   bg:  'assets/bg.png',
   bgFG: 'assets/bg_fg.png',
   frame: 'assets/frame.png',
@@ -1089,8 +1089,8 @@ const ART = {
   anticip: 'assets/ai/ui_05.png',             // 觸發期待（取閃電光框）
   trans: 'assets/ai/transition_01.png',       // 免費遊戲轉場
   big1: 'assets/ai/bigwin_01.png', big2: 'assets/ai/bigwin_02.png', big3: 'assets/ai/bigwin_03.png', big4: 'assets/ai/bigwin_04.png',
-  cupidL: 'assets/ai/character_01.png?v=holy-12',       // 小愛神（左，白色劍士帽、揮手）
-  cupidR: 'assets/ai/character_02_transparent_20261022.png?v=holy-17',       // 小愛神（右，白色修道士帽、托腮坐著；2026-10-22 改吊帶裙（一邊吊帶掉下）＋咖啡色腰帶掛簡單藥瓶、拿掉項鍊）
+  cupidL: 'assets/ai/character_01.png?v=holy-40',       // 小愛神（左，黃頭帶、揮手；2026-10-22 帽子改回頭帶、小皮包改咖啡色小劍插在腰帶內）
+  cupidR: 'assets/ai/character_02_transparent_20261022.png?v=holy-40',       // 小愛神（右，黑頭帶、托腮坐著；2026-10-22 舊圓臉頭帶版＋吊帶裙（一邊吊帶掉下）＋咖啡色腰帶掛藥瓶）
 };
 const FRAME_PAD = 24;
 function isFGScene() {
@@ -1450,7 +1450,7 @@ function forcedWheels(force) {
   }
   return null;
 }
-// 固定牌型（得分級距測試用，兩個模式都生效）：第 1 輪用 {羽毛,卷軸,蠟燭,皮帶}、第 3 輪起用別的圖示
+// 固定牌型（得分級距測試用，兩個模式都生效）：第 1 輪用 {羽毛,卷軸,蠟燭,小鈴鐺}、第 3 輪起用別的圖示
 // → 除了刻意種的線之外，任何線都湊不到 3 連（結果可重現）
 const LINE_FORCES = {
   small: [[1, 1, 3]],                 // 天使之劍 3 連（第 2 列）＝2 倍：得分數字等級 1，不跑分
@@ -2320,8 +2320,8 @@ const ART_GEO = {
   // band＝格區內外緣（相對 R，給倍數字、壓灰、亮框、燃火用）
   wheel: { blue: { cx: 628.5, cy: 620.5, R: 622.0, band: [0.372, 0.93] },   // blue＝紫十字架的輪；2026-10-22 換天使版紫色輪盤（白手套祈禱手），外框改細紫框（無回紋），重量
     red: { cx: 628.0, cy: 620.5, R: 621.2, band: [0.371, 0.93] }, band: [0.39, 0.84] },   // red＝金十字架的輪；2026-10-22 換天使版金色輪盤（白手套祈禱手），外框改細金框（無回紋），重量
-  cupidL: [3, 3, 965, 1173],           // character_01 天使女孩（左、黑髮、白色劍士帽＋黃愛心夾、咖啡色皮腰帶＋小皮囊、手指繃帶、揮手飛著；2026-10-22 腰帶版 971×1178，與前一版同比例）alpha>128 bbox（x, y, w, h）
-  cupidR: [17, 10, 1077, 1355, 1137],    // 右天使去背新圖 1136×1385；前四項為 alpha bbox，末項沿用原顯示基準高度，保持佈局大小
+  cupidL: [10, 2, 1122, 1351, 1173],   // character_01 左天使（黑髮、黃頭帶＋愛心蝴蝶結、咖啡色腰帶插咖啡色小劍；2026-10-22 頭帶木劍版 1139×1381）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度，沿用前一版 1173 讓畫面上大小不變
+  cupidR: [212, 21, 865, 1193, 1124],   // 右天使（舊圓臉＋黑頭帶，身體為吊帶裙＋腰帶藥瓶；2026-10-22 1254×1254）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度（前一版人物可見高 1339×1137/1355≈1124），畫面上大小不變
   // ui_02 FG 進入介面（全幅）：拱形標題匾、米白大面板、綠／紅兩顆按鈕；blank＝面板空白處（不提供抽籤時蓋掉按鈕用），ty＝面板內各行文字的 y
   fgIntro: { title: [468, 196], panel: [150, 260, 645, 235], start: { x: 152, y: 498, w: 303, h: 100 },
     deal: { x: 470, y: 498, w: 310, h: 100 }, blank: [148, 385, 640, 108], blankDst: [148, 494, 640, 110],
