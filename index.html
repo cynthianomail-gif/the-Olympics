@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-79';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-83';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -816,6 +816,7 @@ const DEFAULT_FX = {
   wheelMulGlow: 1.0,  // 停在乘號格的光效強度（光暈＋放射光）
   wheelGray:  0.35,   // 轉盤停下後沒轉到的格壓灰強度（0＝不壓、1＝全灰）；使用者 2026-10-20「壓灰淡一點」→ 保留約 65% 原色
   burstAmt:   1.0,    // 紅輪聖火炸開強度
+  heartBurn:  1.0,    // 聖心燒成輪盤（輪盤登場時聖心燒掉、火焰沿外緣竄出）強度
   fireAmt:    1.0,    // 高倍數格燃火強度
   zoomMax:    1.8,    // 拉近倍率上限（實際取「轉盤不出畫面」的最大值）
   fireAdd:    25,     // 加法格 ≥ 此值 → 燃火段
@@ -868,6 +869,7 @@ const FX_META = [
     ['wheelMulGlow', '乘號光效', 0, 2, 0.05, { hint: '停在乘號格時聖火與倍數格的光暈＋放射光強度；0＝關' }],
     ['wheelGray', '沒轉到壓灰', 0, 1, 0.05, { hint: '轉盤停下後沒轉到的格壓灰強度：0＝不壓、1＝全灰（預設 0.35，保留約 65% 原色）' }],
     ['burstAmt', '紅輪炸開強度', 0, 2, 0.05, { hint: '紅輪彈出時聖火在轉盤周圍炸開的強度；0＝關' }],
+    ['heartBurn', '聖心燒成輪盤', 0, 2, 0.05, { hint: '匕首插進聖心後，輪盤登場時聖心燒掉、火焰沿輪盤外緣竄出的強度；0＝關（只剩輪盤展開）' }],
     ['fireAmt', '高倍燃火強度', 0, 2, 0.05, { hint: '燃火段／拉近段停下後，該格周圍火焰的強度' }],
     ['zoomMax', '拉近倍率', 1, 3, 0.05, { hint: '拉近段鏡頭倍率上限；實際取轉盤不會跑出畫面的最大值' }],
     ['reelJitter', '各格速度差異', 0, 1.2, 0.05,
@@ -1153,6 +1155,7 @@ const ART = {
   wheelBlueBase: 'assets/ai/icon_13_base.png?v=holy-46', wheelBlueTorch: 'assets/ai/icon_13_torch.png?v=holy-46',   // tools/split_wheel_art.py 產
   wheelRedBase: 'assets/ai/icon_14_base.png?v=holy-46', wheelRedTorch: 'assets/ai/icon_14_torch.png?v=holy-46',
   coin: 'assets/fx/coin.png',                 // 大獎噴金幣（交付包 05_特效/金幣.png 縮圖）
+  dagger: 'assets/fx/dagger.png?v=holy-80',   // 聖心匕首（刀柄朝上、箭頭柄頭；嘗試/FX_短匕首_柄上.png 縮圖）
   bill: 'assets/fx/bill.png',                 // EPIC 噴鈔票（交付包 05_特效/鈔票.png 縮圖）
   fgIntro: 'assets/ai/ui_02.png',             // FG 進入介面
   zeusDraw: 'assets/ai/ui_03.png',            // 宙斯抽籤
@@ -1895,6 +1898,19 @@ function updateWheel() {
     }
   }
 }
+// 匕首插入聖心（使用者 2026-10-24）：只插「接下來要開的那顆」，時段＝它的聖心脈動（第 1 顆在 POSTSTOP 最後 0.25s、之後各自的 pulse）
+// 0～0.5 垂直落下（加速）、0.5 插到底＝脈動最大那一刻、之後維持；-1＝這格還沒有匕首（或已經是輪盤）
+function daggerStabK(c, r) {
+  const F = Math.max(1, TF(SIX_PULSE)), i = wheels.findIndex(w => w.c === c && w.r === r);
+  if (i < 0) return -1;
+  if (currentState === STATE.POSTSTOP) {
+    if (i !== 0 || (lineFirst && !postGap)) return -1;
+    const k = (stateTimer - (postStopFrames() - F)) / F;
+    return k < 0 ? -1 : Math.min(1, k);
+  }
+  if (currentState === STATE.WHEEL && i === wheelIdx && wheelPhase === 'pulse') return Math.min(1, stateTimer / F);
+  return -1;
+}
 // 聖心脈動（競品：全部輪停 0.30 秒後放大縮回 0.25 秒；連開時下一個也先脈動）
 function sixPulseScale(c, r) {
   const F = Math.max(1, TF(SIX_PULSE));
@@ -1926,9 +1942,10 @@ function wheelFireK(w) {                    // 該格燃燒強度 0～1：結果
   return Math.max(0, Math.min(1, since / 12)) * FX.fireAmt;
 }
 function easeInOut(k) { return k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; }
-// 鏡頭：拉近段轉盤停下前朝它拉近（以轉盤中心為軸，倍率取「不跑出畫面」的最大值），停下後維持再退回
+// 鏡頭：拉近段轉盤停下前朝它拉近，停下後維持再退回。輪盤以匕首為中心不往內挪（2026-10-24），所以靠邊時改成「拉近＋平移」：
+// 倍率只受畫面大小限制，畫面同時平移（px,py）把放大後的輪盤帶回畫面內；輪盤與盤面、匕首一起動，相對位置不變
 function cameraNow() {
-  const none = { z: 1, cx: W / 2, cy: H / 2, k: 0, wheel: null };
+  const none = { z: 1, cx: W / 2, cy: H / 2, px: W / 2, py: H / 2, k: 0, wheel: null };
   if (currentState !== STATE.WHEEL || wheelPhase === 'intro' || wheelPhase === 'pulse') return none;
   const w = wheels[wheelIdx];
   if (!w) return none;
@@ -1936,14 +1953,16 @@ function cameraNow() {
   if (segTier(w.segs[w.idx]) !== 2 && !anticCam) return none;
   const g0 = wheelGeom(w), bottom = LAYOUT.bottomUI.y, sc = gridToScreen(g0.cx1, g0.cy1), gs = gridScaleNow();
   const g = { cx1: sc[0], cy1: sc[1], R1: g0.R1 * gs };   // 畫面座標（含盤面縮放）
-  const zFit = Math.min(g.cx1 / g.R1, (W - g.cx1) / g.R1, g.cy1 / g.R1, (bottom - g.cy1) / g.R1);
-  const zMax = Math.max(1, Math.min(anticCam ? FX.anticZoom : FX.zoomMax, zFit));
+  const zFit = Math.min(W, bottom) / (2 * g.R1);   // 放大後的輪盤要整個塞得進畫面（不含公版面板）
+  const zMax = Math.max(1, Math.min(anticCam ? FX.anticZoom : FX.zoomMax, zFit)), rz = g.R1 * zMax;
+  const tx = Math.min(W - rz, Math.max(rz, g.cx1)), ty = Math.min(bottom - rz, Math.max(rz, g.cy1));   // 拉到最近時輪盤中心該在的畫面位置
+  const cam = (k, e, extra) => Object.assign({ z: 1 + (zMax - 1) * e, cx: g.cx1, cy: g.cy1, px: g.cx1 + (tx - g.cx1) * e, py: g.cy1 + (ty - g.cy1) * e, k: k, wheel: w, zMax: zMax }, extra || {});
   let k = 0;
   if (anticCam) {
     if (wheelPhase === 'spin') k = Math.min(1, stateTimer / Math.max(1, wheelSpinFrames(w)));
     else if (wheelPhase === 'result') k = Math.max(0, 1 - stateTimer / Math.max(1, TF(TIMING.zoomOut)));
     const e0 = easeInOut(k);
-    return { z: 1 + (zMax - 1) * e0, cx: g.cx1, cy: g.cy1, k: k, wheel: w, zMax: zMax, antic: w.antic };
+    return cam(k, e0, { antic: w.antic });
   }
   if (wheelPhase === 'spin') {
     const F = wheelSpinFrames(w), zi = Math.max(1, TF(TIMING.zoomIn));
@@ -1954,7 +1973,7 @@ function cameraNow() {
     k = stateTimer < h ? 1 : Math.max(0, 1 - (stateTimer - h) / o);
   }
   const e = easeInOut(k);
-  return { z: 1 + (zMax - 1) * e, cx: g.cx1, cy: g.cy1, k: k, wheel: w, zMax: zMax };
+  return cam(k, e);
 }
 // 停定回饋（使用者 2026-10-19）：中央聖火與選中格同幀放大→縮回彈一下；乘號格幅度更大＋光效
 function wheelPopInfo(w) {                       // NX 出現那一刻起彈（競品：彈跳在 NX 出現時，不是停定時）
@@ -2462,6 +2481,26 @@ function wheelArt(kind) {
 // 外圈盤面（base＋倍數字＋聖火格）以 angleDeg 整盤轉動、逐漸減速停下；手握聖火固定朝正上方，
 // 停下時正上方那一格＝結果（格 i 的中心角＝-90＋i×30＋angleDeg）
 const TORCH_FIXED_DEG = 0;                        // 聖火層固定角度（朝正上方）
+// 聖心匕首（使用者 2026-10-24）：觸發時匕首垂直插進聖心 → 聖心燒成輪盤 → 匕首留在輪盤中心當指針（取代祈禱手）
+// assets/fx/dagger.png 刀柄朝上；DAGGER_CUT＝護手下緣（刀刃起點）在圖高的比例。支點＝護手下緣中心
+const DAGGER_CUT = 0.4909;
+const DAGGER_WHEEL = { hilt: 0.6, pivot: 0.174, hub: 0.371, blade: 0.323 };   // 輪盤上：柄長 0.6R、支點在圓心下 0.174R（箭頭尖冒出黃圈外緣 0.371R 再 0.055R；使用者兩次「放大 往下移」）；刀刃只露在深藍圓（黃圈內緣 0.323R）內，黃圈蓋在刀刃上（使用者 2026-10-24 放大、往下移、刀刃在黃圈後）
+const DAGGER_HEART = { hilt: 0.42, pivot: 0.048 };               // 聖心上：柄長＝0.42×圖示框、支點在框中心下 0.048×框（垂直插在正中央）
+let wheelDaggerNow = null;                        // 輪盤登場中：匕首柄長／支點由聖心尺寸接到輪盤尺寸（drawWheels 設、drawWheelDiscArt 用）
+function drawDagger(px, py, hilt, mode, clip) {   // mode：'back' 整把、'front' 只畫柄（護手以上）、'wheel' 柄＋圓 clip 內的刀刃
+  const img = artImg('dagger');
+  if (!img || hilt <= 0) return false;
+  const s = hilt / (DAGGER_CUT * img.height), w = img.width * s, h = img.height * s, x = px - w / 2, y = py - DAGGER_CUT * h;
+  const cs = DAGGER_CUT * img.height;
+  if (mode === 'back') { ctx.drawImage(img, x, y, w, h); return true; }
+  if (mode === 'wheel' && clip) {                 // 刀刃：只在中心圈內看得到（超出的部分被外圈蓋住）
+    ctx.save(); ctx.beginPath(); ctx.arc(clip.x, clip.y, clip.r, 0, Math.PI * 2); ctx.clip();
+    ctx.drawImage(img, 0, cs - 1, img.width, img.height - cs + 1, x, py - s, w, h - DAGGER_CUT * h + s);
+    ctx.restore();
+  }
+  ctx.drawImage(img, 0, 0, img.width, cs, x, y, w, DAGGER_CUT * h);   // 柄：最上層
+  return true;
+}
 function wheelSegCenterDeg(i, angleDeg) { return -90 + i * 30 + angleDeg; }
 function wheelTopSeg(angleDeg) { return ((Math.round(-angleDeg / 30) % 12) + 12) % 12; }   // 目前在正上方的格
 const WHEEL_LABEL_K = 0.55;                     // 倍數字在格區的半徑位置（0＝內緣、1＝外緣）；直向排列後字沿半徑方向，中心往內移一點（原 0.62）
@@ -2563,13 +2602,16 @@ function drawWheelDiscArt(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, gl
     ctx.shadowBlur = 0;
     ctx.restore();
   }
-  // 手握聖火：固定朝正上方，不跟著轉（火焰尖端＝指針）；停定時與選中格同幀彈跳，乘號時發光
+  // 指針：匕首（使用者 2026-10-24 取代祈禱手）。固定朝正上方，柄＋箭頭在最上層、箭頭剛好冒出中心圈；刀刃只露在中心圈內。
+  // 停定時與選中格同幀彈跳，乘號時發光；沒有匕首圖時退回祈禱手
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate(TORCH_FIXED_DEG * Math.PI / 180);
   ctx.scale(pop.s, pop.s);
   if (pop.glow > 0) { ctx.shadowColor = '#fde047'; ctx.shadowBlur = 45 * Math.min(1.5, pop.glow); }
-  ctx.drawImage(A.torch, -A.geo.cx * sc, -A.geo.cy * sc, A.torch.width * sc, A.torch.height * sc);
+  const dv = wheelDaggerNow || { hilt: DAGGER_WHEEL.hilt * R, dy: DAGGER_WHEEL.pivot * R };
+  if (!drawDagger(0, dv.dy, dv.hilt, 'wheel', { x: 0, y: 0, r: DAGGER_WHEEL.blade * R }))
+    ctx.drawImage(A.torch, -A.geo.cx * sc, -A.geo.cy * sc, A.torch.width * sc, A.torch.height * sc);
   ctx.restore();
   if (wheelBurnNow && hiIdx !== null && hiIdx !== undefined)   // 高倍數燃燒：只在邊上，畫在結果字之前
     drawSegBurn(cx, cy, R, wheelSegCenterDeg(hiIdx, angleDeg), wheelBurnNow.k, t, kind);
@@ -3163,9 +3205,9 @@ function wheelGeom(w) {
     for (let i = 1; i < wheels.length; i++) md = Math.min(md, Math.abs(wheels[i].c - wheels[i - 1].c) * CELL_SIZE);
     if (isFinite(md)) Rf = Math.min(Rf, md / 2 * 0.98);
   }
-  // 放大後留在盤面範圍內（不蓋到上方 LOGO 匾額與下方公版面板）；多個轉盤時水平留在原輪中心，避免互相重疊
-  const cx1 = multi ? cx0 : Math.min(GRID_X + GRID_W - Rf * 0.8, Math.max(GRID_X + Rf * 0.8, cx0));
-  const cy1 = Math.min(GRID_Y + GRID_H - Rf * 0.9, Math.max(GRID_Y + Rf * 0.9, cy0));
+  // 輪盤以匕首（聖心那格的中心）為圓心原地長大，不再往盤面內側挪（使用者 2026-10-24「要確保匕首插下去之後輪盤是以匕首為中心長出」）；
+  // 舊做法會把中心夾到盤面內，匕首跟著位移
+  const cx1 = cx0, cy1 = cy0;
   return { cx0: cx0, cy0: cy0, cx1: cx1, cy1: cy1, R0: CELL_SIZE * 0.45, R1: Rf };
 }
 // 外圈 12 格整盤轉動；中央手握聖火繞圈跑（angleDeg＝跑者轉過的角度，負值），火焰固定朝上，停下時正上方那格即選中
@@ -3258,6 +3300,39 @@ function drawAnticGlow(cx, cy, R, lv, t) {
 }
 // 紅輪聖火炸開：一圈火焰從轉盤邊緣往外噴、火星飛散（front＝只畫最外層火星）
 const BURST_MIN_R = 0.95;                         // 紅輪炸開火焰最內圈（相對 R，在格區外、不擋倍數字）
+function drawHeartBurn(cx, cy, R, kind, hid, box0, p, t) {   // 輪盤登場時：聖心放大燒掉（畫在輪盤後面）＋一圈火舌沿外緣往外竄
+  const amt = FX.heartBurn;
+  if (amt <= 0) return;
+  const blue = kind === 'blue', img = iconArt(hid);
+  ctx.save();
+  const ha = Math.max(0, 1 - p / 0.7) * Math.min(1, amt);
+  if (img && ha > 0) {                               // 聖心：放大、越燒越亮、淡出
+    const s = box0 * (1 + 0.45 * p);
+    ctx.globalAlpha = ha; ctx.drawImage(img, cx - s / 2, cy - s / 2, s, s);
+    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = ha * 0.7 * Math.min(1, p * 3);
+    ctx.drawImage(img, cx - s / 2, cy - s / 2, s, s);
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  const fa = Math.sin(Math.PI * Math.min(1, p)) * Math.min(1.5, amt);   // 火舌：一圈往外竄再收
+  if (fa > 0) {
+    const c1 = blue ? '96,165,250' : '249,115,22', c2 = blue ? '224,242,254' : '253,224,71';
+    const rg = ctx.createRadialGradient(cx, cy, R * 0.7, cx, cy, R * 1.45);
+    rg.addColorStop(0, 'rgba(' + c2 + ',' + (0.55 * fa) + ')'); rg.addColorStop(1, 'rgba(' + c1 + ',0)');
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, R * 1.45, 0, Math.PI * 2); ctx.fill();
+    for (let i = 0; i < 16; i++) {
+      const a = i * Math.PI / 8 + t * 0.02, wob = 0.8 + 0.2 * Math.sin(t * 0.9 + i * 1.7), len = R * (0.28 + 0.22 * p) * wob;
+      const bx = cx + Math.cos(a) * R * 0.92, by = cy + Math.sin(a) * R * 0.92, tx = cx + Math.cos(a) * (R * 0.92 + len), ty = cy + Math.sin(a) * (R * 0.92 + len);
+      const nx = -Math.sin(a) * R * 0.09, ny = Math.cos(a) * R * 0.09;
+      ctx.globalAlpha = Math.min(1, fa);
+      ctx.fillStyle = 'rgba(' + c1 + ',0.85)';
+      ctx.beginPath(); ctx.moveTo(bx + nx, by + ny); ctx.quadraticCurveTo(bx + (tx - bx) * 0.55 + nx, by + (ty - by) * 0.55 + ny, tx, ty);
+      ctx.quadraticCurveTo(bx + (tx - bx) * 0.55 - nx, by + (ty - by) * 0.55 - ny, bx - nx, by - ny); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = 'rgba(' + c2 + ',0.9)';
+      ctx.beginPath(); ctx.moveTo(bx + nx * 0.45, by + ny * 0.45); ctx.lineTo(bx + (tx - bx) * 0.6, by + (ty - by) * 0.6); ctx.lineTo(bx - nx * 0.45, by - ny * 0.45); ctx.closePath(); ctx.fill();
+    }
+  }
+  ctx.restore();
+}
 function drawRedBurst(cx, cy, R, k, t, front) {   // 金輪彈出：金光擴散（使用者 2026-10-22 由火焰炸開換成）；front＝蓋在轉盤上的星光
   const amt = FX.burstAmt;
   if (amt <= 0) return;
@@ -3414,6 +3489,13 @@ function drawWheels() {
     ctx.fillStyle = 'rgba(0,0,0,.25)';
     ctx.beginPath(); ctx.ellipse(cx, cy + R * 0.95, R * 0.8, R * 0.12, 0, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
+    wheelDaggerNow = null;
+    if (d.cur && wheelPhase === 'intro') {            // 聖心燒成輪盤（使用者 2026-10-24）：聖心放大燒掉、火焰沿外緣竄出；匕首由聖心尺寸接到輪盤尺寸
+      const p = Math.min(1, stateTimer / Math.max(1, TF(wheelT('wheelIntro')))), hid = board[w.c][w.r].id;
+      const box0 = (CELL_SIZE - 8) * iconScaleOf(hid), e = 1 - Math.pow(1 - p, 2);
+      wheelDaggerNow = { hilt: lerp(DAGGER_HEART.hilt * box0, DAGGER_WHEEL.hilt * R, e), dy: lerp(DAGGER_HEART.pivot * box0, DAGGER_WHEEL.pivot * R, e) };
+      drawHeartBurn(cx, cy, R, w.kind, hid, box0, p, t);
+    }
     const bk = wheelBurstK(w);
     if (bk >= 0) drawRedBurst(cx, cy, R, bk, t);       // 金輪：彈出同時金光擴散（先畫在轉盤後面）
     wheelPopNow = d.hi !== null ? wheelPopInfo(w) : null;
@@ -3421,7 +3503,7 @@ function drawWheels() {
     const fk = d.hi !== null ? wheelFireK(w) : 0;      // 高倍數：格邊框＋外圈燃燒（在 drawWheelDiscArt 裡、結果字之前畫）
     wheelBurnNow = fk > 0 ? { k: fk, kind: w.kind } : null;
     drawWheelDisc(cx, cy, R, w.kind, w.segs, w.angle, d.hi, t, d.cur && wheelPhase === 'spin', antic);
-    wheelPopNow = null; wheelBurnNow = null; wheelAnticNow = 0;
+    wheelPopNow = null; wheelBurnNow = null; wheelAnticNow = 0; wheelDaggerNow = null;
     if (bk >= 0) drawRedBurst(cx, cy, R, bk, t, true);  // 金色星光蓋在轉盤上
     // 轉盤下方的「聖火！」與倍數字樣：使用者 2026-10-22 拿掉（倍數看 LOGO 匾額的 NX）
   });
@@ -3771,7 +3853,21 @@ function drawBoard() {
         ctx.translate(x + CELL_SIZE / 2 + wfx.dx, y + CELL_SIZE / 2 + wfx.dy); ctx.rotate(wfx.rot); ctx.translate(-(x + CELL_SIZE / 2), -(y + CELL_SIZE / 2));
         if (wfx.glow > 0) { ctx.shadowColor = '#fde68a'; ctx.shadowBlur = 22 * wfx.glow; }
       }
+      const dk = cell.id >= SIX_ID && !cell.used ? daggerStabK(c, r) : -1;   // 匕首垂直插進聖心：刀身在聖心後、柄在前
+      let dg = null;
+      if (dk >= 0 && artImg('dagger')) {
+        const box = (CELL_SIZE - 8) * sc * iconScaleOf(cell.id), fall = dk < 0.5 ? Math.pow(1 - dk / 0.5, 2) : 0;
+        dg = { x: x + CELL_SIZE / 2, y: y + CELL_SIZE / 2 + DAGGER_HEART.pivot * box - fall * box * 0.9, hilt: DAGGER_HEART.hilt * box, a: Math.min(1, dk / 0.15) };
+        ctx.save(); ctx.globalAlpha *= dg.a; drawDagger(dg.x, dg.y, dg.hilt, 'back'); ctx.restore();
+      }
       drawReelSymbol(cell.id, x, y, sc, cell.used);
+      if (dg) {
+        if (dk >= 0.5 && dk < 0.9) {                // 插到底那一下：聖心閃亮（先畫，柄蓋在上面才不會被洗白）
+          ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.6 * (1 - (dk - 0.5) / 0.4);
+          drawReelSymbol(cell.id, x, y, sc, cell.used); ctx.restore();
+        }
+        ctx.save(); ctx.globalAlpha *= dg.a; drawDagger(dg.x, dg.y, dg.hilt, 'front'); ctx.restore();
+      }
       ctx.shadowBlur = 0;
       if (wfx && wfx.sweep >= 0) drawIconSweep(cell.id, x, y, sc, wfx.sweep);
       if (wfx && wfx.flash > 0) drawIconFlash(x, y, sc * iconScaleOf(cell.id), wfx.flash);
@@ -4426,7 +4522,7 @@ function draw() {
   const cam = cameraNow(), shk = screenShakeOffset();
   ctx.save();                                   // 拉近鏡頭＋倍數 >200 一次性震動：只套場景層（公版面板、選單不動）
   ctx.translate(shk[0], shk[1]);
-  if (cam.z > 1) { ctx.translate(cam.cx, cam.cy); ctx.scale(cam.z, cam.z); ctx.translate(-cam.cx, -cam.cy); }
+  if (cam.z > 1) { ctx.translate(cam.px, cam.py); ctx.scale(cam.z, cam.z); ctx.translate(-cam.cx, -cam.cy); }   // 以輪盤中心放大，並把它平移到 (px,py)
   const shaking = shk[0] !== 0 || shk[1] !== 0;      // 震動時背景放大 1.05 避免露邊（美術需求：背景出圖需出血）
   if (!(shaking ? drawArtCell(bgImg, -W * 0.025, -H * 0.025, W * 1.05, H * 1.05, 0) : drawArtCell(bgImg, 0, 0, W, H, 0))) drawScene();
   drawCharacters();
@@ -6116,6 +6212,12 @@ function spinWith(force, pred, maxF) {
   forceSpinType = force; startSpin();
   return runUntil(pred, maxF);
 }
+function wheelAtCell(c, r, pred) {               // 截圖用：把第 1 個轉盤（連同聖心格）搬到指定格，看邊緣列的輪盤是否以匕首為中心
+  spinWith('ng1add', pred || (() => currentState === STATE.WHEEL && wheelPhase === 'spin' && stateTimer >= 40));
+  const w = wheels[0], t = board[c][r];
+  board[c][r] = board[w.c][w.r]; board[w.c][w.r] = t;
+  w.c = c; w.r = r;
+}
 function toFGIntro(level) {
   spinWith(['fg', 'sfg', 'ufg'][level - 1], () => currentState === STATE.FG_INTRO);
   runUntil(() => stateTimer >= fgIntroReadyFrames() + 2);
@@ -6140,6 +6242,13 @@ const SHOT_PRESETS = {
   pickShield:    () => { setIconPick({ top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'shieldGreen', m2: 'flaskGreen', low: 'greekObj' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 綠聖盾＋綠聖水瓶：隨機盤面
   keyIdle:       () => { setIconPick({ top: 'keyDiag' }, true); },    // 待機全盤＝最高分：天堂鑰匙
   pickKey:       () => { setIconPick({ top: 'keyDiag' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 最高分換天堂鑰匙（斜放）：隨機盤面
+  daggerFall:    () => spinWith('ng1add', () => currentState === STATE.POSTSTOP && wheels.length && daggerStabK(wheels[0].c, wheels[0].r) >= 0.3),   // 匕首落下中
+  daggerHit:     () => spinWith('ng1add', () => currentState === STATE.POSTSTOP && wheels.length && daggerStabK(wheels[0].c, wheels[0].r) >= 0.6),   // 匕首插到底（閃亮）
+  daggerBurn:    () => spinWith('ng1add', () => currentState === STATE.WHEEL && wheelPhase === 'intro' && stateTimer >= TF(wheelT('wheelIntro')) * 0.45),   // 聖心燒成輪盤
+  daggerWheel:   () => spinWith('ng1add', () => currentState === STATE.WHEEL && wheelPhase === 'spin' && stateTimer >= 40),   // 輪盤轉動中：匕首當指針
+  wheelTopLeft:  () => wheelAtCell(0, 0),                              // 邊緣：左上角聖心的輪盤（以匕首為中心，不往內挪）
+  wheelBotRight: () => wheelAtCell(COLS - 1, ROWS - 1),                // 邊緣：右下角
+  wheelMidIntro: () => wheelAtCell(2, 1, () => currentState === STATE.WHEEL && wheelPhase === 'intro' && stateTimer >= TF(wheelT('wheelIntro')) * 0.5),   // 長大中
   pickPanel:     () => { setIconPick({ top: 'crossGold', h1: 'unicorn', h2: 'wings', m1: 'chalice', m2: 'amphora', low: 'greekObj' }, true); openTuneTab('icon'); },   // 面板「圖示大小」分頁頂端的 6 個下拉選單
   spinning:      () => { forceSpinType = null; startSpin(); for (let i = 0; i < 26; i++) update(); },
   sixLand:   () => spinWith('ng1add', () => currentState === STATE.POSTSTOP && stateTimer >= 10),
