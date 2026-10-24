@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-65';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-66';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -782,7 +782,7 @@ const LAYOUT_META = [
 ];
 
 // --- 圖示大小（依層級；使用者 2026-10-20：這款圖示大小是分層級的關鍵）---
-const DEFAULT_ICON = { iconGold: 1.45, iconHigh: 1.32, iconMid: 1.51, iconLow: 1.29, iconSix: 1.21 };   // 使用者 2026-10-21 調好匯出（docs/tuning_user_20261021_iconscale.json）
+const DEFAULT_ICON = { iconGold: 1.35, iconHigh: 1.29, iconMid: 1.48, iconLow: 1.29, iconSix: 1.45 };   // 使用者 2026-10-24 匯出設為預設（docs/tuning_user_20261024.json；10-21 版 1.45／1.32／1.51／1.29／1.21）
 const ICON_META = [
   { group: '圖示大小（依層級，1＝原尺寸）', items: [
     ['iconGold', '最高分', 0.5, 2.0, 0.01, { hint: '最高分（上方「圖示組合」選的那個；盤面與賠率表一起套用）' }],
@@ -3719,7 +3719,7 @@ function drawBoard() {
   const showWin = winCells && winPhaseOn();
   const bigLv = currentState === STATE.BIGWIN ? BIG_FX_LEVEL[bigShownTier()] : null;
   const zoom = bigLv && bigLv[1] ? FX['zoom' + bigLv[1]] : 1;
-  for (let pass = 0; pass < 2; pass++)              // 兩趟：先畫沒中獎的，再畫中獎的（圖示放大溢出時中獎圖示在最上層，不被鄰格蓋住）
+  for (let pass = 0; pass < 3; pass++)              // 三趟：沒中獎 → 中獎 → 聖心（圖示放大溢出時中獎圖示蓋過鄰格；聖心永遠最上層，使用者 2026-10-24「聖心的層級要最高」）
   for (let c = 0; c < COLS; c++) {
     const colOff = (REEL_MODE === 'column') ? (colOffsets[c] || 0) : 0;
     const bnc = colBounce[c] || 0;
@@ -3736,7 +3736,7 @@ function drawBoard() {
       const top = GRID_Y + r * CELL_SIZE;
       const y = top + colOff + cellOff + cell.yOffset + bnc;
       const isWin = showWin && winCells.has(c + ',' + r);
-      if ((pass === 1) !== !!isWin) continue;
+      if (pass !== (cell.id >= SIX_ID ? 2 : isWin ? 1 : 0)) continue;
       let sc = cell.scale;
       if (landT[c] >= 0 && cell.id >= SIX_ID && !cell.used) sc *= sixLandScale(c);   // 聖心出現：整體放大 30%
       if (cell.id >= SIX_ID && !cell.used) sc *= sixPulseScale(c, r);                 // 全部輪停後的聖心脈動（競品）
@@ -4484,7 +4484,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 24;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
+const TUNE_VERSION = 25;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
@@ -5049,6 +5049,7 @@ document.getElementById('tuneExport').addEventListener('click', () => {
     game: GAME_NAME, build: APP_BUILD, version: TUNE_VERSION,
     timing_seconds: TIMING, timeline_start_seconds: TIMING_START,
     layout_px: LAYOUT, fx: FX, odds: ODDS, choice: CHOICE, icon_scale: ICON, tint_hsl: TINT,
+    icon_pick: ICON_PICK,                          // 圖示自由組合（2026-10-24 補：設為預設時才知道選了哪些圖示）
   }, null, 2);
   const done = ok => setTuneStatus(ok ? '設定已複製到剪貼簿 ✓' : '已開啟複製視窗', ok ? 'ok' : 'wait');
   if (navigator.clipboard && navigator.clipboard.writeText) {
