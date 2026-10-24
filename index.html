@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-63';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-65';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -325,7 +325,7 @@ const ICON_CATALOG = {
   wings:       { name: '天使之翼', emoji: '🪽' },
   trumpet:     { name: '天使號角', emoji: '🎺' },   // 超粗銀號角（被天使之翼取代，留在目錄）
   chalice:     { name: '聖杯',     emoji: '🏆' },   // 銀聖杯（波浪粗花紋）
-  holyWater:   { name: '聖水',     emoji: '🧪' },   // 銀色無翅聖水（被銀豎琴取代，留在目錄）
+  holyWater:   { name: '聖水',     emoji: '🧪' },   // 聖水：10/22 十字瓶塞聖水瓶造型、玻璃與瓶塞白銀、水淺藍（2026-10-24 使用者「整體改白銀色」→「內容物的水可以是淺藍色」）
   laurel:      { name: '月桂冠',   emoji: '🌿' },
   amphora:     { name: '雙耳瓶',   emoji: '🏺' },
   shieldGreen: { name: '聖盾',     emoji: '🛡️' },   // 10/22 天使版聖盾，藍→亮綠（使用者 2026-10-24「盾牌跟聖水可以把藍色部分改成綠色的看看」→「亮綠就好」）
@@ -353,7 +353,7 @@ const LEGACY_ICON_SETS = {                        // 舊保存值 iconSet（A／
   A: DEFAULT_ICON_PICK,
   B: { top: 'crossGold', h1: 'harp', h2: 'wings', m1: 'laurel', m2: 'amphora', low: 'greek' },
 };
-const ICON_SET_VER = 'holy-63';
+const ICON_SET_VER = 'holy-65';
 let ICON_PICK = Object.assign({}, DEFAULT_ICON_PICK);
 function pickOptions(key) { return key === 'low' ? Object.keys(LOW_SETS) : key === 'top' ? ICON_POOL.top : ICON_POOL.high; }
 function pickSlotOf(id) { return PICK_SLOTS.find(s => s.ids.indexOf(id) >= 0) || null; }
