@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-78';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-79';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -317,7 +317,7 @@ const SIX_ID = 10, GOLD_ID = 11;
 // 最高分 id0、15 倍 id1／2、10 倍 id3／4 各自從目錄挑（15 倍與 10 倍共用同一批候選），低分 id5～9 整組挑；觸發 id10／11 固定。
 // 圖檔：assets/pick/<key>.png（tools/build_icon_pick.py 產）；調色盤遮罩：assets/pick/tint/<key>_gray|_mask.png（tools/make_tint_masks.py --pick）。
 const ICON_CATALOG = {                            // tone：下拉選單名稱後面標的顏色（使用者 2026-10-24），只用在選單、不改盤面名稱
-  crossGold:   { name: '金十字架', emoji: '✝️', tone: '金' },   // 紅寶石金十字架；2026-10-24 換成反光金屬版（造型不變，使用者看天堂鑰匙後選「適中」）
+  crossGold:   { name: '金十字架', emoji: '✝️', tone: '金' },   // 紅寶石金十字架；2026-10-24 反光金屬版跑風格 → 照美術風格重生的卡通 B 高光帶（扁平色塊＋硬邊高光帶）
   crossSilver: { name: '銀十字架', emoji: '✝️', tone: '銀' },
   keyDiag:     { name: '天堂鑰匙',      emoji: '🗝️', tone: '金' },   // 2026-10-24 使用者「生成天堂鑰匙看看 形狀要飽滿 看起來層級最高 可以鑲嵌一顆紅寶石」→ 斜放短胖版（直立、更短版沒留）   // 紅寶石銀十字架（2026-10-24 試過的銀色版）
   unicorn:     { name: '獨角獸',   emoji: '🦄', tone: '黃' },
@@ -357,7 +357,7 @@ const LEGACY_ICON_SETS = {                        // 舊保存值 iconSet（A／
   A: { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'harp', m2: 'chalice', low: 'akqj' },
   B: { top: 'crossGold', h1: 'harp', h2: 'wings', m1: 'laurel', m2: 'amphora', low: 'greek' },
 };
-const ICON_SET_VER = 'holy-78';
+const ICON_SET_VER = 'holy-79';
 let ICON_PICK = Object.assign({}, DEFAULT_ICON_PICK);
 const IS_LOCAL = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);   // 本機開的 demo（file:／localhost）
 function pickOptions(key, local = IS_LOCAL) {    // localOnly 的圖示只在本機選單出現（線上版沒上傳那些圖）
