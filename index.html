@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-71';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-78';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -317,10 +317,14 @@ const SIX_ID = 10, GOLD_ID = 11;
 // 最高分 id0、15 倍 id1／2、10 倍 id3／4 各自從目錄挑（15 倍與 10 倍共用同一批候選），低分 id5～9 整組挑；觸發 id10／11 固定。
 // 圖檔：assets/pick/<key>.png（tools/build_icon_pick.py 產）；調色盤遮罩：assets/pick/tint/<key>_gray|_mask.png（tools/make_tint_masks.py --pick）。
 const ICON_CATALOG = {                            // tone：下拉選單名稱後面標的顏色（使用者 2026-10-24），只用在選單、不改盤面名稱
-  crossGold:   { name: '金十字架', emoji: '✝️', tone: '金' },   // 紅寶石金十字架
-  crossSilver: { name: '銀十字架', emoji: '✝️', tone: '銀' },   // 紅寶石銀十字架（2026-10-24 試過的銀色版）
+  crossGold:   { name: '金十字架', emoji: '✝️', tone: '金' },   // 紅寶石金十字架；2026-10-24 換成反光金屬版（造型不變，使用者看天堂鑰匙後選「適中」）
+  crossSilver: { name: '銀十字架', emoji: '✝️', tone: '銀' },
+  keyDiag:     { name: '天堂鑰匙',      emoji: '🗝️', tone: '金' },   // 2026-10-24 使用者「生成天堂鑰匙看看 形狀要飽滿 看起來層級最高 可以鑲嵌一顆紅寶石」→ 斜放短胖版（直立、更短版沒留）   // 紅寶石銀十字架（2026-10-24 試過的銀色版）
   unicorn:     { name: '獨角獸',   emoji: '🦄', tone: '黃' },
   bird:        { name: '天堂鳥',   emoji: '🐦', tone: '黃' },
+  pegasus:     { name: '飛馬',     emoji: '🐴', tone: '黃', localOnly: true },   // 2026-10-24 照獨角獸／天堂鳥同風格生；localOnly＝只在本機出現（使用者「白鴿 跟 飛馬不用推上去」）
+  dove:        { name: '白鴿',     emoji: '🕊️', tone: '白', localOnly: true },
+  // asset-skip: pegasus  // asset-skip: dove  // asset-skip: pegasus_gray  // asset-skip: pegasus_mask  // asset-skip: dove_gray  // asset-skip: dove_mask
   harp:        { name: '銀豎琴',   emoji: '🎵', tone: '銀' },
   wings:       { name: '天使之翼', emoji: '🪽', tone: '白' },
   trumpet:     { name: '天使號角', emoji: '🎺', tone: '銀' },   // 超粗銀號角（被天使之翼取代，留在目錄）
@@ -331,8 +335,8 @@ const ICON_CATALOG = {                            // tone：下拉選單名稱�
   shieldGreen: { name: '聖盾',     emoji: '🛡️', tone: '綠' },   // 10/22 天使版聖盾，藍→亮綠（使用者 2026-10-24「盾牌跟聖水可以把藍色部分改成綠色的看看」→「亮綠就好」）
   flaskGreen:  { name: '聖水瓶',   emoji: '🧪', tone: '綠' },   // 10/22 天使版十字瓶塞聖水瓶，藍→亮綠
 };
-const ICON_POOL = { top: ['crossGold', 'crossSilver'],
-  high: ['unicorn', 'bird', 'harp', 'wings', 'trumpet', 'chalice', 'holyWater', 'laurel', 'amphora',   // 15 倍與 10 倍共用
+const ICON_POOL = { top: ['crossGold', 'crossSilver', 'keyDiag'],
+  high: ['unicorn', 'bird', 'pegasus', 'dove', 'harp', 'wings', 'trumpet', 'chalice', 'holyWater', 'laurel', 'amphora',   // 15 倍與 10 倍共用
          'shieldGreen', 'flaskGreen'] };
 const LOW_SETS = {
   akqj:     { label: 'A K Q J 10（土色）', names: ['A', 'K', 'Q', 'J', '10'], emoji: ['A', 'K', 'Q', 'J', '10'] },
@@ -353,9 +357,13 @@ const LEGACY_ICON_SETS = {                        // 舊保存值 iconSet（A／
   A: { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'harp', m2: 'chalice', low: 'akqj' },
   B: { top: 'crossGold', h1: 'harp', h2: 'wings', m1: 'laurel', m2: 'amphora', low: 'greek' },
 };
-const ICON_SET_VER = 'holy-71';
+const ICON_SET_VER = 'holy-78';
 let ICON_PICK = Object.assign({}, DEFAULT_ICON_PICK);
-function pickOptions(key) { return key === 'low' ? Object.keys(LOW_SETS) : key === 'top' ? ICON_POOL.top : ICON_POOL.high; }
+const IS_LOCAL = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);   // 本機開的 demo（file:／localhost）
+function pickOptions(key, local = IS_LOCAL) {    // localOnly 的圖示只在本機選單出現（線上版沒上傳那些圖）
+  if (key === 'low') return Object.keys(LOW_SETS);
+  return (key === 'top' ? ICON_POOL.top : ICON_POOL.high).filter(k => local || !ICON_CATALOG[k].localOnly);
+}
 function pickSlotOf(id) { return PICK_SLOTS.find(s => s.ids.indexOf(id) >= 0) || null; }
 function pickKeyOf(id, pick) {                     // id0～4 → 目錄 key；id5～9 → 低分組 key；觸發 → null
   const s = pickSlotOf(id); return s ? (pick || ICON_PICK)[s.key] : null;
@@ -6130,6 +6138,8 @@ const SHOT_PRESETS = {
   setBBoard:     () => { setIconPick(LEGACY_ICON_SETS.B, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 希臘字母版組合：隨機盤面
   pickBoard:     () => { setIconPick({ top: 'crossSilver', h1: 'harp', h2: 'wings', m1: 'chalice', m2: 'amphora', low: 'greekObj' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 自由組合範例：隨機盤面（低分希臘物件）
   pickShield:    () => { setIconPick({ top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'shieldGreen', m2: 'flaskGreen', low: 'greekObj' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 綠聖盾＋綠聖水瓶：隨機盤面
+  keyIdle:       () => { setIconPick({ top: 'keyDiag' }, true); },    // 待機全盤＝最高分：天堂鑰匙
+  pickKey:       () => { setIconPick({ top: 'keyDiag' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 最高分換天堂鑰匙（斜放）：隨機盤面
   pickPanel:     () => { setIconPick({ top: 'crossGold', h1: 'unicorn', h2: 'wings', m1: 'chalice', m2: 'amphora', low: 'greekObj' }, true); openTuneTab('icon'); },   // 面板「圖示大小」分頁頂端的 6 個下拉選單
   spinning:      () => { forceSpinType = null; startSpin(); for (let i = 0; i < 26; i++) update(); },
   sixLand:   () => spinWith('ng1add', () => currentState === STATE.POSTSTOP && stateTimer >= 10),
