@@ -216,8 +216,8 @@ canvas { display: block; width: 100%; height: 100%; }
         <p>• 4×5 盤面（5 輪 × 4 列）、<b>14 條固定贏分線</b>，從最左輪起連續 3 個以上相同圖示即可贏分</p>
         <p>• 滾輪為掉落式：舊圖示整輪往下掉出，新圖示由上往下逐輪掉入</p>
         <p>• 沒有 WILD 與 SCATTER，免費遊戲由轉盤觸發</p>
-        <h3>▌ 十字架與藍輪</h3>
-        <p>• 紫十字架只出現在第 1、3、5 輪，每輪最多 1 個；落地後在同一格出現藍輪</p>
+        <h3>▌ 聖心與藍輪</h3>
+        <p>• 藍聖心只出現在第 1、3、5 輪，每輪最多 1 個；落地後在同一格出現藍輪</p>
         <p>• 外圈轉盤轉動後逐漸停下，中央手握聖火固定朝上，火焰尖端指到的正上方那格即選中；多個轉盤由左到右依序轉動並收集</p>
         <p>• 加法格把倍數加進累計；乘法格把目前累計乘上倍數，累計為 0 時以面值計入</p>
         <p>• 轉盤彩金＝押注額 × 轉盤累計倍數，與連線彩金相加（乘法不乘連線彩金）</p>
@@ -227,13 +227,13 @@ canvas { display: block; width: 100%; height: 100%; }
         <p>• FG、SFG 出賽前可請主審宙斯抽籤重排賽程：5／8／12／16／20 局取代原局數，或停在晉級格晉級（UFG 不提供）</p>
         <p>• 免費遊戲中不加局，最多 20 局</p>
         <h3>▌ 購買</h3>
-        <p>• BET×10：每局提高紫十字架出現機率；BET×50：每局必定出現紅輪（不能觸發免費遊戲）</p>
+        <p>• BET×10：每局提高藍聖心出現機率；BET×50：每局必定出現紅輪（不能觸發免費遊戲）</p>
         <p>• BET×100 購買 FG、BET×250 購買 SFG；UFG 不能購買</p>
       </div>
       <div>
         <h3>▌ 賠率表（目前押注 <span id="infoBet">100</span>）</h3>
         <table id="infoPayTable"></table>
-        <p style="margin-top:10px;color:#94a3b8">金／紫十字架沒有連線賠率。<br>demo 的機率為預設值，非正式數值；RTP 未校準。</p>
+        <p style="margin-top:10px;color:#94a3b8">藍／紅聖心沒有連線賠率。<br>demo 的機率為預設值，非正式數值；RTP 未校準。</p>
       </div>
     </div>
   </div>
@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-42';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-63';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -294,25 +294,88 @@ const DEFAULT_REEL_MODE = 'drop';
 let REEL_MODE = DEFAULT_REEL_MODE;
 
 // --- 符號表 [企劃 §一般遊戲 E33～E35、§FREE GAME E35～E38、§美術 C 欄主色] ---
-// 沒有 WILD、沒有 SCATTER [企劃 §一般遊戲 D32]。金／紫十字架＝轉盤圖示（落地後變藍輪／紅輪）。
+// 沒有 WILD、沒有 SCATTER [企劃 §一般遊戲 D32]。藍／紅聖心＝轉盤圖示（落地後變藍輪／紅輪）。
 // demo 圖示用 emoji、不顯示名稱（使用者 2026-10-16：「demo圖示不要用名稱 用icon或emoji」，decisions「demo 圖示」節）；
-// 金／紫十字架用圖檔（assets/icon_10、11）；程式退回版用 emoji ✝️。name 只留給賠率表 title／測試用，不畫在盤面上。
+// 藍／紅聖心用圖檔（assets/icon_10、11）；程式退回版用 emoji ✝️。name 只留給賠率表 title／測試用，不畫在盤面上。
 const SYMBOLS = [
   // 圖示：emoji（＋小配件 sub）或程式繪製（draw）；不顯示名稱。武器副色為金黃，聖物為銀藍。
-  { name: '白鴿',       emoji: '🕊️', color: '#4f8ec9', tier: 'hi', bg: ['#1e3a5f', '#0b172b'] },   // 最高分：展翅白鴿（2026-10-22）
-  { name: '天使之劍',   emoji: '🗡️', color: '#b58b33', tier: 'hi' },   // 15 倍武器組（2026-10-21 天使版圖示）；2026-10-22 換銀大劍愛心版（嘗試/天使之劍_銀大劍愛心.png，水平翻轉）
-  { name: '天使之書',   emoji: '📖', color: '#b58b33', tier: 'hi' },   // 15 倍武器組（2026-10-22 愛心弓箭→僧侶書→天使之書；組名待使用者決定）；2026-10-22 換銀魔法書愛心版（嘗試/天使之書_銀魔法書愛心.png）
-  { name: '聖盾',       emoji: '🛡️', color: '#64748b', tier: 'hi' },   // 10 倍聖物組
-  { name: '聖水瓶',     emoji: '🧴', color: '#64748b', tier: 'hi' },   // 10 倍聖物組
-  { name: '羽毛',       emoji: '🪶', color: '#8a7f6e', tier: 'lo' },   // 低分：土棕灰低飽和（配暖色低分圖示；2026-10-22 橄欖樹枝換羽毛）
-  { name: '卷軸',       emoji: '📜', color: '#7c6f5d', tier: 'lo' },   // 2026-10-22 換使用者給的 L5_卷軸.png（暖黃版）
-  { name: '蠟燭',       emoji: '🕯️', color: '#8b7765', tier: 'lo' },
-  { name: '小鈴鐺',     emoji: '🔔', color: '#7a6a58', tier: 'lo' },   // 2026-10-22 雙耳陶瓶→愛心髮夾→皮帶→小鈴鐺（使用者給的 L2_小鈴鐺.png）
-  { name: '蝴蝶結',     emoji: '🎀', color: '#6f6a60', tier: 'lo' },   // 2026-10-22 書本→小皮靴→蝴蝶結（使用者給的 L3_蝴蝶結.png）
-  { name: '紫十字架',   emoji: '✝️', color: '#1d4ed8', wheel: 'blue' },   // 觸發圖示（落地後變藍輪）；程式退回版 emoji ✝️（2026-10-22 由寶石之翼換成）
-  { name: '金十字架',   emoji: '✝️', color: '#7c3aed', wheel: 'gold' },   // 觸發圖示（kind 'gold'＝紅輪）；程式退回版 emoji ✝️（2026-10-22 由寶石之翼換成）
+  { name: '金十字架',   emoji: '✝️', color: '#4f8ec9', tier: 'hi', bg: ['#1e3a5f', '#0b172b'] },   // 最高分（2026-10-24：白鴿→紅寶石金十字架，位階高於 15 倍天堂生物；嘗試/H_最高分_金十字架_紅寶石.png；同日試過銀色版，使用者選回金色）
+  { name: '獨角獸',     emoji: '🦄', color: '#b58b33', tier: 'hi' },   // 15 倍天堂生物組（2026-10-24：SixSixSix「地獄生物」反過來＝天堂生物；黃色系、簡單點點眼；嘗試/H15_獨角獸頭像_黃_簡單臉.png）
+  { name: '天堂鳥',     emoji: '🐦', color: '#b58b33', tier: 'hi' },   // 15 倍天堂生物組（嘗試/H15_天堂鳥頭像_黃_簡單臉.png）
+  { name: '銀豎琴',     emoji: '🎵', color: '#64748b', tier: 'hi' },   // 10 倍組（2026-10-24：生命之水瓶 → 銀色無翅聖水 → 使用者「聖水換成豎琴」；與 B 組 15 倍同圖 嘗試/H15B_銀豎琴_無翅.png）
+  { name: '聖杯',       emoji: '🏆', color: '#64748b', tier: 'hi' },   // 10 倍生命象徵組（嘗試/H10_聖杯_黃無臉.png）
+  { name: 'A',          emoji: 'A', color: '#8a7f6e', tier: 'lo' },   // 低分：AKQJ10（2026-10-24 參考 Red Rascal 胖圓卡通字、土色系：A 磚紅、K 橄欖綠、Q 米棕、J 芥末黃、10 陶土棕）
+  { name: 'K',          emoji: 'K', color: '#7c6f5d', tier: 'lo' },
+  { name: 'Q',          emoji: 'Q', color: '#8b7765', tier: 'lo' },
+  { name: 'J',          emoji: 'J', color: '#7a6a58', tier: 'lo' },
+  { name: '10',         emoji: '10', color: '#6f6a60', tier: 'lo' },
+  { name: '藍聖心',     emoji: '💙', color: '#1d4ed8', wheel: 'blue' },   // 觸發圖示（一般遊戲；落地後變藍輪）；2026-10-24 紫十字架→藍聖心（愛心＋火焰）
+  { name: '紅聖心',     emoji: '❤️', color: '#7c3aed', wheel: 'gold' },   // 觸發圖示（免費遊戲；kind 'gold'＝紅輪）；2026-10-24 十字架→紅聖心（愛心＋火焰）
 ];
 const SIX_ID = 10, GOLD_ID = 11;
+// 圖示自由組合（使用者 2026-10-24：「圖示替換的部分 可以給我自由組合嗎 就不要一定規定要A B版 可以改成下拉是選單」）：
+// 最高分 id0、15 倍 id1／2、10 倍 id3／4 各自從目錄挑（15 倍與 10 倍共用同一批候選），低分 id5～9 整組挑；觸發 id10／11 固定。
+// 圖檔：assets/pick/<key>.png（tools/build_icon_pick.py 產）；調色盤遮罩：assets/pick/tint/<key>_gray|_mask.png（tools/make_tint_masks.py --pick）。
+const ICON_CATALOG = {
+  crossGold:   { name: '金十字架', emoji: '✝️' },   // 紅寶石金十字架
+  crossSilver: { name: '銀十字架', emoji: '✝️' },   // 紅寶石銀十字架（2026-10-24 試過的銀色版）
+  unicorn:     { name: '獨角獸',   emoji: '🦄' },
+  bird:        { name: '天堂鳥',   emoji: '🐦' },
+  harp:        { name: '銀豎琴',   emoji: '🎵' },
+  wings:       { name: '天使之翼', emoji: '🪽' },
+  trumpet:     { name: '天使號角', emoji: '🎺' },   // 超粗銀號角（被天使之翼取代，留在目錄）
+  chalice:     { name: '聖杯',     emoji: '🏆' },   // 銀聖杯（波浪粗花紋）
+  holyWater:   { name: '聖水',     emoji: '🧪' },   // 銀色無翅聖水（被銀豎琴取代，留在目錄）
+  laurel:      { name: '月桂冠',   emoji: '🌿' },
+  amphora:     { name: '雙耳瓶',   emoji: '🏺' },
+  shieldGreen: { name: '聖盾',     emoji: '🛡️' },   // 10/22 天使版聖盾，藍→亮綠（使用者 2026-10-24「盾牌跟聖水可以把藍色部分改成綠色的看看」→「亮綠就好」）
+  flaskGreen:  { name: '聖水瓶',   emoji: '🧪' },   // 10/22 天使版十字瓶塞聖水瓶，藍→亮綠
+};
+const ICON_POOL = { top: ['crossGold', 'crossSilver'],
+  high: ['unicorn', 'bird', 'harp', 'wings', 'trumpet', 'chalice', 'holyWater', 'laurel', 'amphora',   // 15 倍與 10 倍共用
+         'shieldGreen', 'flaskGreen'] };
+const LOW_SETS = {
+  akqj:     { label: 'A K Q J 10', names: ['A', 'K', 'Q', 'J', '10'], emoji: ['A', 'K', 'Q', 'J', '10'] },
+  greek:    { label: '希臘符號 α β δ π Ω', names: ['α', 'β', 'δ', 'π', 'Ω'], emoji: ['α', 'β', 'δ', 'π', 'Ω'] },
+  greekObj: { label: '希臘物件（橄欖樹枝／號角／蠟燭／羽毛筆／標槍）', names: ['橄欖樹枝', '號角', '蠟燭', '羽毛筆', '標槍'],   // 交付包 10/21 版，豎琴換 10/22 胖蠟燭、雙耳陶瓶換 10/22 胖羽毛
+              emoji: ['🫒', '📯', '🕯️', '🪶', '🗡️'] },
+};
+const PICK_SLOTS = [                              // 面板下拉選單：key → 盤面 id
+  { key: 'top', label: '最高分',   ids: [0] },
+  { key: 'h1',  label: '15 倍 ①', ids: [1] },
+  { key: 'h2',  label: '15 倍 ②', ids: [2] },
+  { key: 'm1',  label: '10 倍 ①', ids: [3] },
+  { key: 'm2',  label: '10 倍 ②', ids: [4] },
+  { key: 'low', label: '低分（5 個一組）', ids: [5, 6, 7, 8, 9] },
+];
+const DEFAULT_ICON_PICK = { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'harp', m2: 'chalice', low: 'akqj' };
+const LEGACY_ICON_SETS = {                        // 舊保存值 iconSet（A／B 圖示組）對應的組合
+  A: DEFAULT_ICON_PICK,
+  B: { top: 'crossGold', h1: 'harp', h2: 'wings', m1: 'laurel', m2: 'amphora', low: 'greek' },
+};
+const ICON_SET_VER = 'holy-63';
+let ICON_PICK = Object.assign({}, DEFAULT_ICON_PICK);
+function pickOptions(key) { return key === 'low' ? Object.keys(LOW_SETS) : key === 'top' ? ICON_POOL.top : ICON_POOL.high; }
+function pickSlotOf(id) { return PICK_SLOTS.find(s => s.ids.indexOf(id) >= 0) || null; }
+function pickKeyOf(id, pick) {                     // id0～4 → 目錄 key；id5～9 → 低分組 key；觸發 → null
+  const s = pickSlotOf(id); return s ? (pick || ICON_PICK)[s.key] : null;
+}
+function iconSrc(i, pick) {                        // id0～9 依自由組合取 assets/pick/；觸發 id10／11 固定 assets/
+  const k = pickKeyOf(i, pick), v = '.png?v=' + ICON_SET_VER;
+  if (!k) return 'assets/icon_' + i + v;
+  return 'assets/pick/' + (i >= 5 ? k + '_' + (i - 4) : k) + v;
+}
+function applyIconPickMeta(patch) {                // 合併選項（不認得的值不套用）→ 名稱、退回 emoji、調色盤標籤（同步，不等圖載入）
+  const next = Object.assign({}, ICON_PICK);
+  PICK_SLOTS.forEach(s => { const v = patch && patch[s.key]; if (pickOptions(s.key).indexOf(v) >= 0) next[s.key] = v; });
+  ICON_PICK = next;
+  PICK_SLOTS.forEach(s => s.ids.forEach((id, n) => {
+    const c = s.key === 'low' ? { name: LOW_SETS[next.low].names[n], emoji: LOW_SETS[next.low].emoji[n] } : ICON_CATALOG[next[s.key]];
+    SYMBOLS[id].name = c.name; SYMBOLS[id].emoji = c.emoji;
+  }));
+  TINT_SLOTS[0].label = '15 倍組（' + SYMBOLS[1].name + '＋' + SYMBOLS[2].name + '）';
+  return next;
+}
 const EMOJI_FONT = "'Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif";   // 彩色 emoji，不加 U+FE0E
 const WILD_ID = -1, SCATTER_ID = -1;   // 本遊戲沒有（保留常數名給共用程式）
 // 賠率：PAY[id] = [3 連, 4 連, 5 連] 的押注倍數 [企劃 §賠率表 D11:F23]
@@ -330,7 +393,7 @@ const PAYLINES = [
   [2, 1, 2, 1, 2], [3, 2, 3, 2, 3], [0, 1, 2, 1, 0], [1, 2, 3, 2, 1],
   [3, 2, 1, 2, 3], [2, 1, 0, 1, 2],
 ];
-// 金／紫十字架只落第 1、3、5 輪；兩種合計每輪最多 1 個 [企劃 E35；spec.md Q1 已確認]
+// 藍／紅聖心只落第 1、3、5 輪；兩種合計每輪最多 1 個 [企劃 E35；spec.md Q1 已確認]
 const WHEEL_REELS = [0, 2, 4];
 
 // --- 轉盤盤面（各 12 格，箭頭起順時針）[企劃 §一般遊戲 E63～E66、§FREE GAME E45～E49] ---
@@ -381,16 +444,16 @@ const DEFAULT_TIMING = {
   spinClear:        0.40,   // 單輪掉出（§3 n=15）
   spinDropIn:       0.22,   // 單輪落入（§3 n=15）
   landBounce:       0.12,   // 每輪停止後 0.2s 回彈（企劃 §節奏表 M28）
-  sixLand:      0.55,   // 十字架落地演繹（公版預設）；沒有連線得分時＝停輪→展開輪盤
-  wheelAfterWin:    0.55,   // 有連線得分時：連線得分跑完→展開輪盤（含最後 0.25 十字架脈動；使用者 2026-10-22）
-  sixPopTime:       0.18,   // 十字架落地快速縮放一下的時長（使用者 2026-10-22：原本綁 sixLand 0.55 太慢）
+  sixLand:      0.55,   // 聖心落地演繹（公版預設）；沒有連線得分時＝停輪→展開輪盤
+  wheelAfterWin:    0.55,   // 有連線得分時：連線得分跑完→展開輪盤（含最後 0.25 聖心脈動；使用者 2026-10-22）
+  sixPopTime:       0.18,   // 聖心落地快速縮放一下的時長（使用者 2026-10-22：原本綁 sixLand 0.55 太慢）
   wheelLeave:       0.80,   // 下一局開轉：上一局轉盤往下掉出＋縮小淡出的時長（每輪；使用者 2026-10-22 要比舊圖示慢）
   wheelIntro:       0.40,   // 轉盤登場（變一格→放大）；與 wheelSpin 合計 4.2（§8.4 紅盤 n=5）
   wheelSpin:        4.18,   // 轉盤轉動到停
   wheelResult:      1.31,   // 轉盤結果停留（公版預設）
   nxFade:           0.37,   // LOGO 字樣淡出→倍數淡入（局結算完反向）；使用者 2026-10-19，待節奏組實測
-  wheelNextGap:     0.52,   // 連開轉盤：前一個 NX 出現→下一個十字架開始脈動（競品實測 0.52，n=11）
-  buySixLand:       0.62,   // 購買觸發局：全部靜止→十字架脈動結束（等 0.37＋脈動 0.25；競品 §6.3 0.62）
+  wheelNextGap:     0.52,   // 連開轉盤：前一個 NX 出現→下一個聖心開始脈動（競品實測 0.52，n=11）
+  buySixLand:       0.62,   // 購買觸發局：全部靜止→聖心脈動結束（等 0.37＋脈動 0.25；競品 §6.3 0.62）
   buyWheelIntro:    0.36,   // 購買觸發局：變形＋長大到全尺寸（競品 0.23＋0.13＝0.36）
   buyWheelSpin:     0.35,   // 購買觸發局：轉盤轉動到停（不到 1 圈；競品實測 0.35，一般局 4.18）
   buyWheelResult:   0.45,   // 購買觸發局：停在聖火格→聖火與結果格彈跳開始（不出 NX、不跑分；競品 0.45）
@@ -442,16 +505,16 @@ const TIMING_META = [
     ['spinDropIn', '新圖示掉入', { hint: '掉落式：新圖示由上往下掉入落定。預設＝競品實測 0.22s', modes: ['drop'] }],
     ['landBounce', '落定回彈', { hint: '每輪停止後回彈時長（企劃節奏表：0.2s）；深度在特效分頁' }] ] },
   { group: '轉盤', items: [
-    ['sixLand', '無得分：停輪→輪盤', { hint: '沒有連線得分時：全部輪停後→十字架脈動結束、展開輪盤（等 0.30＋脈動 0.25；競品實測 0.55）' }],
-    ['sixPopTime', '十字架落地縮放', 0, 1, 0.01, { hint: '十字架掉下來落地時快速放大縮回一下的時長；縮完接「停輪→輪盤」的間隔，再展開輪盤' }],
+    ['sixLand', '無得分：停輪→輪盤', { hint: '沒有連線得分時：全部輪停後→聖心脈動結束、展開輪盤（等 0.30＋脈動 0.25；競品實測 0.55）' }],
+    ['sixPopTime', '聖心落地縮放', 0, 1, 0.01, { hint: '聖心掉下來落地時快速放大縮回一下的時長；縮完接「停輪→輪盤」的間隔，再展開輪盤' }],
     ['wheelLeave', '轉盤掉出', 0, 3, 0.05, { hint: '下一局開轉時，上一局的轉盤跟著該輪往下掉出盤面、同時縮小淡出的時長（每輪；左到右照滾輪啟動錯開）' }],
-    ['wheelAfterWin', '有得分：結算→輪盤', { hint: '有連線得分時：先演連線得分＋跑連線分數，跑完→十字架脈動結束、展開輪盤（最後 0.25 是十字架脈動；使用者 2026-10-22）' }],
-    ['wheelIntro', '轉盤登場', { hint: '十字架變成一格大小的轉盤→放大到約 2 格（與轉動合計＝競品實測 4.2s）' }],
+    ['wheelAfterWin', '有得分：結算→輪盤', { hint: '有連線得分時：先演連線得分＋跑連線分數，跑完→聖心脈動結束、展開輪盤（最後 0.25 是聖心脈動；使用者 2026-10-22）' }],
+    ['wheelIntro', '轉盤登場', { hint: '聖心變成一格大小的轉盤→放大到約 2 格（與轉動合計＝競品實測 4.2s）' }],
     ['wheelSpin', '轉盤轉動', 0, 10, 0.05, { hint: '轉盤轉動、逐漸減速停下，指針指到的格即選中（每個轉盤各一次）' }],
     ['wheelResult', '停定→NX', { hint: '轉盤停定→LOGO 位置出現 NX（靜止約 0.93s→其他格壓灰、結果格亮 0.38s→NX；競品實測 1.31s）。轉盤開始演出→NX 固定 6.13s' }],
     ['nxFade', '倍數淡入淡出', { hint: '轉盤倍數出現時 LOGO 字樣淡出、同一匾額淡入倍數；該局結算完倍數淡出、LOGO 淡入（待節奏組實測）' }],
-    ['wheelNextGap', '連開間隔', { hint: '一局多個轉盤時，前一個 NX 出現→下一個十字架開始脈動的等待（競品實測 0.52s）' }],
-    ['buySixLand', '購買局脈動', { hint: '購買觸發局：全部靜止→十字架脈動結束（等 0.37＋脈動 0.25；競品 §6.3 0.62）' }],
+    ['wheelNextGap', '連開間隔', { hint: '一局多個轉盤時，前一個 NX 出現→下一個聖心開始脈動的等待（競品實測 0.52s）' }],
+    ['buySixLand', '購買局脈動', { hint: '購買觸發局：全部靜止→聖心脈動結束（等 0.37＋脈動 0.25；競品 §6.3 0.62）' }],
     ['buyWheelIntro', '購買局轉盤登場', { hint: '購買觸發局：變形＋長大到全尺寸（競品 0.23＋0.13＝0.36）' }],
     ['buyWheelSpin', '購買局轉盤轉動', { hint: '購買觸發局：轉盤轉動到停（不到 1 圈；競品實測 0.35，一般局 4.18）' }],
     ['buyWheelResult', '購買局停定', { hint: '購買觸發局：停在聖火格→聖火與結果格彈跳開始（不出 NX、不跑分；競品 0.45）' }],
@@ -578,16 +641,16 @@ const RHYTHM_MAP = [
   ['spinClear',        '清場',             '掉落式：舊圖示整輪往下掉出的持續時間',                   null],
   ['spinDropIn',       '掉入',             '掉落式：新圖示由上往下掉入落定的持續時間',               null],
   ['landBounce',       '滾輪回彈時間',     '圖示落定後回彈到完全停止的持續時間（深度＝圖示 1/3）',   null],
-  ['sixLand',      '無得分：停輪→輪盤',   '沒有連線得分時：全部輪停後→十字架脈動結束、展開輪盤（等 0.30＋脈動 0.25）', null],
-  ['sixPopTime',   '十字架落地縮放',    '十字架落地時快速放大縮回的持續時間', null],
+  ['sixLand',      '無得分：停輪→輪盤',   '沒有連線得分時：全部輪停後→聖心脈動結束、展開輪盤（等 0.30＋脈動 0.25）', null],
+  ['sixPopTime',   '聖心落地縮放',    '聖心落地時快速放大縮回的持續時間', null],
   ['wheelLeave',   '轉盤掉出',          '下一局開轉時，上一局的轉盤往下掉出盤面並縮小淡出的持續時間（每輪）', null],
-  ['wheelAfterWin', '有得分：結算→輪盤',  '有連線得分時：連線得分跑完→十字架脈動結束、展開輪盤（最後 0.25 是十字架脈動）', null],
-  ['wheelIntro',       '轉盤登場演繹',     '十字架變成轉盤並放大到約 2 格寬的持續時間',             null],
+  ['wheelAfterWin', '有得分：結算→輪盤',  '有連線得分時：連線得分跑完→聖心脈動結束、展開輪盤（最後 0.25 是聖心脈動）', null],
+  ['wheelIntro',       '轉盤登場演繹',     '聖心變成轉盤並放大到約 2 格寬的持續時間',             null],
   ['wheelSpin',        '轉盤轉動演繹',     '轉盤轉動到停下的持續時間（每個轉盤）',       null],
   ['wheelResult',      '轉盤停定→NX',      '轉盤停定→LOGO 位置出現 NX（最後 0.38s 其他格壓灰、結果格亮起）', null],
   ['nxFade',           '倍數淡入淡出',     'LOGO 字樣淡出、同一匾額淡入倍數的時間（該局結算完倍數淡出、LOGO 淡入）', null],
-  ['wheelNextGap',     '連開轉盤間隔',     '前一個轉盤 NX 出現→下一個十字架開始脈動的等待時間',     null],
-  ['buySixLand', '購買局十字架脈動', '購買觸發局：全部靜止→十字架脈動結束（等 0.37＋脈動 0.25；競品 §6.3 0.62）', null],
+  ['wheelNextGap',     '連開轉盤間隔',     '前一個轉盤 NX 出現→下一個聖心開始脈動的等待時間',     null],
+  ['buySixLand', '購買局聖心脈動', '購買觸發局：全部靜止→聖心脈動結束（等 0.37＋脈動 0.25；競品 §6.3 0.62）', null],
   ['buyWheelIntro', '購買局轉盤登場', '購買觸發局：變形＋長大到全尺寸（競品 0.23＋0.13＝0.36）', null],
   ['buyWheelSpin', '購買局轉盤轉動', '購買觸發局：轉盤轉動到停（不到 1 圈；競品實測 0.35，一般局 4.18）', null],
   ['buyWheelResult', '購買局停定→彈跳', '購買觸發局：停在聖火格→聖火與結果格彈跳開始（不出 NX、不跑分；競品 0.45）', null],
@@ -722,11 +785,11 @@ const LAYOUT_META = [
 const DEFAULT_ICON = { iconGold: 1.45, iconHigh: 1.32, iconMid: 1.51, iconLow: 1.29, iconSix: 1.21 };   // 使用者 2026-10-21 調好匯出（docs/tuning_user_20261021_iconscale.json）
 const ICON_META = [
   { group: '圖示大小（依層級，1＝原尺寸）', items: [
-    ['iconGold', '白鴿', 0.5, 2.0, 0.01, { hint: '最高分：白鴿（盤面與賠率表一起套用）' }],
-    ['iconHigh', '武器組', 0.5, 2.0, 0.01, { hint: '15 倍武器組：天使之劍／天使之書' }],
-    ['iconMid', '聖物組', 0.5, 2.0, 0.01, { hint: '10 倍聖物組：聖盾／聖水瓶' }],
-    ['iconLow', '低分', 0.5, 2.0, 0.01, { hint: '低分 5 個：羽毛／卷軸／蠟燭／小鈴鐺／蝴蝶結' }],
-    ['iconSix', '十字架', 0.5, 2.0, 0.01, { hint: '金／紫十字架（落地放大 30% 疊在這個之上）' }] ] },
+    ['iconGold', '最高分', 0.5, 2.0, 0.01, { hint: '最高分（上方「圖示組合」選的那個；盤面與賠率表一起套用）' }],
+    ['iconHigh', '15 倍組', 0.5, 2.0, 0.01, { hint: '15 倍兩格（上方「圖示組合」選的；兩格共用這個大小）' }],
+    ['iconMid', '10 倍組', 0.5, 2.0, 0.01, { hint: '10 倍兩格（上方「圖示組合」選的；兩格共用這個大小）' }],
+    ['iconLow', '低分', 0.5, 2.0, 0.01, { hint: '低分 5 個（A K Q J 10／希臘符號／希臘物件，上方「圖示組合」選）' }],
+    ['iconSix', '聖心', 0.5, 2.0, 0.01, { hint: '藍／紅聖心（落地放大 30% 疊在這個之上）' }] ] },
 ];
 function iconTierKey(id) { return id === 0 ? 'iconGold' : id <= 2 ? 'iconHigh' : id <= 4 ? 'iconMid' : id <= 9 ? 'iconLow' : 'iconSix'; }
 // 新素材透明留白校正：保持原本占格長邊，保留胖版造型；盤面與中獎刷光共用。
@@ -737,7 +800,7 @@ function iconScaleOf(id) { const v = ICON[iconTierKey(id)]; return (Number.isFin
 const DEFAULT_FX = {
   dimAlpha:   0.40,   // 未中獎圖示壓暗至
   bounceAmp:  35,     // 落定回彈深度：圖示 1/3（企劃 §節奏表 V13；105/3≈35）
-  landPop:    0.30,   // 十字架落地（出現）時整體放大 30%（使用者 2026-10-19）
+  landPop:    0.30,   // 聖心落地（出現）時整體放大 30%（使用者 2026-10-19）
   wheelBig:   2.0,    // 轉盤放大後約幾格寬（企劃 §美術 H26：約 2 格）
   wheelTurns: 4,      // 轉盤轉幾圈才停
   wheelPopAmp: 0.18,  // 轉盤停定彈跳幅度（加法格／聖火格）
@@ -761,7 +824,7 @@ const DEFAULT_FX = {
   anticFake:  0.25,   // 預報演繹 1（假預報）：NG 藍輪沒有停在聖火格時，以這個機率播預報 1（使用者 2026-10-21 定；停在聖火格必播預報 2）
   anticZoom:  1.35,   // 預報演繹 1／2：轉盤轉動時畫面朝轉盤緩慢拉近的倍率上限（實際取轉盤不出畫面的最大值）
   anticDots:  1.0,   // 預報演繹的金色光點粒子量（預報 2 為 3 倍）
-  winZoomHi:  1.2,   // 圖示中獎：白鴿、武器組／聖物組放大倍率（美術需求：20%）
+  winZoomHi:  1.2,   // 圖示中獎：金十字架、武器組／聖物組放大倍率（美術需求：20%）
   winZoomLo:  1.1,   // 圖示中獎：低分圖示放大倍率（美術需求：10%）
   heartX:     500,   // 單盤總贏分 ≥ 此倍數 → 轉盤轉動前播天使雙人愛心合體（美術需求 54G）
   bigCoins:   1.0,   // 大獎時天使身後噴出金幣／鈔票的量（BIG 少量、MEGA 大量、EPIC 加鈔票）
@@ -789,7 +852,7 @@ const FX_META = [
   { group: '滾輪與轉盤', items: [
     ['bounceAmp', '落定回彈幅度', 0, 60, 1,
       { hint: '落定下沉再彈回的深度（px）；企劃：回彈深度＝圖示 1/3（35px）。時長在節奏分頁' }],
-    ['landPop', '十字架落地放大', 0, 1, 0.05, { hint: '十字架出現（落地）時整體放大幅度（0.30＝放大 30%，使用者 2026-10-19）' }],
+    ['landPop', '聖心落地放大', 0, 1, 0.05, { hint: '聖心出現（落地）時整體放大幅度（0.30＝放大 30%，使用者 2026-10-19）' }],
     ['wheelBig', '轉盤放大格數', 1, 4, 0.1, { hint: '轉盤放大後約幾格寬（企劃：約 2 格）' }],
     ['wheelTurns', '轉盤圈數', 1, 10, 1, { hint: '轉盤停下前轉幾圈（純視覺）' }],
     ['wheelPopAmp', '停定彈跳幅度', 0, 1, 0.01, { hint: '轉盤停下時聖火＋選中格放大幅度（0.18＝放大 18%）；時長在節奏分頁' }],
@@ -816,7 +879,7 @@ const FX_META = [
     ['anticFake', '假預報機率', 0, 1, 0.05, { hint: '預報演繹 1（假預報）：NG 藍輪沒有停在聖火格時，以這個機率播預報 1（使用者 2026-10-21 定；停在聖火格必播預報 2）' }],
     ['anticZoom', '預報拉近', 1, 2, 0.05, { hint: '預報演繹 1／2：轉盤轉動時畫面朝轉盤緩慢拉近的倍率上限（實際取轉盤不出畫面的最大值）' }],
     ['anticDots', '預報光點量', 0, 3, 0.1, { hint: '預報演繹的金色光點粒子量（預報 2 為 3 倍）' }],
-    ['winZoomHi', '高分中獎放大', 1, 1.6, 0.01, { hint: '圖示中獎：白鴿、武器組／聖物組放大倍率（美術需求：20%）' }],
+    ['winZoomHi', '高分中獎放大', 1, 1.6, 0.01, { hint: '圖示中獎：金十字架、武器組／聖物組放大倍率（美術需求：20%）' }],
     ['winZoomLo', '低分中獎放大', 1, 1.6, 0.01, { hint: '圖示中獎：低分圖示放大倍率（美術需求：10%）' }],
     ['heartX', '合體倍數≥', 50, 5000, 10, { hint: '單盤總贏分 ≥ 此倍數 → 轉盤轉動前播天使雙人愛心合體（美術需求 54G）' }],
     ['bigCoins', '大獎金幣量', 0, 3, 0.1, { hint: '大獎時天使身後噴出金幣／鈔票的量（BIG 少量、MEGA 大量、EPIC 加鈔票）' }],
@@ -845,11 +908,11 @@ const FX_META = [
 const DEFAULT_ODDS = {
   bet:          100,
   payMul:       1,
-  hamNG:        4,     // 一般遊戲：第 1／3／5 輪各自出現紫十字架的機率（%）
+  hamNG:        4,     // 一般遊戲：第 1／3／5 輪各自出現藍聖心的機率（%）
   ham10:        12,    // BET×10：同上
-  fgGold:       10,    // FG：每輪出現金十字架（%）
-  fgBlue:       10,    // FG：每輪出現紫十字架（%）
-  sfgGold:      18,    // SFG：每輪出現金十字架（%）
+  fgGold:       10,    // FG：每輪出現紅聖心（%）
+  fgBlue:       10,    // FG：每輪出現藍聖心（%）
+  sfgGold:      18,    // SFG：每輪出現紅聖心（%）
   gc1:          70,    // UFG／BET×50：每局紅輪 1 個的權重
   gc2:          25,    // 2 個
   gc3:          5,     // 3 個
@@ -871,11 +934,11 @@ const ODDS_META = [
     ['bet', '單局押注', 10, 1000, 10, { hint: '基本押注；機制購買期間派彩與大獎分級都以此計' }],
     ['payMul', '全域賠率乘數', 0.1, 5, 0.05, { hint: '調 RTP 用（RTP 未校準，非競品實值）' }] ] },
   { group: '轉盤圖示出現率', items: [
-    ['hamNG', 'NG紫十字率', 0, 100, 0.5, { hint: '一般遊戲：第 1／3／5 輪各自出現紫十字架的機率 %（待數值組）' }],
-    ['ham10', 'B10紫十字率', 0, 100, 0.5, { hint: 'BET×10 啟用時每輪紫十字架機率 %（提高但不保證）' }],
-    ['fgGold', 'FG金十字率', 0, 100, 0.5, { hint: 'FG：每輪金十字架機率 %（兩種合計每輪最多 1 個）' }],
-    ['fgBlue', 'FG紫十字率', 0, 100, 0.5, { hint: 'FG：每輪紫十字架（藍輪 藍-3）機率 %' }],
-    ['sfgGold', 'SFG金十字率', 0, 100, 0.5, { hint: 'SFG：每輪金十字架機率 %（不出藍輪）' }],
+    ['hamNG', 'NG藍聖心率', 0, 100, 0.5, { hint: '一般遊戲：第 1／3／5 輪各自出現藍聖心的機率 %（待數值組）' }],
+    ['ham10', 'B10藍聖心率', 0, 100, 0.5, { hint: 'BET×10 啟用時每輪藍聖心機率 %（提高但不保證）' }],
+    ['fgGold', 'FG紅聖心率', 0, 100, 0.5, { hint: 'FG：每輪紅聖心機率 %（兩種合計每輪最多 1 個）' }],
+    ['fgBlue', 'FG藍聖心率', 0, 100, 0.5, { hint: 'FG：每輪藍聖心（藍輪 藍-3）機率 %' }],
+    ['sfgGold', 'SFG紅聖心率', 0, 100, 0.5, { hint: 'SFG：每輪紅聖心機率 %（不出藍輪）' }],
     ['gc1', '紅盤1個權重', 0, 100, 1, { hint: 'UFG／BET×50 每局紅輪 1 個的權重（每局必出）' }],
     ['gc2', '紅盤2個權重', 0, 100, 1, { hint: 'UFG／BET×50 每局紅輪 2 個的權重' }],
     ['gc3', '紅盤3個權重', 0, 100, 1, { hint: 'UFG／BET×50 每局紅輪 3 個的權重' }] ] },
@@ -1069,7 +1132,7 @@ function syncLayoutDerived() {
  * 區塊 3：美術載入（assets 圖檔優先；缺件時使用程式退回版）
  * ========================================================== */
 const ART = {
-  sym: SYMBOLS.map((s, i) => 'assets/icon_' + i + '.png?v=holy-42'),
+  sym: SYMBOLS.map((s, i) => iconSrc(i)),
   bg:  'assets/bg.png',
   bgFG: 'assets/bg_fg.png',
   frame: 'assets/frame.png',
@@ -1077,10 +1140,10 @@ const ART = {
   // AI 素材（assets/assets_map.md）：其餘場景、轉盤、介面、轉場、大獎、角色
   bgSFG: 'assets/ai/scene_03.png',            // SFG 銀牌賽
   bgUFG: 'assets/ai/scene_04.png',            // UFG 金牌賽
-  wheelBlue: 'assets/ai/icon_13.png?v=holy-22',         // 紫十字架的輪（程式裡仍叫 blue）原圖（拆層來源；拆不到時整張當底圖）；2026-10-22 換天使版紫色輪盤
-  wheelRed: 'assets/ai/icon_14.png?v=holy-22',          // 金十字架的輪（程式裡仍叫 red）原圖；2026-10-22 換天使版金色輪盤
-  wheelBlueBase: 'assets/ai/icon_13_base.png?v=holy-22', wheelBlueTorch: 'assets/ai/icon_13_torch.png?v=holy-22',   // tools/split_wheel_art.py 產
-  wheelRedBase: 'assets/ai/icon_14_base.png?v=holy-22', wheelRedTorch: 'assets/ai/icon_14_torch.png?v=holy-22',
+  wheelBlue: 'assets/ai/icon_13.png?v=holy-46',         // 藍聖心的輪（程式裡叫 blue）原圖（拆層來源；拆不到時整張當底圖）；2026-10-22 天使版輪盤，2026-10-24 拆層改藍輪（格色／外框由 split_wheel_art.py 重畫）
+  wheelRed: 'assets/ai/icon_14.png?v=holy-46',          // 紅聖心的輪（程式裡叫 red）原圖；2026-10-22 天使版輪盤，2026-10-24 拆層改紅輪
+  wheelBlueBase: 'assets/ai/icon_13_base.png?v=holy-46', wheelBlueTorch: 'assets/ai/icon_13_torch.png?v=holy-46',   // tools/split_wheel_art.py 產
+  wheelRedBase: 'assets/ai/icon_14_base.png?v=holy-46', wheelRedTorch: 'assets/ai/icon_14_torch.png?v=holy-46',
   coin: 'assets/fx/coin.png',                 // 大獎噴金幣（交付包 05_特效/金幣.png 縮圖）
   bill: 'assets/fx/bill.png',                 // EPIC 噴鈔票（交付包 05_特效/鈔票.png 縮圖）
   fgIntro: 'assets/ai/ui_02.png',             // FG 進入介面
@@ -1089,8 +1152,8 @@ const ART = {
   anticip: 'assets/ai/ui_05.png',             // 觸發期待（取閃電光框）
   trans: 'assets/ai/transition_01.png',       // 免費遊戲轉場
   big1: 'assets/ai/bigwin_01.png', big2: 'assets/ai/bigwin_02.png', big3: 'assets/ai/bigwin_03.png', big4: 'assets/ai/bigwin_04.png',
-  cupidL: 'assets/ai/character_01.png?v=holy-40',       // 小愛神（左，黃頭帶、揮手；2026-10-22 帽子改回頭帶、小皮包改咖啡色小劍插在腰帶內）
-  cupidR: 'assets/ai/character_02_transparent_20261022.png?v=holy-40',       // 小愛神（右，黑頭帶、托腮坐著；2026-10-22 舊圓臉頭帶版＋吊帶裙（一邊吊帶掉下）＋咖啡色腰帶掛藥瓶）
+  cupidL: 'assets/ai/character_01.png?v=holy-43',       // 小愛神（左，黃頭帶、揮手；2026-10-22 帽子改回頭帶；2026-10-23 拿掉腰帶與小劍）
+  cupidR: 'assets/ai/character_02_transparent_20261022.png?v=holy-43',       // 小愛神（右，黑頭帶、托腮坐著；2026-10-22 舊圓臉頭帶版＋吊帶裙（一邊吊帶掉下）；2026-10-23 拿掉腰帶與藥瓶）
 };
 const FRAME_PAD = 24;
 function isFGScene() {
@@ -1119,13 +1182,27 @@ async function loadArt() {
   if (!sceneImgs.wheelRedBase && sceneImgs.wheelRed) sceneImgs.wheelRedBase = sceneImgs.wheelRed;
   artReady = true;
 }
+let iconPickLoading = null;                       // 換圖示中的載入 Promise（驗證用）
+function setIconPick(patch, noSave) {             // 面板下拉選單換圖示：套選項 → 載入 id0～9 的圖與調色盤遮罩 → 清著色快取 → 重畫賠率表
+  applyIconPickMeta(patch);
+  const jobs = [];
+  for (let i = 0; i <= 9; i++) { const src = iconSrc(i); jobs.push(_loadImg(src).then(im => { if (im && iconSrc(i) === src) iconImgs[i] = im; })); }
+  jobs.push(loadTintArt());
+  iconPickLoading = Promise.all(jobs).then(() => {
+    tintCache = {};
+    const ip = document.getElementById('infoPanel');
+    if (ip && ip.classList.contains('visible') && typeof buildPayTable === 'function') buildPayTable();
+  });
+  if (!noSave) saveTuning();
+  return iconPickLoading;
+}
 /* --- 調色盤（面板「調色盤」分頁，使用者 2026-10-22）---
  * 原色部位遮罩＋灰階底圖由 tools/make_tint_masks.py 離線產生（2026-10-22 起劍與書是藍色版，遮罩抓藍色部位）（assets/tint/icon_<i>_mask.png／_gray.png），
  * 執行時只在離屏 canvas 合成、不讀像素（file:// 開啟時 getImageData 會 taint）。換了圖示檔要重跑該腳本。
  * 合成：灰階底圖 →（遮罩內）multiply 一層所選顏色（＝灰階明暗×顏色，保留原本金屬的高光與陰影，比 'color' 混色飽和）→ 亮度 >50 用 screen 提亮、<50 用 multiply 壓暗。
  * 可擴充：別的圖示做好遮罩後，在 TINT_SLOTS 加一組、DEFAULT_TINT 加同名預設即可。 */
 const TINT_SLOTS = [
-  { key: 'tintHigh', label: '15 倍組（天使之劍＋天使之書）', ids: [1, 2] },
+  { key: 'tintHigh', label: '15 倍組（獨角獸＋天堂鳥）', ids: [1, 2] },
 ];
 const TINT_PRESETS = [['藍（原色）', null, '#2563eb'], ['金', [45, 85, 55]], ['紫', [280, 75, 50]], ['粉', [330, 80, 58]], ['銀白', [220, 6, 62]]];   // 亮度 50＝保留原金色明暗
 const DEFAULT_TINT = { tintHigh: { on: 0, h: 280, s: 75, l: 50 } };   // on 0＝顯示原圖原色（藍，不著色）
@@ -1137,9 +1214,11 @@ function tintSlotOf(id) { return TINT_SLOTS.find(t => t.ids.indexOf(id) >= 0) ||
 function loadTintArt() {
   const jobs = [];
   TINT_SLOTS.forEach(t => t.ids.forEach(id => {
-    const o = TINT_ART[id] = {};
-    jobs.push(_loadImg('assets/tint/icon_' + id + '_gray.png?v=holy-37').then(im => { o.gray = im; }));
-    jobs.push(_loadImg('assets/tint/icon_' + id + '_mask.png?v=holy-37').then(im => { o.mask = im; }));
+    const o = {}, key = pickKeyOf(id);              // 兩張都載好才換上（換圖示時，舊遮罩在新圖載完前照常可用）
+    jobs.push(Promise.all([
+      _loadImg('assets/pick/tint/' + key + '_gray.png?v=' + ICON_SET_VER).then(im => { o.gray = im; }),
+      _loadImg('assets/pick/tint/' + key + '_mask.png?v=' + ICON_SET_VER).then(im => { o.mask = im; }),
+    ]).then(() => { if (pickKeyOf(id) === key) TINT_ART[id] = o; }));
   }));
   return Promise.all(jobs);
 }
@@ -1221,7 +1300,7 @@ function roundRect(x, y, w, h, r, fill, stroke, lw) {
 
 /* ============================================================
  * 區塊 4：玩法
- * 一局：SPINNING（掉落）→ POSTSTOP（十字架落地演繹）→ WHEEL×N（由左到右：登場→轉動→結果→收合）
+ * 一局：SPINNING（掉落）→ POSTSTOP（聖心落地演繹）→ WHEEL×N（由左到右：登場→轉動→結果→收合）
  *      → WIN_SHOW（連線）→ SCORE（中央得分）或 BIGWIN（大獎）→ 聖火格數量判斷 → FG_INTRO …
  * [企劃 §一般遊戲 E53 流程簡述；spec.yaml flow]
  * ========================================================== */
@@ -1238,7 +1317,7 @@ let colNext = [];
 let cellOffsets = [], cellStopped = [], cellSpeedK = [];
 let spinOldBoard = null, spinOldDrops = [];
 let spinTimer = 0, stateTimer = 0;
-let landT = [];            // 各輪十字架落地演繹計時（-1＝沒有）
+let landT = [];            // 各輪聖心落地演繹計時（-1＝沒有）
 let winLines = [], winCells = null;
 let wheels = [], wheelIdx = 0, wheelPhase = 'intro', wheelAcc = 0, nxPopT = -1, startCount = 0;
 let nxFadeK = 0, nxShownVal = 0, nxTierCur = 0, nxPlantT = -1, nxShakeT = -1, nxStale = true;   // nxStale：新的一局，下一個倍數要重新長植栽   // LOGO 匾額：0＝顯示 LOGO、1＝顯示倍數（中間＝交叉淡入淡出）
@@ -1326,7 +1405,7 @@ function newCell(id) {
   return { id: id, yOffset: 0, isMatched: false, scale: 1, nextId: id, used: null };
 }
 
-// 初始盤面：全盤最高分圖示（白鴿）[企劃 §一般遊戲 D20；decisions 硬關卡]
+// 初始盤面：全盤最高分圖示（金十字架）[企劃 §一般遊戲 D20；decisions 硬關卡]
 function generateBoard() {
   board = [];
   colOffsets = []; colBounce = []; colStopped = []; colNext = []; colBounceT = [];
@@ -1450,20 +1529,20 @@ function forcedWheels(force) {
   }
   return null;
 }
-// 固定牌型（得分級距測試用，兩個模式都生效）：第 1 輪用 {羽毛,卷軸,蠟燭,小鈴鐺}、第 3 輪起用別的圖示
+// 固定牌型（得分級距測試用，兩個模式都生效）：第 1 輪用 {A,K,Q,J}、第 3 輪起用別的圖示
 // → 除了刻意種的線之外，任何線都湊不到 3 連（結果可重現）
 const LINE_FORCES = {
   small: [[1, 1, 3]],                 // 天使之劍 3 連（第 2 列）＝2 倍：得分數字等級 1，不跑分
   run:   [[1, 1, 5]],                 // 天使之劍 5 連＝15 倍：公版特效(1)＋跑分
   hi2:   [[0, 3, 5], [3, 3, 5]],      // 聖盾第 1 列＋第 4 列各 5 連＝20 倍：天使高倍 2（20～25 倍）
-  big1:  [[0, 0, 5]],                 // 白鴿 5 連＝50 倍：BIG WIN
+  big1:  [[0, 0, 5]],                 // 金十字架 5 連＝50 倍：BIG WIN
   big2:  [[0, 0, 5], [3, 1, 5]],      // 50＋15＝65 倍：SUPER WIN
   big3:  [[0, 0, 5], [3, 0, 5], [2, 1, 5]],   // 50＋50＋15＝115 倍：MEGA WIN
-  big4:  'all',                       // 全盤白鴿 14 線×50＝700 倍：EPIC WIN
+  big4:  'all',                       // 全盤金十字架 14 線×50＝700 倍：EPIC WIN
 };
 function plantedBoard(spec) {
   const b = [];
-  const pool01 = [5, 6, 7, 8], pool2 = [9, 2, 3, 4];   // 第 3 輪起不放白鴿／天使之劍：種的線不會被隨機延長
+  const pool01 = [5, 6, 7, 8], pool2 = [9, 2, 3, 4];   // 第 3 輪起不放金十字架／天使之劍：種的線不會被隨機延長
   for (let c = 0; c < COLS; c++) {
     b[c] = [];
     for (let r = 0; r < ROWS; r++) {
@@ -1581,7 +1660,7 @@ function startDropSpin() {
 }
 function columnLanded(c) {
   colBounceT[c] = 0;
-  for (let r = 0; r < ROWS; r++) if (targetBoard[c][r] >= SIX_ID) landT[c] = 0;   // 十字架落地演繹
+  for (let r = 0; r < ROWS; r++) if (targetBoard[c][r] >= SIX_ID) landT[c] = 0;   // 聖心落地演繹
 }
 function updateSpinning() {
   spinTimer++;
@@ -1725,10 +1804,10 @@ function scoreDone() {                            // 跑分演完：先結算連
   } else roundDone();
 }
 // 轉盤節奏（對齊競品 docs/competitor-rhythm-20261020.md）：
-//   第 1 個：全部輪停 → sixLand（等 0.30＋十字架脈動 0.25）→ intro → spin → result（停定→NX 1.31，最後 0.38 壓灰亮格）→ NX
+//   第 1 個：全部輪停 → sixLand（等 0.30＋聖心脈動 0.25）→ intro → spin → result（停定→NX 1.31，最後 0.38 壓灰亮格）→ NX
 //   之後：after（連開間隔 wheelNextGap 0.52；最後一個是 0.12 後出分數）→ 下一個 pulse（脈動 0.25）→ intro …
 //   「轉盤開始演出（脈動）→NX」＝0.25＋0.40＋4.18＋1.31＝6.14 ≈ 競品 6.13
-const SIX_PULSE = 0.25;                         // 十字架脈動（競品實測 0.25，含在 sixLand 最後一段）
+const SIX_PULSE = 0.25;                         // 聖心脈動（競品實測 0.25，含在 sixLand 最後一段）
 const WHEEL_DIM_LEAD = 0.38;                    // NX 前 0.38 秒其他格壓灰、結果格亮起（競品實測 n=53）
 const WHEEL_SCORE_GAP = 0.12;                   // 最後一個 NX → 跑分數字出現（競品實測 n=8）
 const WHEEL_BIG_GAP = 0.28;                     // 最後一個 NX → 大獎跑分開始（競品 P 50x 局：NX 0 → 0.28 跑分開始）
@@ -1807,7 +1886,7 @@ function updateWheel() {
     }
   }
 }
-// 十字架脈動（競品：全部輪停 0.30 秒後放大縮回 0.25 秒；連開時下一個也先脈動）
+// 聖心脈動（競品：全部輪停 0.30 秒後放大縮回 0.25 秒；連開時下一個也先脈動）
 function sixPulseScale(c, r) {
   const F = Math.max(1, TF(SIX_PULSE));
   let k = -1;
@@ -2318,10 +2397,10 @@ const ART_GEO = {
   frame: { win: [132, 286, 1403, 911], plaque: [482, 20, 1055, 245] },
   // 藍輪／紅輪：tools/split_wheel_art.py 拆層。AI 圖分隔線不均（±4°），格區依原圖格色重畫成精準 30°、格 0 置中在正上方；
   // band＝格區內外緣（相對 R，給倍數字、壓灰、亮框、燃火用）
-  wheel: { blue: { cx: 628.5, cy: 620.5, R: 622.0, band: [0.372, 0.93] },   // blue＝紫十字架的輪；2026-10-22 換天使版紫色輪盤（白手套祈禱手），外框改細紫框（無回紋），重量
-    red: { cx: 628.0, cy: 620.5, R: 621.2, band: [0.371, 0.93] }, band: [0.39, 0.84] },   // red＝金十字架的輪；2026-10-22 換天使版金色輪盤（白手套祈禱手），外框改細金框（無回紋），重量
-  cupidL: [10, 2, 1122, 1351, 1173],   // character_01 左天使（黑髮、黃頭帶＋愛心蝴蝶結、咖啡色腰帶插咖啡色小劍；2026-10-22 頭帶木劍版 1139×1381）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度，沿用前一版 1173 讓畫面上大小不變
-  cupidR: [212, 21, 865, 1193, 1124],   // 右天使（舊圓臉＋黑頭帶，身體為吊帶裙＋腰帶藥瓶；2026-10-22 1254×1254）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度（前一版人物可見高 1339×1137/1355≈1124），畫面上大小不變
+  wheel: { blue: { cx: 628.5, cy: 620.5, R: 622.0, band: [0.372, 0.93] },   // blue＝藍聖心的輪；天使版輪盤（白手套祈禱手），細框無回紋；2026-10-24 改藍輪（格子淺／深藍、藍框）
+    red: { cx: 628.0, cy: 620.5, R: 621.2, band: [0.371, 0.93] }, band: [0.39, 0.84] },   // red＝紅聖心的輪；天使版輪盤（白手套祈禱手），細框無回紋；2026-10-24 改紅輪（格子淺／深紅、紅框）
+  cupidL: [10, 2, 1121, 1353, 1173],   // character_01 左天使（黑髮、黃頭帶＋愛心蝴蝶結；2026-10-23 拿掉腰帶與小劍，1139×1381）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度，沿用前一版 1173 讓畫面上大小不變
+  cupidR: [212, 21, 865, 1193, 1124],   // 右天使（舊圓臉＋黑頭帶，身體為吊帶裙；2026-10-23 拿掉腰帶與藥瓶，1254×1254）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度（前一版人物可見高 1339×1137/1355≈1124），畫面上大小不變
   // ui_02 FG 進入介面（全幅）：拱形標題匾、米白大面板、綠／紅兩顆按鈕；blank＝面板空白處（不提供抽籤時蓋掉按鈕用），ty＝面板內各行文字的 y
   fgIntro: { title: [468, 196], panel: [150, 260, 645, 235], start: { x: 152, y: 498, w: 303, h: 100 },
     deal: { x: 470, y: 498, w: 310, h: 100 }, blank: [148, 385, 640, 108], blankDst: [148, 494, 640, 110],
@@ -2368,15 +2447,15 @@ const TORCH_FIXED_DEG = 0;                        // 聖火層固定角度（朝
 function wheelSegCenterDeg(i, angleDeg) { return -90 + i * 30 + angleDeg; }
 function wheelTopSeg(angleDeg) { return ((Math.round(-angleDeg / 30) % 12) + 12) % 12; }   // 目前在正上方的格
 const WHEEL_LABEL_K = 0.55;                     // 倍數字在格區的半徑位置（0＝內緣、1＝外緣）；直向排列後字沿半徑方向，中心往內移一點（原 0.62）
-// 倍數字方向（使用者 2026-10-22 參考競品）：沿半徑直向排、由盤心往外讀；聖火格的金十字架維持朝外直立
-let segCrossSil = null;                          // 金十字架的黑色剪影（離屏 canvas 合成、不讀像素，file:// 也能用）
+// 倍數字方向（使用者 2026-10-22 參考競品）：沿半徑直向排、由盤心往外讀；聖火格的紅聖心維持朝外直立
+let segCrossSil = null;                          // 紅聖心的黑色剪影（離屏 canvas 合成、不讀像素，file:// 也能用）
 function segCrossSilhouette(im) {
   if (segCrossSil && segCrossSil.im === im) return segCrossSil.c;
   const c = document.createElement('canvas'); c.width = im.width; c.height = im.height;
   const g = c.getContext('2d'); g.drawImage(im, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = '#000'; g.fillRect(0, 0, c.width, c.height);
   segCrossSil = { im: im, c: c }; return c;
 }
-function drawSegCross(R) {                       // 聖火格的金十字架（原點＝格中心，已轉成朝外直立）；圖未載入時退回 ✝️
+function drawSegCross(R) {                       // 聖火格的紅聖心（原點＝格中心，已轉成朝外直立）；圖未載入時退回 ✝️
   const im = iconImgs[GOLD_ID], s = R * 0.4;       // 使用者 2026-10-22：放大（原 0.3）＋周圍黑邊
   if (im) {
     const sil = segCrossSilhouette(im), o = Math.max(1.5, R * 0.02);
@@ -2417,7 +2496,7 @@ function drawWheelDiscArt(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, gl
   for (let i = 0; i < 12; i++) {
     const sg = segs[i];
     const a0 = (wheelSegCenterDeg(i, angleDeg) - 15) * Math.PI / 180, a1 = a0 + Math.PI / 6;
-    if (sg.type === 'start') {                       // 聖火格：金十字架圖示（使用者 2026-10-22 拿掉金橘疊色＋🔥）；預報演繹時整體變亮（美術需求 22H／23H）
+    if (sg.type === 'start') {                       // 聖火格：紅聖心圖示（使用者 2026-10-22 拿掉金橘疊色＋🔥）；預報演繹時整體變亮（美術需求 22H／23H）
       ctx.beginPath(); ctx.arc(cx, cy, r1, a0, a1); ctx.arc(cx, cy, r0, a1, a0, true); ctx.closePath();
       if (wheelAnticNow > 0) {
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -3103,7 +3182,7 @@ function drawWheelDisc(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, glow)
     ctx.translate(cx + Math.cos(am) * Ri * 0.72, cy + Math.sin(am) * Ri * 0.72);
     ctx.rotate(am + wheelLabelRot(sg));
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    if (sg.type === 'start') {                       // 聖火格：金十字架
+    if (sg.type === 'start') {                       // 聖火格：紅聖心
       drawSegCross(R);
     } else {
       const ls = wheelLabelStyle(sg);
@@ -3259,7 +3338,7 @@ function wheelDrawList() {
   const out = [];
   for (let j = 0; j <= wheelIdx && j < wheels.length; j++) {
     const w = wheels[j], g = wheelGeom(w), cur = j === wheelIdx;
-    if (cur && wheelPhase === 'pulse') continue;    // 還在十字架脈動，轉盤還沒出來
+    if (cur && wheelPhase === 'pulse') continue;    // 還在聖心脈動，轉盤還沒出來
     let k = 1;
     if (cur && wheelPhase === 'intro') k = easeOutBack(Math.min(1, stateTimer / TF(wheelT('wheelIntro'))));
     const kk = Math.max(0, k);
@@ -3561,12 +3640,12 @@ function activeWheelCell() {
   wheelDrawList().forEach(d => { keys[d.w.c + ',' + d.w.r] = 1; });
   return keys;
 }
-// 凸顯聖火（使用者 2026-10-19）：十字架出現時整體放大 30%。旋轉中壓暗其他圖示的功能已拿掉（使用者 2026-10-22）
+// 凸顯聖火（使用者 2026-10-19）：聖心出現時整體放大 30%。旋轉中壓暗其他圖示的功能已拿掉（使用者 2026-10-22）
 function sixLandScale(c) {
   if (landT[c] < 0) return 1;
   return 1 + FX.landPop * Math.sin(Math.PI * Math.min(1, landT[c] / Math.max(1, TF(TIMING.sixPopTime))));
 }
-// 圖示中獎演繹（美術需求 4H～9H）：白鴿／武器組／聖物組放大 20%、低分 10%；白鴿左右晃動＋雙翼刷光一次＋刷光；
+// 圖示中獎演繹（美術需求 4H～9H）：金十字架／武器組／聖物組放大 20%、低分 10%；金十字架左右晃動＋雙翼刷光一次＋刷光；
 // 武器組（天使之劍／天使之書）、聖物組（聖盾／聖水瓶）＝通用放大＋刷光（2026-10-21 天使版：原本綁角色的抖動拿掉）；低分外框微光暈
 function winSymbolFx(id, t) {
   if (id >= SIX_ID) return null;
@@ -3597,7 +3676,7 @@ function drawIconSweep(id, x, y, sc, ph) {        // 圖示表面刷光一次（
   ctx.drawImage(oc, x + CELL_SIZE / 2 - S / 2, y + CELL_SIZE / 2 - S / 2);
   ctx.restore();
 }
-function drawIconFlash(x, y, sc, f) {             // 白鴿雙翼刷光一次（左右翅膀各一團白光，由翼尖往身體方向掃）
+function drawIconFlash(x, y, sc, f) {             // 金十字架雙翼刷光一次（左右翅膀各一團白光，由翼尖往身體方向掃）
   const cx = x + CELL_SIZE / 2, cy = y + CELL_SIZE / 2, S = (CELL_SIZE - 8) * sc;
   const m = 0.34 - 0.12 * Math.min(1, Math.max(0, f));          // 光團位置：翼尖（0.34）→ 翅膀中段
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = f;
@@ -3659,8 +3738,8 @@ function drawBoard() {
       const isWin = showWin && winCells.has(c + ',' + r);
       if ((pass === 1) !== !!isWin) continue;
       let sc = cell.scale;
-      if (landT[c] >= 0 && cell.id >= SIX_ID && !cell.used) sc *= sixLandScale(c);   // 十字架出現：整體放大 30%
-      if (cell.id >= SIX_ID && !cell.used) sc *= sixPulseScale(c, r);                 // 全部輪停後的十字架脈動（競品）
+      if (landT[c] >= 0 && cell.id >= SIX_ID && !cell.used) sc *= sixLandScale(c);   // 聖心出現：整體放大 30%
+      if (cell.id >= SIX_ID && !cell.used) sc *= sixPulseScale(c, r);                 // 全部輪停後的聖心脈動（競品）
       if (isWin && zoom > 1) sc *= 1 + (zoom - 1) * (0.6 + 0.4 * Math.sin(nowT() / 90));
       const wfx = isWin && winFxT >= 0 ? winSymbolFx(cell.id, winFxT) : null;   // 圖示中獎演繹（美術需求 4H～9H）
       if (wfx) sc *= wfx.s;
@@ -3687,7 +3766,7 @@ function drawBoard() {
     }
   }
   ctx.restore();
-  // 十字架落地光圈
+  // 聖心落地光圈
   for (let c = 0; c < COLS; c++) {
     if (landT[c] < 0) continue;
     for (let r = 0; r < ROWS; r++) {
@@ -4237,7 +4316,7 @@ function drawForceMenu() {
 
 /* --- 特殊遊戲購買：4 張卡片（機制購買 ACTIVATE／直購 BUY）＋確認框 [企劃 §美術 E63] --- */
 const BUY_CARDS = [
-  { key: 'b10', name: 'BET×10',     desc: '每局提高紫十字架出現機率', mul: 10,  btn: 'ACTIVATE' },
+  { key: 'b10', name: 'BET×10',     desc: '每局提高藍聖心出現機率', mul: 10,  btn: 'ACTIVATE' },
   { key: 'b50', name: 'BET×50',     desc: '每局必定出現紅輪',     mul: 50,  btn: 'ACTIVATE' },
   { key: 'fg',  name: 'FG 銅牌賽', desc: '購買免費遊戲 FG（10 局）', mul: 100, btn: 'BUY' },
   { key: 'sfg', name: 'SFG 銀牌賽', desc: '購買免費遊戲 SFG（10 局）', mul: 250, btn: 'BUY' },
@@ -4432,7 +4511,7 @@ function saveTuning() {
       version: TUNE_VERSION, timing: TIMING_AUTO, timingTurbo: TIMING_TURBO,
       speedMode: SPEED_MODE,
       centerRun: CENTER_RUN_MODE, timeline: TIMING_START,
-      layout: LAYOUT, fx: FX, odds: ODDS, choice: CHOICE, icon: ICON, tint: TINT,
+      layout: LAYOUT, fx: FX, odds: ODDS, choice: CHOICE, icon: ICON, tint: TINT, iconPick: ICON_PICK,
     }));
     return true;
   } catch (e) { return false; }
@@ -4463,6 +4542,8 @@ function loadTuning() {
         TINT[k].on = v.on ? 1 : 0;
       }
       tintCache = {};
+      if (d.iconPick) setIconPick(d.iconPick, true);                                  // 圖示自由組合（不認得的值不套用）
+      else if (LEGACY_ICON_SETS[d.iconSet]) setIconPick(LEGACY_ICON_SETS[d.iconSet], true);   // 舊保存值（A／B 圖示組）
       if (d.timeline) for (const k in DEFAULT_TIMING_START) {
         const v = d.timeline[k];
         if (typeof v === 'number' && isFinite(v)) TIMING_START[k] = Math.min(8, Math.max(0, v));
@@ -4848,14 +4929,44 @@ function refreshTuneBody() {
   if (tuneTab === 'timing') buildTimingTab();
   else if (tuneTab === 'layout') buildLayoutTab();
   else if (tuneTab === 'tint') buildTintTab();
-  else if (tuneTab === 'icon') buildSliderTab(ICON, ICON_META, ICON_RANGE, setIconValue,
+  else if (tuneTab === 'icon') { buildSliderTab(ICON, ICON_META, ICON_RANGE, setIconValue,
     '圖示大小：依層級縮放盤面圖示（賠率表小圖同步）。1＝原尺寸，0.5～2.0（放大超過格子時會蓋到相鄰格，不會被格窗切掉）。');
+    buildIconPickRows(); }
   else if (tuneTab === 'fx') buildSliderTab(FX, FX_META, FX_RANGE, setFxValue,
     '特效強度：門檻類（÷押注）決定該次演繹採用哪一級。');
   else buildSliderTab(ODDS, ODDS_META, ODDS_RANGE, setOddsValue,
     '機率與賠率：改動後於下一局生效。調 RTP 先動「全域賠率乘數」。');
 }
 
+function buildIconPickRows() {                    // 「圖示大小」分頁頂端：圖示自由組合（6 個下拉選單；觸發的藍／紅聖心固定）
+  const box = document.createElement('div'); box.style.cssText = 'margin:4px 0 10px;padding:6px 8px;border:1px solid #475569;border-radius:8px;background:#0f172a';
+  const h = document.createElement('div'); h.textContent = '圖示組合（自由搭配；觸發的藍／紅聖心固定）';
+  h.style.cssText = 'font-size:13px;font-weight:bold;color:#fde68a;margin-bottom:4px';
+  box.appendChild(h);
+  PICK_SLOTS.forEach(s => {
+    const row = document.createElement('div'); row.className = 'tune-row';
+    const lab = document.createElement('label'); lab.textContent = s.label; row.appendChild(lab);
+    const sel = document.createElement('select'); sel.dataset.iconPick = s.key;
+    sel.style.cssText = 'flex:1;min-width:0;padding:3px 6px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#e2e8f0;font-size:13px';
+    pickOptions(s.key).forEach(k => {
+      const o = document.createElement('option'); o.value = k;
+      o.textContent = s.key === 'low' ? LOW_SETS[k].label : ICON_CATALOG[k].name;
+      sel.appendChild(o);
+    });
+    sel.value = ICON_PICK[s.key];
+    sel.addEventListener('change', () => { setIconPick({ [s.key]: sel.value }); refreshTuneBody(); });
+    row.appendChild(sel); box.appendChild(row);
+  });
+  const mids = ['h1', 'h2', 'm1', 'm2'].map(k => ICON_PICK[k]);
+  const dup = mids.filter((v, i) => mids.indexOf(v) !== i);
+  if (dup.length) {                                // 同一個圖示放兩格：盤面與賠率表會分不出來，提醒但不擋
+    const w = document.createElement('div'); w.dataset.iconPickWarn = '1';
+    w.textContent = '⚠ 15／10 倍有兩格選了同一個圖示（' + dup.map(k => ICON_CATALOG[k].name).join('、') + '），盤面和賠率表會分不出來';
+    w.style.cssText = 'font-size:12px;color:#fca5a5;margin-top:4px';
+    box.appendChild(w);
+  }
+  tuneBody.insertBefore(box, tuneBody.children[1] || null);
+}
 function openTuneTab(name) {                     // 截圖／驗證用：打開面板並切到指定分頁
   tuneTab = name;
   tunePanel.querySelectorAll('.tune-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
@@ -5410,7 +5521,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
     for (let i = 0; i < 2; i++) {
       t = start;
       marks.push({ t: t, text: '第' + (i + 1) + '個轉盤開始（脈動）' });
-      segs.push({ t0: t, dur: SIX_PULSE, text: '十字架脈動(' + R1(SIX_PULSE) + 's)', fill: 'symbol' }); t += SIX_PULSE;
+      segs.push({ t0: t, dur: SIX_PULSE, text: '聖心脈動(' + R1(SIX_PULSE) + 's)', fill: 'symbol' }); t += SIX_PULSE;
       segs.push({ t0: t, dur: T.buyWheelIntro, text: '轉盤登場(' + R1(T.buyWheelIntro) + 's)', fill: 'line' }); t += T.buyWheelIntro;
       segs.push({ t0: t, dur: T.buyWheelSpin, text: '轉盤轉動(' + R1(T.buyWheelSpin) + 's；不到 1 圈)', fill: 'reel' }); t += T.buyWheelSpin;
       marks.push({ t: t, text: '停在聖火格' });
@@ -5431,7 +5542,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
   const zoomSc = kind === 'wheelZoom';
   if (nW) {
     segs.push({ t0: t, dur: T.sixLand - SIX_PULSE, text: '全部輪停→等待(' + R1(T.sixLand - SIX_PULSE) + 's)', fill: 'pause' });
-    segs.push({ t0: t + T.sixLand - SIX_PULSE, dur: SIX_PULSE, text: '十字架脈動(' + R1(SIX_PULSE) + 's)', fill: 'symbol' });
+    segs.push({ t0: t + T.sixLand - SIX_PULSE, dur: SIX_PULSE, text: '聖心脈動(' + R1(SIX_PULSE) + 's)', fill: 'symbol' });
     marks.push({ t: t + T.sixLand - SIX_PULSE, text: '轉盤開始演出（脈動）' });
     t += T.sixLand;
     for (let i = 0; i < nW; i++) {
@@ -5440,7 +5551,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
         segs.push({ t0: t, dur: T.wheelNextGap, text: '連開間隔(' + R1(T.wheelNextGap) + 's)', fill: 'pause' });
         t += T.wheelNextGap;
         marks.push({ t: t, text: tag + '轉盤開始演出（脈動；前一個保持顯示）' });
-        segs.push({ t0: t, dur: SIX_PULSE, text: '十字架脈動(' + R1(SIX_PULSE) + 's)', fill: 'symbol' });
+        segs.push({ t0: t, dur: SIX_PULSE, text: '聖心脈動(' + R1(SIX_PULSE) + 's)', fill: 'symbol' });
         t += SIX_PULSE;
       }
       segs.push({ t0: t, dur: T.wheelIntro, text: tag + (zoomSc ? '紅輪' : '轉盤') + '登場(' + R1(T.wheelIntro) + 's)', fill: 'line' });
@@ -5627,7 +5738,7 @@ function sheetToolParams() {
   put(sh, r++, 1, '註：滾輪類型＝' + reelModeName() + '（本表只列該類型用得到的參數）。', XF.plain);
   put(sh, r++, 1, '註：FX = 時長由特效檔決定；公版 = 用公版時長；n = 曲線設定，非時間值。', XF.plain);
   put(sh, r++, 1, '註：本表由 ' + GAME_NAME + ' demo（' + APP_BUILD + '）匯出，為設計值，非真機實測值。', XF.plain);
-  put(sh, r++, 1, '註：預設值取競品實測（competitor-ref §3、§8.4）與企劃書節奏表；十字架落地、轉盤結果／收合、大獎跑分等量不到的項目為公版預設，待節奏組用公用測試機實測覆蓋。', XF.plain);
+  put(sh, r++, 1, '註：預設值取競品實測（competitor-ref §3、§8.4）與企劃書節奏表；聖心落地、轉盤結果／收合、大獎跑分等量不到的項目為公版預設，待節奏組用公用測試機實測覆蓋。', XF.plain);
   put(sh, r++, 1, '註：中央得分數字跑分規則＝' + centerRunMode()[1] + '；<10 倍直接顯示（得分數字等級 1）。', XF.plain);
   return sh;
 }
@@ -6004,13 +6115,18 @@ const atNX = (i, n) => () => currentState === STATE.WHEEL && wheelIdx === i && w
 const afterWheelsFor = n => () => (currentState === STATE.SCORE || currentState === STATE.BIGWIN || currentState === STATE.WIN_SHOW) && stateTimer >= n;
 const SHOT_PRESETS = {
   idle:          () => {},
+  setBIdle:      () => { setIconPick(LEGACY_ICON_SETS.B, true); },                            // 希臘字母版組合：待機全盤
+  setBBoard:     () => { setIconPick(LEGACY_ICON_SETS.B, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 希臘字母版組合：隨機盤面
+  pickBoard:     () => { setIconPick({ top: 'crossSilver', h1: 'harp', h2: 'wings', m1: 'chalice', m2: 'amphora', low: 'greekObj' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 自由組合範例：隨機盤面（低分希臘物件）
+  pickShield:    () => { setIconPick({ top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'shieldGreen', m2: 'flaskGreen', low: 'greekObj' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 綠聖盾＋綠聖水瓶：隨機盤面
+  pickPanel:     () => { setIconPick({ top: 'crossGold', h1: 'unicorn', h2: 'wings', m1: 'chalice', m2: 'amphora', low: 'greekObj' }, true); openTuneTab('icon'); },   // 面板「圖示大小」分頁頂端的 6 個下拉選單
   spinning:      () => { forceSpinType = null; startSpin(); for (let i = 0; i < 26; i++) update(); },
   sixLand:   () => spinWith('ng1add', () => currentState === STATE.POSTSTOP && stateTimer >= 10),
   wheelIntro:    () => spinWith('ng1add', atWheel(0, 'intro', 0.6)),
   wheelSpin:     () => spinWith('ng1add', atWheel(0, 'spin', 0.5)),
   wheelResult:   () => spinWith('ng1add', atNX(0, 5)),
   wheelMul:      () => spinWith('ng1mul', atNX(0, 5)),
-  sixPop:        () => spinWith('ng3mix', () => currentState === STATE.SPINNING && landT[2] >= Math.round(TF(TIMING.sixPopTime) / 2)),   // 十字架出現放大 30%
+  sixPop:        () => spinWith('ng3mix', () => currentState === STATE.SPINNING && landT[2] >= Math.round(TF(TIMING.sixPopTime) / 2)),   // 聖心出現放大 30%
   wheelLeave:    () => { spinWith('ng3mix', () => currentState === STATE.IDLE); forceSpinType = null; startSpin(); for (let i = 0; i < 24; i++) update(); },   // 下一局開轉：上一局轉盤跟著舊盤面掉出、縮小淡出
   redBurst:      () => { toFG(1, 'fgG1'); startSpin(); runUntil(atWheel(0, 'intro', 0.5)); },   // 紅輪彈出聖火炸開
   wheelFire:     () => spinWith('v100', afterWheelsFor(20)),     // 燃火段：該格燃火
@@ -6028,7 +6144,7 @@ const SHOT_PRESETS = {
   angelHi2:      () => spinWith('hi2', () => currentState === STATE.SCORE && stateTimer >= 20),   // 20～25 倍：天使高倍 2
   heartFly:      () => spinWith('big4', () => currentState === STATE.HEART && stateTimer >= Math.round(TF(TIMING.heartTime) * 0.25)),
   heartHit:      () => spinWith('big4', () => currentState === STATE.HEART && stateTimer >= Math.round(TF(TIMING.heartTime) * 0.45)),
-  winSymbols:    () => spinWith('big1', () => currentState === STATE.WIN_SHOW && stateTimer >= 12),   // 白鴿中獎：放大＋晃動＋雙翼刷光＋刷光
+  winSymbols:    () => spinWith('big1', () => currentState === STATE.WIN_SHOW && stateTimer >= 12),   // 金十字架中獎：放大＋晃動＋雙翼刷光＋刷光
   sixFlare:      () => spinWith('ng3mix', () => currentState === STATE.POSTSTOP || (currentState === STATE.SPINNING && landT.some(v => v >= 6))),
   promoteShrink: () => { toFGIntro(1); forceDeal = 'dealP'; chooseDeal(); runUntil(() => currentState === STATE.PROMOTE && stateTimer >= Math.round(TF(TIMING.promoteHold) * 0.1)); },
   promoteLift:   () => { toFGIntro(1); forceDeal = 'dealP'; chooseDeal(); runUntil(() => currentState === STATE.PROMOTE && stateTimer >= Math.round(TF(TIMING.promoteHold) * 0.45)); },
@@ -6055,7 +6171,7 @@ const SHOT_PRESETS = {
   lineWin:       () => spinWith('small', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20),
   iconMax:       () => { Object.keys(ICON).forEach(k => { ICON[k] = 2.0; }); SHOT_PRESETS.promoBoard(); },   // 圖示大小五組都 2.0
   iconMaxWin:    () => { Object.keys(ICON).forEach(k => { ICON[k] = 2.0; }); spinWith('big1', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20); },
-  topLineWin:    () => spinWith('big1', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20),   // 最高分（白鴿）5 連中獎演出（大獎版出現前）
+  topLineWin:    () => spinWith('big1', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20),   // 最高分（金十字架）5 連中獎演出（大獎版出現前）
   scoreSmall:    () => spinWith('small', () => currentState === STATE.SCORE && stateTimer >= 30),
   scoreRun:      () => spinWith('run', () => currentState === STATE.SCORE && stateTimer >= 30),
   bigWin:        () => spinWith('big1', () => currentState === STATE.BIGWIN && stateTimer >= bigRunFrames()),
@@ -6089,7 +6205,7 @@ const SHOT_PRESETS = {
   buySFGSpin:    () => { buyFeature(2); runUntil(atWheel(1, 'spin', 0.5)); },        // 購買 SFG：第 2 個轉盤轉動中（第 1 個已停在聖火）
   buySFGPop:     () => { buyFeature(2); runUntil(atNX(1, 3)); },                     // 購買 SFG：第 2 個停在聖火、彈跳中
   forceMenu:     () => { showForceMenu = true; },
-  promoBoard:    () => {                        // 宣傳示意圖：混合圖示（白鴿、武器組／聖物組、低分；第 1 輪紫十字架、第 5 輪金十字架），不開轉盤、藏開發 UI
+  promoBoard:    () => {                        // 宣傳示意圖：混合圖示（金十字架、武器組／聖物組、低分；第 1 輪藍聖心、第 5 輪紅聖心），不開轉盤、藏開發 UI
     const B = [[5, 1, 10, 7], [3, 8, 0, 6], [2, 9, 4, 0], [7, 0, 1, 5], [4, 6, 11, 9]];
     for (let c = 0; c < COLS; c++) for (let r = 0; r < ROWS; r++) Object.assign(board[c][r], { id: B[c][r], used: null, scale: 1, yOffset: 0, isMatched: false });
     promoMode = true;
