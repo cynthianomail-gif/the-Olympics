@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-83';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-84';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -443,24 +443,25 @@ const LEVEL_INFO = [
 // --- 節奏（秒）---
 // 預設值依 competitor-ref §3／§8.4 實測（企劃書 drawing01 F82：「節奏依 competitor-ref §3、§8.4 實測值」）；
 // 量不到的用公版預設＋可調（spec.md Q5 已確認），匯出表註記待節奏組實測。
+// 使用者 2026-10-24 第二份匯出設為預設（docs/tuning_user_20261024b.json）：AUTO 節奏 12 鍵調慢（輪盤登場 0.8、聖心落地縮放 0.6 等），不再等於競品實測值
 const DEFAULT_TIMING = {
   reelStartDelay:   0.10,   // 各輪開始掉出間隔（§3 n=12）
-  reelFirstStop:    0.86,   // 按下→第 1 輪落定（§3 n=4）
+  reelFirstStop:    0.85,   // 按下→第 1 輪落定（§3 n=4）
   reelStopInterval: 0.10,  // 各輪落定間隔（§3 n=12）
   reelSpeed:        0.045,  // 'column'／'cell' 專用
   cellStagger:      0.05,   // 'cell' 專用
-  spinClear:        0.40,   // 單輪掉出（§3 n=15）
-  spinDropIn:       0.22,   // 單輪落入（§3 n=15）
-  landBounce:       0.12,   // 每輪停止後 0.2s 回彈（企劃 §節奏表 M28）
-  sixLand:      0.55,   // 聖心落地演繹（公版預設）；沒有連線得分時＝停輪→展開輪盤
+  spinClear:        0.50,   // 單輪掉出（§3 n=15）
+  spinDropIn:       0.50,   // 單輪落入（§3 n=15）
+  landBounce:       0.25,   // 每輪停止後 0.2s 回彈（企劃 §節奏表 M28）
+  sixLand:      0.70,   // 聖心落地演繹（公版預設）；沒有連線得分時＝停輪→展開輪盤
   wheelAfterWin:    0.55,   // 有連線得分時：連線得分跑完→展開輪盤（含最後 0.25 聖心脈動；使用者 2026-10-22）
-  sixPopTime:       0.18,   // 聖心落地快速縮放一下的時長（使用者 2026-10-22：原本綁 sixLand 0.55 太慢）
-  wheelLeave:       0.80,   // 下一局開轉：上一局轉盤往下掉出＋縮小淡出的時長（每輪；使用者 2026-10-22 要比舊圖示慢）
-  wheelIntro:       0.40,   // 轉盤登場（變一格→放大）；與 wheelSpin 合計 4.2（§8.4 紅盤 n=5）
-  wheelSpin:        4.18,   // 轉盤轉動到停
-  wheelResult:      1.31,   // 轉盤結果停留（公版預設）
-  nxFade:           0.37,   // LOGO 字樣淡出→倍數淡入（局結算完反向）；使用者 2026-10-19，待節奏組實測
-  wheelNextGap:     0.52,   // 連開轉盤：前一個 NX 出現→下一個聖心開始脈動（競品實測 0.52，n=11）
+  sixPopTime:       0.60,   // 聖心落地快速縮放一下的時長（使用者 2026-10-22：原本綁 sixLand 0.55 太慢）
+  wheelLeave:       1.00,   // 下一局開轉：上一局轉盤往下掉出＋縮小淡出的時長（每輪；使用者 2026-10-22 要比舊圖示慢）
+  wheelIntro:       0.80,   // 轉盤登場（變一格→放大）；與 wheelSpin 合計 4.2（§8.4 紅盤 n=5）
+  wheelSpin:        4.30,   // 轉盤轉動到停
+  wheelResult:      1.30,   // 轉盤結果停留（公版預設）
+  nxFade:           0.45,   // LOGO 字樣淡出→倍數淡入（局結算完反向）；使用者 2026-10-19，待節奏組實測
+  wheelNextGap:     0.60,   // 連開轉盤：前一個 NX 出現→下一個聖心開始脈動（競品實測 0.52，n=11）
   buySixLand:       0.62,   // 購買觸發局：全部靜止→聖心脈動結束（等 0.37＋脈動 0.25；競品 §6.3 0.62）
   buyWheelIntro:    0.36,   // 購買觸發局：變形＋長大到全尺寸（競品 0.23＋0.13＝0.36）
   buyWheelSpin:     0.35,   // 購買觸發局：轉盤轉動到停（不到 1 圈；競品實測 0.35，一般局 4.18）
@@ -568,8 +569,8 @@ const TIMING_META = [
 // 甘特圖起點（秒）：只影響面板視覺
 const DEFAULT_TIMING_START = {
   reelStartDelay: 0, reelFirstStop: 0, reelStopInterval: 0.86, reelSpeed: 0,
-  cellStagger: 0.86, spinClear: 0, spinDropIn: 0.64, landBounce: 0.86,
-  sixLand: 0, wheelAfterWin: 0, wheelLeave: 0, sixPopTime: 0, wheelIntro: 0.55, wheelSpin: 0.95, wheelResult: 5.13, nxFade: 6.44, wheelNextGap: 6.44, buySixLand: 0, buyWheelIntro: 0.62, buyWheelSpin: 0.98, buyWheelResult: 1.33, buyWheelPop: 1.78, buyWheelGap: 0.37, buyWheelEnd: 2.21, wheelPop: 6.44, wheelSlow3: 5.13, redBurst: 0.55, zoomIn: 4.13, zoomHold: 6.44, zoomOut: 7.04, plantGrow: 6.44, nxShake: 6.44,
+  cellStagger: 0.86, spinClear: 0, spinDropIn: 0.64, landBounce: 1.1,
+  sixLand: 0, wheelAfterWin: 0, wheelLeave: 0, sixPopTime: 0, wheelIntro: 0.55, wheelSpin: 1.2, wheelResult: 5.13, nxFade: 6.44, wheelNextGap: 6.44, buySixLand: 0, buyWheelIntro: 0.62, buyWheelSpin: 0.98, buyWheelResult: 1.33, buyWheelPop: 1.78, buyWheelGap: 0.37, buyWheelEnd: 2.21, wheelPop: 6.44, wheelSlow3: 5.13, redBurst: 0.55, zoomIn: 4.13, zoomHold: 6.44, zoomOut: 7.04, plantGrow: 6.44, nxShake: 6.44,
   winPause: 0, winDisplay: 0.00, scoreHold: 0.90, scoreStay: 2.37,
   bigRunBig: 0, bigRunSuper: 0, bigRunMega: 0, bigRunEpic: 0, bigWinHold: 7.10, bigRunPre: 0, bigSwap: 3.48,
   fgIntroAnim: 0, dealDelay: 0.6, dealSpin: 1.37, dealResult: 7.04, promoteHold: 0,
@@ -1183,7 +1184,9 @@ function _loadImg(src) {
 }
 async function loadArt() {
   const jobs = [];
-  ART.sym.forEach((s, i) => jobs.push(_loadImg(s).then(im => { iconImgs[i] = im; })));
+  // 圖示路徑在「這一刻」才算（loadTuning 已套用保存的圖示組合），載完時若組合又變了就不覆蓋：
+  // 原本用開頭算好的 ART.sym（預設組合），會跟 setIconPick 搶，重新整理時最高分忽而鑰匙忽而十字架（使用者 2026-10-24）
+  SYMBOLS.forEach((s, i) => { const src = iconSrc(i); jobs.push(_loadImg(src).then(im => { if (iconSrc(i) === src) iconImgs[i] = im; })); });
   jobs.push(loadTintArt());
   Object.keys(ART).filter(k => k !== 'sym').forEach(k => jobs.push(_loadImg(ART[k]).then(im => { sceneImgs[k] = im; })));
   await Promise.all(jobs);
@@ -4586,7 +4589,7 @@ function buildPayTable() {
     if (s.wheel) return;
     const tinted = iconImgs[i] && iconArt(i) !== iconImgs[i];   // 調色盤著色後：用 canvas 畫（著色圖是 canvas，file:// 下不能轉 dataURL）
     html += '<tr><td title="' + s.name + '">' + (tinted ? '<canvas class="pt-tint" data-id="' + i + '" width="88" height="88" style="width:44px;height:44px"></canvas>'
-      : '<img alt="" width="44" height="44" src="' + (iconImgs[i] ? ART.sym[i] : symbolDataURL(i)) + '">') + '</td>'
+      : '<img alt="" width="44" height="44" src="' + (iconImgs[i] ? iconSrc(i) : symbolDataURL(i)) + '">') + '</td>'   // 目前組合的圖（原本用 ART.sym＝預設組合，換了圖示賠率表還是舊圖）
       + [2, 1, 0].map(j => '<td>' + fmtNum(ODDS.bet * PAY[i][j]) + '</td>').join('') + '</tr>';
   });
   t.innerHTML = html;
@@ -4598,7 +4601,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 26;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
+const TUNE_VERSION = 27;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
