@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-66';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-71';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -316,28 +316,28 @@ const SIX_ID = 10, GOLD_ID = 11;
 // 圖示自由組合（使用者 2026-10-24：「圖示替換的部分 可以給我自由組合嗎 就不要一定規定要A B版 可以改成下拉是選單」）：
 // 最高分 id0、15 倍 id1／2、10 倍 id3／4 各自從目錄挑（15 倍與 10 倍共用同一批候選），低分 id5～9 整組挑；觸發 id10／11 固定。
 // 圖檔：assets/pick/<key>.png（tools/build_icon_pick.py 產）；調色盤遮罩：assets/pick/tint/<key>_gray|_mask.png（tools/make_tint_masks.py --pick）。
-const ICON_CATALOG = {
-  crossGold:   { name: '金十字架', emoji: '✝️' },   // 紅寶石金十字架
-  crossSilver: { name: '銀十字架', emoji: '✝️' },   // 紅寶石銀十字架（2026-10-24 試過的銀色版）
-  unicorn:     { name: '獨角獸',   emoji: '🦄' },
-  bird:        { name: '天堂鳥',   emoji: '🐦' },
-  harp:        { name: '銀豎琴',   emoji: '🎵' },
-  wings:       { name: '天使之翼', emoji: '🪽' },
-  trumpet:     { name: '天使號角', emoji: '🎺' },   // 超粗銀號角（被天使之翼取代，留在目錄）
-  chalice:     { name: '聖杯',     emoji: '🏆' },   // 銀聖杯（波浪粗花紋）
-  holyWater:   { name: '聖水',     emoji: '🧪' },   // 聖水：10/22 十字瓶塞聖水瓶造型、玻璃與瓶塞白銀、水淺藍（2026-10-24 使用者「整體改白銀色」→「內容物的水可以是淺藍色」）
-  laurel:      { name: '月桂冠',   emoji: '🌿' },
-  amphora:     { name: '雙耳瓶',   emoji: '🏺' },
-  shieldGreen: { name: '聖盾',     emoji: '🛡️' },   // 10/22 天使版聖盾，藍→亮綠（使用者 2026-10-24「盾牌跟聖水可以把藍色部分改成綠色的看看」→「亮綠就好」）
-  flaskGreen:  { name: '聖水瓶',   emoji: '🧪' },   // 10/22 天使版十字瓶塞聖水瓶，藍→亮綠
+const ICON_CATALOG = {                            // tone：下拉選單名稱後面標的顏色（使用者 2026-10-24），只用在選單、不改盤面名稱
+  crossGold:   { name: '金十字架', emoji: '✝️', tone: '金' },   // 紅寶石金十字架
+  crossSilver: { name: '銀十字架', emoji: '✝️', tone: '銀' },   // 紅寶石銀十字架（2026-10-24 試過的銀色版）
+  unicorn:     { name: '獨角獸',   emoji: '🦄', tone: '黃' },
+  bird:        { name: '天堂鳥',   emoji: '🐦', tone: '黃' },
+  harp:        { name: '銀豎琴',   emoji: '🎵', tone: '銀' },
+  wings:       { name: '天使之翼', emoji: '🪽', tone: '白' },
+  trumpet:     { name: '天使號角', emoji: '🎺', tone: '銀' },   // 超粗銀號角（被天使之翼取代，留在目錄）
+  chalice:     { name: '聖杯',     emoji: '🏆', tone: '銀' },   // 銀聖杯（波浪粗花紋）
+  holyWater:   { name: '聖水',     emoji: '🧪', tone: '銀／淺藍' },   // 聖水：10/22 十字瓶塞聖水瓶造型、玻璃與瓶塞白銀、水淺藍（2026-10-24 使用者「整體改白銀色」→「內容物的水可以是淺藍色」）
+  laurel:      { name: '月桂冠',   emoji: '🌿', tone: '綠' },
+  amphora:     { name: '雙耳瓶',   emoji: '🏺', tone: '綠' },
+  shieldGreen: { name: '聖盾',     emoji: '🛡️', tone: '綠' },   // 10/22 天使版聖盾，藍→亮綠（使用者 2026-10-24「盾牌跟聖水可以把藍色部分改成綠色的看看」→「亮綠就好」）
+  flaskGreen:  { name: '聖水瓶',   emoji: '🧪', tone: '綠' },   // 10/22 天使版十字瓶塞聖水瓶，藍→亮綠
 };
 const ICON_POOL = { top: ['crossGold', 'crossSilver'],
   high: ['unicorn', 'bird', 'harp', 'wings', 'trumpet', 'chalice', 'holyWater', 'laurel', 'amphora',   // 15 倍與 10 倍共用
          'shieldGreen', 'flaskGreen'] };
 const LOW_SETS = {
-  akqj:     { label: 'A K Q J 10', names: ['A', 'K', 'Q', 'J', '10'], emoji: ['A', 'K', 'Q', 'J', '10'] },
-  greek:    { label: '希臘符號 α β δ π Ω', names: ['α', 'β', 'δ', 'π', 'Ω'], emoji: ['α', 'β', 'δ', 'π', 'Ω'] },
-  greekObj: { label: '希臘物件（橄欖樹枝／號角／蠟燭／羽毛筆／標槍）', names: ['橄欖樹枝', '號角', '蠟燭', '羽毛筆', '標槍'],   // 交付包 10/21 版，豎琴換 10/22 胖蠟燭、雙耳陶瓶換 10/22 胖羽毛
+  akqj:     { label: 'A K Q J 10（土色）', names: ['A', 'K', 'Q', 'J', '10'], emoji: ['A', 'K', 'Q', 'J', '10'] },
+  greek:    { label: '希臘符號 α β δ π Ω（土色）', names: ['α', 'β', 'δ', 'π', 'Ω'], emoji: ['α', 'β', 'δ', 'π', 'Ω'] },
+  greekObj: { label: '希臘物件 橄欖樹枝／號角／蠟燭／羽毛／標槍（原色）', names: ['橄欖樹枝', '號角', '蠟燭', '羽毛筆', '標槍'],   // 交付包 10/21 版，豎琴換 10/22 胖蠟燭、雙耳陶瓶換 10/22 胖羽毛
               emoji: ['🫒', '📯', '🕯️', '🪶', '🗡️'] },
 };
 const PICK_SLOTS = [                              // 面板下拉選單：key → 盤面 id
@@ -348,12 +348,12 @@ const PICK_SLOTS = [                              // 面板下拉選單：key �
   { key: 'm2',  label: '10 倍 ②', ids: [4] },
   { key: 'low', label: '低分（5 個一組）', ids: [5, 6, 7, 8, 9] },
 ];
-const DEFAULT_ICON_PICK = { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'harp', m2: 'chalice', low: 'akqj' };
+const DEFAULT_ICON_PICK = { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'wings', m2: 'harp', low: 'greek' };   // 使用者 2026-10-24「預設組合換成 金十字架 兩隻動物 翅膀 銀豎琴 希臘數字」
 const LEGACY_ICON_SETS = {                        // 舊保存值 iconSet（A／B 圖示組）對應的組合
-  A: DEFAULT_ICON_PICK,
+  A: { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'harp', m2: 'chalice', low: 'akqj' },
   B: { top: 'crossGold', h1: 'harp', h2: 'wings', m1: 'laurel', m2: 'amphora', low: 'greek' },
 };
-const ICON_SET_VER = 'holy-65';
+const ICON_SET_VER = 'holy-71';
 let ICON_PICK = Object.assign({}, DEFAULT_ICON_PICK);
 function pickOptions(key) { return key === 'low' ? Object.keys(LOW_SETS) : key === 'top' ? ICON_POOL.top : ICON_POOL.high; }
 function pickSlotOf(id) { return PICK_SLOTS.find(s => s.ids.indexOf(id) >= 0) || null; }
@@ -1210,6 +1210,7 @@ const TINT_RANGE = { h: [0, 360], s: [0, 100], l: [10, 90] };
 let TINT = JSON.parse(JSON.stringify(DEFAULT_TINT));
 const TINT_ART = {};          // id → { gray, mask }
 let tintCache = {};           // id → 著色後的 canvas（null＝用原圖）；顏色改變時清空重建
+applyIconPickMeta(ICON_PICK);  // 開頁就把 SYMBOLS 名稱／退回 emoji／調色盤標籤對齊預設組合（SYMBOLS 表寫的是舊 A 組名稱）
 function tintSlotOf(id) { return TINT_SLOTS.find(t => t.ids.indexOf(id) >= 0) || null; }
 function loadTintArt() {
   const jobs = [];
@@ -2394,7 +2395,8 @@ function drawUsedBlock(x, y, used) {
 const ART_GEO = {
   // 2026-10-20 換成 1930 年代橡皮管卡通畫風（風格板 天使形象/images/olympus_rubberhose_v29_整張重繪.png），以下全部重量
   // frame.png 1536×1024：5 條深藍輪格 x132～1403（各約 239 寬、間隔 17）、y286～911（顏色門檻量）；LOGO 匾額面約 x482～1055、y95～240
-  frame: { win: [132, 286, 1403, 911], plaque: [482, 20, 1055, 245] },
+  frame: { win: [132, 286, 1403, 911], plaque: [482, 20, 1055, 245],
+           cols: [[132, 370], [388, 627], [645, 881], [899, 1140], [1158, 1403]] },   // 5 條深藍窗格（原圖 x，顏色門檻實量）：寬度不一，見 colDX
   // 藍輪／紅輪：tools/split_wheel_art.py 拆層。AI 圖分隔線不均（±4°），格區依原圖格色重畫成精準 30°、格 0 置中在正上方；
   // band＝格區內外緣（相對 R，給倍數字、壓灰、亮框、燃火用）
   wheel: { blue: { cx: 628.5, cy: 620.5, R: 622.0, band: [0.372, 0.93] },   // blue＝藍聖心的輪；天使版輪盤（白手套祈禱手），細框無回紋；2026-10-24 改藍輪（格子淺／深藍、藍框）
@@ -2424,6 +2426,14 @@ function frameGeom() {
   const img = artImg('frame'), g = ART_GEO.frame;
   const s = GRID_W / (g.win[2] - g.win[0] + 1);
   return { img: img, s: s, x0: GRID_X - g.win[0] * s, topH: g.win[1] * s, g: g };
+}
+// 每輪圖示的水平微調＝該輪窗格中心 − 等寬格子中心（窗格寬 239／240／237／242／246 不一，差 −3.7～+1.7px；
+// 使用者 2026-10-24「他沒有左右置中 他很偏右」）。沒有框圖時為 0。
+function colDX(c) {
+  const cols = ART_GEO.frame.cols;
+  if (!artImg('frame') || !cols || !cols[c]) return 0;
+  const f = frameGeom();
+  return f.x0 + (cols[c][0] + cols[c][1]) / 2 * f.s - (GRID_X + c * CELL_SIZE + CELL_SIZE / 2);
 }
 function drawFrameArt() {
   const f = frameGeom(), img = f.img, g = f.g;
@@ -2595,7 +2605,7 @@ function drawUsedBlockArt(x, y, used) {
 function drawAnticArt(w, antic) {
   const img = artImg('anticip');
   if (!img) return false;
-  const s = ART_GEO.anticCol, x = GRID_X + w.c * CELL_SIZE - 12, y = GRID_Y - 12, ww = CELL_SIZE + 24, hh = GRID_H + 24;
+  const s = ART_GEO.anticCol, x = GRID_X + w.c * CELL_SIZE + colDX(w.c) - 12, y = GRID_Y - 12, ww = CELL_SIZE + 24, hh = GRID_H + 24;
   ctx.save();
   ctx.beginPath(); ctx.rect(x, y, ww, hh); ctx.rect(x + 22, y + 22, ww - 44, hh - 44); ctx.clip('evenodd');
   ctx.globalCompositeOperation = 'lighter';
@@ -3137,7 +3147,7 @@ function drawReelSymbol(id, x, y, scale, used) {
 
 /* --- 轉盤（藍輪／紅輪）：轉動後頂端指針指到的格即選中 [企劃 §美術 E26、H26～H31] --- */
 function wheelGeom(w) {
-  const cx0 = GRID_X + w.c * CELL_SIZE + CELL_SIZE / 2, cy0 = GRID_Y + w.r * CELL_SIZE + CELL_SIZE / 2;
+  const cx0 = GRID_X + w.c * CELL_SIZE + CELL_SIZE / 2 + colDX(w.c), cy0 = GRID_Y + w.r * CELL_SIZE + CELL_SIZE / 2;
   let Rf = FX.wheelBig * CELL_SIZE / 2;
   const multi = wheels.length > 1;
   if (multi) {            // 多個轉盤會同時放大停在盤面上：半徑不超過相鄰轉盤中心距的一半，結果格都看得到
@@ -3711,7 +3721,7 @@ function drawBoard() {
       const old = spinOldBoard[c] && spinOldBoard[c][r];
       if (!old) continue;
       ctx.save();
-      drawReelSymbol(old.id, GRID_X + c * CELL_SIZE, GRID_Y + r * CELL_SIZE + (spinOldDrops[c] || 0), 1, old.used);
+      drawReelSymbol(old.id, GRID_X + c * CELL_SIZE + colDX(c), GRID_Y + r * CELL_SIZE + (spinOldDrops[c] || 0), 1, old.used);
       ctx.restore();
     }
   }
@@ -3724,7 +3734,7 @@ function drawBoard() {
     const colOff = (REEL_MODE === 'column') ? (colOffsets[c] || 0) : 0;
     const bnc = colBounce[c] || 0;
     if (pass === 0 && REEL_MODE === 'column' && !colStopped[c]) {
-      drawReelSymbol(colNext[c], GRID_X + c * CELL_SIZE, GRID_Y - CELL_SIZE + colOff + bnc, 1);
+      drawReelSymbol(colNext[c], GRID_X + c * CELL_SIZE + colDX(c), GRID_Y - CELL_SIZE + colOff + bnc, 1);
     }
     for (let r = 0; r < ROWS; r++) {
       const cell = board[c][r];
@@ -3732,7 +3742,7 @@ function drawBoard() {
       if (skipKeys[c + ',' + r]) continue;               // 這格正在放大成轉盤（或轉完維持放大）
       const cellOff = (REEL_MODE === 'cell') ? ((cellOffsets[c] && cellOffsets[c][r]) || 0) : 0;
       const spinning = (REEL_MODE === 'cell') ? !(cellStopped[c] && cellStopped[c][r]) : false;
-      const x = GRID_X + c * CELL_SIZE;
+      const x = GRID_X + c * CELL_SIZE + colDX(c);   // 對齊該輪窗格中心
       const top = GRID_Y + r * CELL_SIZE;
       const y = top + colOff + cellOff + cell.yOffset + bnc;
       const isWin = showWin && winCells.has(c + ',' + r);
@@ -3777,7 +3787,7 @@ function drawBoard() {
       ctx.globalAlpha = 1 - k;
       ctx.strokeStyle = cell.id === GOLD_ID ? '#fde047' : '#ffffff'; ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.arc(GRID_X + c * CELL_SIZE + CELL_SIZE / 2, GRID_Y + r * CELL_SIZE + CELL_SIZE / 2, 40 + 30 * k, 0, Math.PI * 2);
+      ctx.arc(GRID_X + c * CELL_SIZE + CELL_SIZE / 2 + colDX(c), GRID_Y + r * CELL_SIZE + CELL_SIZE / 2, 40 + 30 * k, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
     }
@@ -4484,7 +4494,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 25;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
+const TUNE_VERSION = 26;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
@@ -4950,7 +4960,7 @@ function buildIconPickRows() {                    // 「圖示大小」分頁頂
     sel.style.cssText = 'flex:1;min-width:0;padding:3px 6px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#e2e8f0;font-size:13px';
     pickOptions(s.key).forEach(k => {
       const o = document.createElement('option'); o.value = k;
-      o.textContent = s.key === 'low' ? LOW_SETS[k].label : ICON_CATALOG[k].name;
+      o.textContent = s.key === 'low' ? LOW_SETS[k].label : ICON_CATALOG[k].name + '（' + ICON_CATALOG[k].tone + '）';
       sel.appendChild(o);
     });
     sel.value = ICON_PICK[s.key];
