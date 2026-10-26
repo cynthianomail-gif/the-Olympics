@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-84';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-92';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -318,8 +318,10 @@ const SIX_ID = 10, GOLD_ID = 11;
 // 圖檔：assets/pick/<key>.png（tools/build_icon_pick.py 產）；調色盤遮罩：assets/pick/tint/<key>_gray|_mask.png（tools/make_tint_masks.py --pick）。
 const ICON_CATALOG = {                            // tone：下拉選單名稱後面標的顏色（使用者 2026-10-24），只用在選單、不改盤面名稱
   crossGold:   { name: '金十字架', emoji: '✝️', tone: '金' },   // 紅寶石金十字架；2026-10-24 反光金屬版跑風格 → 照美術風格重生的卡通 B 高光帶（扁平色塊＋硬邊高光帶）
-  crossSilver: { name: '銀十字架', emoji: '✝️', tone: '銀' },
-  keyDiag:     { name: '天堂鑰匙',      emoji: '🗝️', tone: '金' },   // 2026-10-24 使用者「生成天堂鑰匙看看 形狀要飽滿 看起來層級最高 可以鑲嵌一顆紅寶石」→ 斜放短胖版（直立、更短版沒留）   // 紅寶石銀十字架（2026-10-24 試過的銀色版）
+  crossSilver: { name: '銀十字架', emoji: '✝️', tone: '銀' },   // 紅寶石銀十字架（2026-10-24 試過的銀色版）
+  chaliceGold: { name: '金聖杯',        emoji: '🏆', tone: '金／紅寶石' },   // 2026-10-26 使用者「全金 鑲紅寶石的 飽滿造型不過度複雜的聖杯」
+  angelFS:     { name: '金天使',        emoji: '👼', tone: '金' },   // 2026-10-26 有翅幽靈天使轉正面、去尾巴留裙擺、派眼＋微笑（無微笑版、短裙兩版都試過，使用者「原本的好了」）
+  keyDiag:     { name: '天堂鑰匙',      emoji: '🗝️', tone: '金' },   // 2026-10-24 使用者「生成天堂鑰匙看看 形狀要飽滿 看起來層級最高 可以鑲嵌一顆紅寶石」→ 斜放短胖版（直立、更短版沒留）
   unicorn:     { name: '獨角獸',   emoji: '🦄', tone: '黃' },
   bird:        { name: '天堂鳥',   emoji: '🐦', tone: '黃' },
   pegasus:     { name: '飛馬',     emoji: '🐴', tone: '黃', localOnly: true },   // 2026-10-24 照獨角獸／天堂鳥同風格生；localOnly＝只在本機出現（使用者「白鴿 跟 飛馬不用推上去」）
@@ -335,7 +337,7 @@ const ICON_CATALOG = {                            // tone：下拉選單名稱�
   shieldGreen: { name: '聖盾',     emoji: '🛡️', tone: '綠' },   // 10/22 天使版聖盾，藍→亮綠（使用者 2026-10-24「盾牌跟聖水可以把藍色部分改成綠色的看看」→「亮綠就好」）
   flaskGreen:  { name: '聖水瓶',   emoji: '🧪', tone: '綠' },   // 10/22 天使版十字瓶塞聖水瓶，藍→亮綠
 };
-const ICON_POOL = { top: ['crossGold', 'crossSilver', 'keyDiag'],
+const ICON_POOL = { top: ['crossGold', 'crossSilver', 'keyDiag', 'chaliceGold', 'angelFS'],
   high: ['unicorn', 'bird', 'pegasus', 'dove', 'harp', 'wings', 'trumpet', 'chalice', 'holyWater', 'laurel', 'amphora',   // 15 倍與 10 倍共用
          'shieldGreen', 'flaskGreen'] };
 const LOW_SETS = {
@@ -357,7 +359,7 @@ const LEGACY_ICON_SETS = {                        // 舊保存值 iconSet（A／
   A: { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'harp', m2: 'chalice', low: 'akqj' },
   B: { top: 'crossGold', h1: 'harp', h2: 'wings', m1: 'laurel', m2: 'amphora', low: 'greek' },
 };
-const ICON_SET_VER = 'holy-79';
+const ICON_SET_VER = 'holy-92';
 let ICON_PICK = Object.assign({}, DEFAULT_ICON_PICK);
 const IS_LOCAL = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);   // 本機開的 demo（file:／localhost）
 function pickOptions(key, local = IS_LOCAL) {    // localOnly 的圖示只在本機選單出現（線上版沒上傳那些圖）
@@ -443,7 +445,7 @@ const LEVEL_INFO = [
 // --- 節奏（秒）---
 // 預設值依 competitor-ref §3／§8.4 實測（企劃書 drawing01 F82：「節奏依 competitor-ref §3、§8.4 實測值」）；
 // 量不到的用公版預設＋可調（spec.md Q5 已確認），匯出表註記待節奏組實測。
-// 使用者 2026-10-24 第二份匯出設為預設（docs/tuning_user_20261024b.json）：AUTO 節奏 12 鍵調慢（輪盤登場 0.8、聖心落地縮放 0.6 等），不再等於競品實測值
+// 使用者 2026-10-24 第二份匯出設為預設（docs/tuning_user_20261024b.json；2026-10-26 再把輪盤登場 wheelIntro 0.8→0.6，docs/tuning_user_20261026.json）：AUTO 節奏 12 鍵調慢（輪盤登場 0.8、聖心落地縮放 0.6 等），不再等於競品實測值
 const DEFAULT_TIMING = {
   reelStartDelay:   0.10,   // 各輪開始掉出間隔（§3 n=12）
   reelFirstStop:    0.85,   // 按下→第 1 輪落定（§3 n=4）
@@ -457,7 +459,7 @@ const DEFAULT_TIMING = {
   wheelAfterWin:    0.55,   // 有連線得分時：連線得分跑完→展開輪盤（含最後 0.25 聖心脈動；使用者 2026-10-22）
   sixPopTime:       0.60,   // 聖心落地快速縮放一下的時長（使用者 2026-10-22：原本綁 sixLand 0.55 太慢）
   wheelLeave:       1.00,   // 下一局開轉：上一局轉盤往下掉出＋縮小淡出的時長（每輪；使用者 2026-10-22 要比舊圖示慢）
-  wheelIntro:       0.80,   // 轉盤登場（變一格→放大）；與 wheelSpin 合計 4.2（§8.4 紅盤 n=5）
+  wheelIntro:       0.60,   // 轉盤登場（變一格→放大）；與 wheelSpin 合計 4.2（§8.4 紅盤 n=5）
   wheelSpin:        4.30,   // 轉盤轉動到停
   wheelResult:      1.30,   // 轉盤結果停留（公版預設）
   nxFade:           0.45,   // LOGO 字樣淡出→倍數淡入（局結算完反向）；使用者 2026-10-19，待節奏組實測
@@ -1186,10 +1188,15 @@ async function loadArt() {
   const jobs = [];
   // 圖示路徑在「這一刻」才算（loadTuning 已套用保存的圖示組合），載完時若組合又變了就不覆蓋：
   // 原本用開頭算好的 ART.sym（預設組合），會跟 setIconPick 搶，重新整理時最高分忽而鑰匙忽而十字架（使用者 2026-10-24）
-  SYMBOLS.forEach((s, i) => { const src = iconSrc(i); jobs.push(_loadImg(src).then(im => { if (iconSrc(i) === src) iconImgs[i] = im; })); });
+  SYMBOLS.forEach((s, i) => jobs.push(loadIconAt(i)));
   jobs.push(loadTintArt());
   Object.keys(ART).filter(k => k !== 'sym').forEach(k => jobs.push(_loadImg(ART[k]).then(im => { sceneImgs[k] = im; })));
   await Promise.all(jobs);
+  for (let n = 0; n < 5; n++) {                   // 載入期間組合被換過（上面那批就不套用）：照「當下」組合補載，全部對上才算 artReady
+    const miss = SYMBOLS.map((s, i) => i).filter(i => iconImgSrc[i] !== iconSrc(i));
+    if (!miss.length) break;
+    await Promise.all(miss.map(loadIconAt).concat([loadTintArt()]));
+  }
   tintCache = {};                                 // 圖載完才建著色快取（載入前查過的會是 null）
   // 拆層檔不在時：外圈退回整張原圖（聖火層缺 → drawWheelDiscArt 不成立，退回程式繪製的轉盤）
   if (!sceneImgs.wheelBlueBase && sceneImgs.wheelBlue) sceneImgs.wheelBlueBase = sceneImgs.wheelBlue;
@@ -1197,10 +1204,15 @@ async function loadArt() {
   artReady = true;
 }
 let iconPickLoading = null;                       // 換圖示中的載入 Promise（驗證用）
+const iconImgSrc = [];                            // 每格目前圖片實際的路徑（跟 iconSrc(i) 比，就知道是不是目前組合的圖）
+function loadIconAt(i) {                          // 載第 i 格「當下」組合的圖；載完時組合沒變才套用
+  const src = iconSrc(i);
+  return _loadImg(src).then(im => { if (im && iconSrc(i) === src) { iconImgs[i] = im; iconImgSrc[i] = src; } });
+}
 function setIconPick(patch, noSave) {             // 面板下拉選單換圖示：套選項 → 載入 id0～9 的圖與調色盤遮罩 → 清著色快取 → 重畫賠率表
   applyIconPickMeta(patch);
   const jobs = [];
-  for (let i = 0; i <= 9; i++) { const src = iconSrc(i); jobs.push(_loadImg(src).then(im => { if (im && iconSrc(i) === src) iconImgs[i] = im; })); }
+  for (let i = 0; i <= 9; i++) jobs.push(loadIconAt(i));
   jobs.push(loadTintArt());
   iconPickLoading = Promise.all(jobs).then(() => {
     tintCache = {};
@@ -4601,7 +4613,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 27;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
+const TUNE_VERSION = 28;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
@@ -6244,6 +6256,8 @@ const SHOT_PRESETS = {
   pickBoard:     () => { setIconPick({ top: 'crossSilver', h1: 'harp', h2: 'wings', m1: 'chalice', m2: 'amphora', low: 'greekObj' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 自由組合範例：隨機盤面（低分希臘物件）
   pickShield:    () => { setIconPick({ top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'shieldGreen', m2: 'flaskGreen', low: 'greekObj' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 綠聖盾＋綠聖水瓶：隨機盤面
   keyIdle:       () => { setIconPick({ top: 'keyDiag' }, true); },    // 待機全盤＝最高分：天堂鑰匙
+  chaliceIdle:   () => { setIconPick({ top: 'chaliceGold' }, true); },   // 待機全盤＝最高分：金聖杯
+  angelFSIdle:   () => { setIconPick({ top: 'angelFS' }, true); },     // 待機全盤＝最高分：金天使
   pickKey:       () => { setIconPick({ top: 'keyDiag' }, true); forceSpinType = null; startSpin(); runUntil(() => currentState === STATE.IDLE); },   // 最高分換天堂鑰匙（斜放）：隨機盤面
   daggerFall:    () => spinWith('ng1add', () => currentState === STATE.POSTSTOP && wheels.length && daggerStabK(wheels[0].c, wheels[0].r) >= 0.3),   // 匕首落下中
   daggerHit:     () => spinWith('ng1add', () => currentState === STATE.POSTSTOP && wheels.length && daggerStabK(wheels[0].c, wheels[0].r) >= 0.6),   // 匕首插到底（閃亮）
@@ -6344,10 +6358,10 @@ const SHOT_PRESETS = {
     promoMode = true;
     ['fsBtn', 'statsBtn', 'tuneBtn', 'infoBtn'].forEach(id => { const el = document.getElementById(id); if (el) el.style.visibility = 'hidden'; });
   },
-  panelIcon:     () => { openTuneTab('icon'); },
+  panelIcon:     () => { openTuneTab('icon'); },                                                           // 控制面板「圖示大小」分頁
   panelTint:     () => { setTint('tintHigh', { on: 1, h: 280, s: 75, l: 50 }); openTuneTab('tint'); },   // 控制面板「調色盤」分頁（紫色預設）
   idlePurple:    () => { setTint('tintHigh', { on: 1, h: 280, s: 75, l: 50 }); },                         // 待機盤面（15 倍組紫色）
-  promoPurple:   () => { setTint('tintHigh', { on: 1, h: 280, s: 75, l: 50 }); SHOT_PRESETS.promoBoard(); },   // 宣傳示意圖（15 倍組紫色）                                    // 控制面板「圖示大小」分頁
+  promoPurple:   () => { setTint('tintHigh', { on: 1, h: 280, s: 75, l: 50 }); SHOT_PRESETS.promoBoard(); },   // 宣傳示意圖（15 倍組紫色）
   layoutScale:   () => { openTuneTab('layout'); layoutSelected = 'charR'; buildLayoutTab(); },   // 佈局：選中右天使，四角縮放把手
 };
 // 新別名（舊名照樣可用）：dealWhistle＝宙斯抽籤開轉前、fgTransBang＝轉場開頭光圈、goldWheelCollapse＝FG 轉盤全部收合後的方塊
