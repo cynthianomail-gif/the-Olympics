@@ -225,7 +225,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <p>• 加法格把倍數加進累計；乘法格把目前累計乘上倍數，累計為 0 時以面值計入</p>
         <p>• MAX WIN 格（雷射紅星）：藍輪、紅輪的每張盤面各有 1 格；轉到時累計 ＋1000 倍，之後轉到的乘法格可再乘上去</p>
         <p>• 轉盤彩金＝押注額 × 轉盤累計倍數，與連線彩金相加（乘法不乘連線彩金）</p>
-        <p>• 升級輪盤：轉盤展開時有機率由天使把所有倍數格升一階（紅心格、MAX WIN 格不變；藍輪最高 100 倍／×10），再開始轉動；藍輪與紅輪都會發生</p>
+        <p>• 升級輪盤：轉盤展開時有機率由天使把所有倍數格升一階（紅心格、MAX WIN 格不變；藍輪最高 100 倍／×10；紅輪的 500 倍格升成 MAX WIN），再開始轉動；藍輪與紅輪都會發生</p>
         <p>• 轉動輪盤：一般遊戲藍輪停在紅心格前一格時，有機率由天使推動轉盤多轉一格，停進紅心格；免費遊戲中轉盤累計倍數差一格就到 51 倍以上時，也有機率由天使多推一格（不會推進或推離 MAX WIN 格）</p>
         <h3>▌ 免費遊戲</h3>
         <p>• 1／2／3 個藍輪停在紅心格 → FG 一重天／SFG 二重天／UFG 三重天，各 10 局</p>
@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-104';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-105';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -1686,9 +1686,10 @@ function plantedBoard(spec) {
  *   例：前兩個輪盤 30 倍，第三個停在 +10＝40，隔壁是 ×2 → 推過去 30×2＝60）。連線得分不算。輪盤停下後右天使飛來往上推，多轉一格
  * 購買觸發局不出（競品購買局轉一下就停）。plan.upg／plan.nudge 在落定盤面時就決定，所以合體預判、跑分都用升級後／推完的結果 */
 const UPG_ADD = [5, 10, 15, 20, 25, 50, 100, 250, 500], UPG_MUL = [2, 3, 4, 5, 10, 15, 20];   // 升一階的階梯（頂端不再升）
-const UPG_BLUE_CAP = { add: 100, mul: 10 };      // 藍輪升級封頂（使用者 2026-10-28：藍輪最高 100 倍／×10；紅輪照升到 500／×20）
+const UPG_BLUE_CAP = { add: 100, mul: 10 };      // 藍輪升級封頂（使用者 2026-10-28：藍輪最高 100 倍／×10；紅輪照升到 500／×20，500 再升＝MAX WIN）
 function upgradeSeg(s, blue) {
   if (s.type === 'start' || s.type === 'max') return s;   // 紅心格、MAX WIN 格不升級（使用者 2026-10-28：天使不碰 MAX WIN）
+  if (!blue && s.type === 'add' && s.v === UPG_ADD[UPG_ADD.length - 1]) return parseSeg('M');   // 紅輪 500 倍再升一階＝MAX WIN（企劃書 V4，使用者 2026-10-28）；藍輪封頂 100 倍不受影響
   const L = (s.type === 'add' ? UPG_ADD : UPG_MUL).filter(v => !blue || v <= UPG_BLUE_CAP[s.type]), i = L.indexOf(s.v);
   const v = i < 0 ? s.v : L[Math.min(L.length - 1, i + 1)];
   return parseSeg(s.type === 'add' ? String(v) : 'x' + v);
