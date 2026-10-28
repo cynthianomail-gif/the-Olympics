@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>奧林匹亞 demo</title>
+<title>天使之心 demo</title>
 <style>
 /* ===== 版面：固定 1280×720，等比縮放置中 ===== */
 body {
@@ -209,33 +209,33 @@ canvas { display: block; width: 100%; height: 100%; }
 
   <div id="infoPanel">
     <button id="infoClose">✕</button>
-    <h2>📖 遊戲說明 — <span id="infoTitle">奧林匹亞</span></h2>
+    <h2>📖 遊戲說明 — <span id="infoTitle">天使之心</span></h2>
     <div class="grid2">
       <div>
         <h3>▌ 基本規則</h3>
         <p>• 4×5 盤面（5 輪 × 4 列）、<b>14 條固定贏分線</b>，從最左輪起連續 3 個以上相同圖示即可贏分</p>
         <p>• 滾輪為掉落式：舊圖示整輪往下掉出，新圖示由上往下逐輪掉入</p>
         <p>• 沒有 WILD 與 SCATTER，免費遊戲由轉盤觸發</p>
-        <h3>▌ 聖心與藍輪</h3>
-        <p>• 藍聖心只出現在第 1、3、5 輪，每輪最多 1 個；落地後在同一格出現藍輪</p>
+        <h3>▌ 愛心與藍輪</h3>
+        <p>• 藍愛心只出現在第 1、3、5 輪，每輪最多 1 個；落地後在同一格出現藍輪</p>
         <p>• 外圈轉盤轉動後逐漸停下，指針固定朝上，指到的正上方那格即選中；多個轉盤由左到右依序轉動並收集</p>
         <p>• 加法格把倍數加進累計；乘法格把目前累計乘上倍數，累計為 0 時以面值計入</p>
         <p>• 轉盤彩金＝押注額 × 轉盤累計倍數，與連線彩金相加（乘法不乘連線彩金）</p>
-        <p>• 升級輪盤：轉盤展開時有機率由天使把所有倍數格升一階（聖火格不變），再開始轉動；藍輪與紅輪都會發生</p>
-        <p>• 轉動輪盤：一般遊戲藍輪停在聖火格前一格時，有機率由天使推動轉盤多轉一格，停進聖火格；免費遊戲中轉盤累計倍數差一格就到 51 倍以上時，也有機率由天使多推一格</p>
+        <p>• 升級輪盤：轉盤展開時有機率由天使把所有倍數格升一階（紅心格不變），再開始轉動；藍輪與紅輪都會發生</p>
+        <p>• 轉動輪盤：一般遊戲藍輪停在紅心格前一格時，有機率由天使推動轉盤多轉一格，停進紅心格；免費遊戲中轉盤累計倍數差一格就到 51 倍以上時，也有機率由天使多推一格</p>
         <h3>▌ 免費遊戲</h3>
-        <p>• 1／2／3 個藍輪停在聖火格 → FG 銅牌賽／SFG 銀牌賽／UFG 金牌賽，各 10 局</p>
-        <p>• FG：紅輪與藍輪出現率提升（藍輪沒有聖火格）；SFG：只出紅輪；UFG：每局必出紅輪</p>
-        <p>• FG、SFG 出賽前可請主審宙斯抽籤重排賽程：5／8／12／16／20 局取代原局數，或停在晉級格晉級（UFG 不提供）</p>
+        <p>• 1／2／3 個藍輪停在紅心格 → FG 一重天／SFG 二重天／UFG 三重天，各 10 局</p>
+        <p>• FG：紅輪與藍輪出現率提升（藍輪沒有紅心格）；SFG：只出紅輪；UFG：每局必出紅輪</p>
+        <p>• FG、SFG 開始前可請天使抽籤重新決定局數：5／8／12／16／20 局取代原局數，或停在晉級格晉級（UFG 不提供）</p>
         <p>• 免費遊戲中不加局，最多 20 局</p>
         <h3>▌ 購買</h3>
-        <p>• BET×10：每局提高藍聖心出現機率；BET×50：每局必定出現紅輪（不能觸發免費遊戲）</p>
+        <p>• BET×10：每局提高藍愛心出現機率；BET×50：每局必定出現紅輪（不能觸發免費遊戲）</p>
         <p>• BET×100 購買 FG、BET×250 購買 SFG；UFG 不能購買</p>
       </div>
       <div>
         <h3>▌ 賠率表（目前押注 <span id="infoBet">100</span>）</h3>
         <table id="infoPayTable"></table>
-        <p style="margin-top:10px;color:#94a3b8">藍／紅聖心沒有連線賠率。<br>demo 的機率為預設值，非正式數值；RTP 未校準。</p>
+        <p style="margin-top:10px;color:#94a3b8">藍／紅愛心沒有連線賠率。<br>demo 的機率為預設值，非正式數值；RTP 未校準。</p>
       </div>
     </div>
   </div>
@@ -249,9 +249,9 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-99';   // 驗證用識別值：測到的是不是最新版，看這個
-const GAME_NAME = '奧林匹亞';
-const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
+const APP_BUILD = 'olympia-holy-100';   // 驗證用識別值：測到的是不是最新版，看這個
+const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
+const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
 const canvas = document.getElementById('gameCanvas');
 let ctx = canvas.getContext('2d');   // let：賠率表要借用同一支繪製函式畫小圖
@@ -457,9 +457,9 @@ const DEAL_SEGS = ['5', '8', '12', '5', '8', 'P', '5', '8', '16', '5', '8', '20'
 const DEAL_WKEY = { '5': 'deal5W', '8': 'deal8W', '12': 'deal12W', '16': 'deal16W', '20': 'deal20W', 'P': 'dealPW' };
 const LEVEL_INFO = [
   null,
-  { code: 'FG',  name: '銅牌賽', color: '#d08a4e', dark: '#5a3416' },
-  { code: 'SFG', name: '銀牌賽', color: '#cbd5e1', dark: '#334155' },
-  { code: 'UFG', name: '金牌賽', color: '#e9c46a', dark: '#5b4310' },
+  { code: 'FG',  name: '一重天', color: '#d08a4e', dark: '#5a3416' },
+  { code: 'SFG', name: '二重天', color: '#cbd5e1', dark: '#334155' },
+  { code: 'UFG', name: '三重天', color: '#e9c46a', dark: '#5b4310' },
 ];
 
 // --- 節奏（秒）---
@@ -520,7 +520,7 @@ const DEFAULT_TIMING = {
   fgTotalHold:      3.00,   // 結算介面停留（公版 FG/BG結算框；點擊可提前繼續）
   autoSpinDelay:    0.12,   // 局間停頓（企劃 §節奏表 P6／P11）
   heartTime:        2.80,   // 單盤總贏分 ≥500 倍時，轉盤轉動前兩位天使「雙人愛心合體」：離場＋上下壓黑→從兩側飛回→相撞爆愛心→停約 1 秒→退場復位（美術需求 54H／62H）
-  fgInPull:         0.80,   // 進入 FG 介面前：遊戲畫面壓暗震動、場景向上拉抵達賽場（美術需求 66H①），之後介面才升起
+  fgInPull:         0.80,   // 進入 FG 介面前：遊戲畫面壓暗震動、場景向上拉抵達天界（美術需求 66H①），之後介面才升起
   totalDrop:        0.50,   // FG 結算：聖火台從上方掉落的時間，落地瞬間畫面震動、燃起火焰（美術需求 75H）
 };
 const TIMING_META = [
@@ -548,7 +548,7 @@ const TIMING_META = [
     ['buySixLand', '購買局脈動', { hint: '購買觸發局：全部靜止→聖心脈動結束（等 0.37＋脈動 0.25；競品 §6.3 0.62）' }],
     ['buyWheelIntro', '購買局轉盤登場', { hint: '購買觸發局：變形＋長大到全尺寸（競品 0.23＋0.13＝0.36）' }],
     ['buyWheelSpin', '購買局轉盤轉動', { hint: '購買觸發局：轉盤轉動到停（不到 1 圈；競品實測 0.35，一般局 4.18）' }],
-    ['buyWheelResult', '購買局停定', { hint: '購買觸發局：停在聖火格→聖火與結果格彈跳開始（不出 NX、不跑分；競品 0.45）' }],
+    ['buyWheelResult', '購買局停定', { hint: '購買觸發局：停在紅心格→紅心與結果格彈跳開始（不出 NX、不跑分；競品 0.45）' }],
     ['buyWheelPop', '購買局彈跳', { hint: '購買觸發局：聖火＋結果格彈跳時間（競品約 0.1）' }],
     ['buyWheelGap', '購買局連開間隔', { hint: '購買觸發局：前一個轉盤開始（脈動）→下一個轉盤開始（競品實測 1.84，n=5）' }],
     ['buyWheelEnd', '購買局收黑', { hint: '購買觸發局：最後一個轉盤開始（脈動）→收黑進 FG 進入介面（競品實測 1.75，n=7）' }],
@@ -575,8 +575,8 @@ const TIMING_META = [
     ['bigSwap', '大獎版切換', 0, 2, 0.05, { hint: '跑到下一級門檻時，上一級大獎版縮小淡出、下一級大獎版彈出的時間（競品約 0.5s，推估 n=4）' }] ] },
   { group: '免費遊戲／抽籤', items: [
     ['fgIntroAnim', '進入介面展開', { hint: '進入介面看板展開（按鈕在展開後才能按；推估 0.2s，競品 n=1）' }],
-    ['dealDelay', '宙斯抽籤啟動', { hint: '按「轉動宙斯抽籤」到轉盤開始轉。預設＝競品實測 1.37s' }],
-    ['dealSpin', '宙斯抽籤轉動', 0, 12, 0.05, { hint: '宙斯抽籤轉動到停。預設＝競品實測 5.67s' }],
+    ['dealDelay', '天使抽籤啟動', { hint: '按「請天使抽籤」到轉盤開始轉。預設＝競品實測 1.37s' }],
+    ['dealSpin', '天使抽籤轉動', 0, 12, 0.05, { hint: '天使抽籤轉動到停。預設＝競品實測 5.67s' }],
     ['dealResult', '抽籤結果停留', { hint: '顯示新的局數或晉級的停留' }],
     ['promoteHold', '晉級畫面停留', { hint: '停在晉級格時的晉級畫面（推估 2.05s＝競品升級黑幕，n=1）' }],
     ['fgEnterHold', 'FG轉場停留', 0, 8, 0.1, { hint: '免費遊戲轉場：光圈由中心擴散蓋滿畫面，過半切到 FG 場景' }],
@@ -585,7 +585,7 @@ const TIMING_META = [
   { group: '局間', items: [
     ['autoSpinDelay', '局間停頓', { hint: 'AUTO 與免費遊戲連轉時兩局之間的停頓（企劃節奏表 0.4s／TURBO 0.3s）' }],
     ['heartTime', '500倍合體', { hint: '單盤總贏分 ≥500 倍時，轉盤轉動前兩位天使「雙人愛心合體」：離場＋上下壓黑→從兩側飛回→相撞爆愛心→停約 1 秒→退場復位（美術需求 54H／62H）' }],
-    ['fgInPull', 'FG進場拉', { hint: '進入 FG 介面前：遊戲畫面壓暗震動、場景向上拉抵達賽場（美術需求 66H①），之後介面才升起' }],
+    ['fgInPull', 'FG進場拉', { hint: '進入 FG 介面前：遊戲畫面壓暗震動、場景向上拉抵達天界（美術需求 66H①），之後介面才升起' }],
     ['totalDrop', '結算台落下', { hint: 'FG 結算：聖火台從上方掉落的時間，落地瞬間畫面震動、燃起火焰（美術需求 75H）' }] ] },
 ];
 // 甘特圖起點（秒）：只影響面板視覺
@@ -684,7 +684,7 @@ const RHYTHM_MAP = [
   ['buySixLand', '購買局聖心脈動', '購買觸發局：全部靜止→聖心脈動結束（等 0.37＋脈動 0.25；競品 §6.3 0.62）', null],
   ['buyWheelIntro', '購買局轉盤登場', '購買觸發局：變形＋長大到全尺寸（競品 0.23＋0.13＝0.36）', null],
   ['buyWheelSpin', '購買局轉盤轉動', '購買觸發局：轉盤轉動到停（不到 1 圈；競品實測 0.35，一般局 4.18）', null],
-  ['buyWheelResult', '購買局停定→彈跳', '購買觸發局：停在聖火格→聖火與結果格彈跳開始（不出 NX、不跑分；競品 0.45）', null],
+  ['buyWheelResult', '購買局停定→彈跳', '購買觸發局：停在紅心格→紅心與結果格彈跳開始（不出 NX、不跑分；競品 0.45）', null],
   ['buyWheelPop', '購買局彈跳', '購買觸發局：聖火＋結果格彈跳時間（競品約 0.1）', null],
   ['buyWheelGap', '購買局連開間隔', '購買觸發局：前一個轉盤開始（脈動）→下一個轉盤開始（競品實測 1.84，n=5）', null],
   ['buyWheelEnd', '購買局收黑', '購買觸發局：最後一個轉盤開始（脈動）→收黑進 FG 進入介面（競品實測 1.75，n=7）', null],
@@ -708,8 +708,8 @@ const RHYTHM_MAP = [
   ['bigRunPre',        '大獎跑分(到BIG門檻)', '大獎從 1 起跑到 BIG WIN 門檻的時間（到門檻才跳出 BIG 版）', null],
   ['bigSwap',          '大獎版切換',       '上一級大獎版縮小淡出、下一級大獎版彈出的時間',           null],
   ['fgIntroAnim',      'FG進入介面登場',   '進入介面看板展開的持續時間',               null],
-  ['dealDelay',        '宙斯抽籤啟動',     '玩家選擇轉動宙斯抽籤後，到轉盤開始轉動的時間',           null],
-  ['dealSpin',         '宙斯抽籤轉動',     '宙斯抽籤轉動到停下的持續時間',                           null],
+  ['dealDelay',        '天使抽籤啟動',     '玩家選擇請天使抽籤後，到轉盤開始轉動的時間',           null],
+  ['dealSpin',         '天使抽籤轉動',     '天使抽籤轉動到停下的持續時間',                           null],
   ['dealResult',       '抽籤結果停留',     '顯示新局數或晉級結果的停留時間',                         null],
   ['promoteHold',      '晉級畫面',         '停在晉級格時的晉級畫面持續時間',                         null],
   ['fgEnterHold',      'FG轉場版',         '免費遊戲轉場（光圈擴散）的持續時間',                         'FG/BG宣告框'],
@@ -717,10 +717,10 @@ const RHYTHM_MAP = [
   ['fgTotalHold',      'FG/BG結算框',      'FG 結算板顯示的持續時間',                                 'FG/BG結算框'],
   ['autoSpinDelay',    '局間停頓',         '分數關閉後到下一局轉輪啟動的停頓時間',                   '停頓時間(局間)'],
   ['heartTime', '500倍合體', '單盤總贏分 ≥500 倍時，轉盤轉動前兩位天使「雙人愛心合體」：離場＋上下壓黑→從兩側飛回→相撞爆愛心→停約 1 秒→退場復位（美術需求 54H／62H）', null],
-  ['fgInPull', 'FG進場拉', '進入 FG 介面前：遊戲畫面壓暗震動、場景向上拉抵達賽場（美術需求 66H①），之後介面才升起', null],
+  ['fgInPull', 'FG進場拉', '進入 FG 介面前：遊戲畫面壓暗震動、場景向上拉抵達天界（美術需求 66H①），之後介面才升起', null],
   ['totalDrop', '結算台落下', 'FG 結算：聖火台從上方掉落的時間，落地瞬間畫面震動、燃起火焰（美術需求 75H）', null],
   // 以下由特效檔決定，demo 給不出值（不要拿 demo 暫代值充數）
-  [null, '觸發期待演出', '已有轉盤停在聖火格時，其餘轉盤轉動中的期待演出時長', null, 'FX'],
+  [null, '觸發期待演出', '已有轉盤停在紅心格時，其餘轉盤轉動中的期待演出時長', null, 'FX'],
   [null, '大獎前停頓',   '大獎演繹前的停頓時間',                               null, 'FX'],
 ];
 
@@ -820,7 +820,7 @@ const ICON_META = [
     ['iconHigh', '15 倍組', 0.5, 2.0, 0.01, { hint: '15 倍兩格（上方「圖示組合」選的；兩格共用這個大小）' }],
     ['iconMid', '10 倍組', 0.5, 2.0, 0.01, { hint: '10 倍兩格（上方「圖示組合」選的；兩格共用這個大小）' }],
     ['iconLow', '低分', 0.5, 2.0, 0.01, { hint: '低分 5 個（A K Q J 10／希臘符號／希臘物件，上方「圖示組合」選）' }],
-    ['iconSix', '聖心', 0.5, 2.0, 0.01, { hint: '藍／紅聖心（落地放大 30% 疊在這個之上）' }] ] },
+    ['iconSix', '愛心', 0.5, 2.0, 0.01, { hint: '藍／紅愛心（落地放大 30% 疊在這個之上）' }] ] },
 ];
 function iconTierKey(id) { return id === 0 ? 'iconGold' : id <= 2 ? 'iconHigh' : id <= 4 ? 'iconMid' : id <= 9 ? 'iconLow' : 'iconSix'; }
 // 新素材透明留白校正：保持原本占格長邊，保留胖版造型；盤面與中獎刷光共用。
@@ -914,7 +914,7 @@ const FX_META = [
     ['nxBigScale', '倍數放大', 1, 2, 0.05, { hint: '51 倍起倍數放大到（美術需求：130%）' }],
     ['sixFlare', '聖火登場猛燒', 0, 2, 0.05, { hint: '聖火圖示出現時火焰猛烈燃燒一次（變亮）的強度；0＝關' }],
     ['nxShakeAmp', '倍數震幅', 0, 40, 1, { hint: '累計 >200 時畫面震動幅度（px）' }],
-    ['anticFake', '假預報機率', 0, 1, 0.05, { hint: '預報演繹 1（假預報）：NG 藍輪沒有停在聖火格時，以這個機率播預報 1（使用者 2026-10-21 定；停在聖火格必播預報 2）' }],
+    ['anticFake', '假預報機率', 0, 1, 0.05, { hint: '預報演繹 1（假預報）：NG 藍輪沒有停在紅心格時，以這個機率播預報 1（使用者 2026-10-21 定；停在紅心格必播預報 2）' }],
     ['anticZoom', '預報拉近', 1, 2, 0.05, { hint: '預報演繹 1／2：轉盤轉動時畫面朝轉盤緩慢拉近的倍率上限（實際取轉盤不出畫面的最大值）' }],
     ['anticDots', '預報光點量', 0, 3, 0.1, { hint: '預報演繹的金色光點粒子量（預報 2 為 3 倍）' }],
     ['winZoomHi', '高分中獎放大', 1, 1.6, 0.01, { hint: '圖示中獎：最高分與 15／10 倍圖示放大倍率（美術需求：20%）' }],
@@ -923,7 +923,7 @@ const FX_META = [
     ['bigCoins', '大獎金幣量', 0, 3, 0.1, { hint: '大獎時天使身後噴出金幣／鈔票的量（BIG 少量、MEGA 大量、EPIC 加鈔票）' }],
     ['shkHi2Amp', '高倍震幅', 0, 40, 1, { hint: '高倍演繹 2（紅輪 250／500、X15／X20）停下後畫面震動幅度（px）' }],
     ['shkHi2Dur', '高倍震秒', 0, 2, 0.05, { hint: '高倍演繹 2 震動秒數' }],
-    ['shkAntAmp', '預報震幅', 0, 40, 1, { hint: '預報演繹 2 轉到聖火格時盤面震動幅度（px）' }],
+    ['shkAntAmp', '預報震幅', 0, 40, 1, { hint: '預報演繹 2 轉到紅心格時盤面震動幅度（px）' }],
     ['shkAntDur', '預報震秒', 0, 2, 0.05, { hint: '預報演繹 2 震動秒數' }],
     ['shkInAmp', '進場震幅', 0, 40, 1, { hint: 'FG 進入介面登場：遊戲畫面壓暗震動幅度（px）' }],
     ['shkInDur', '進場震秒', 0, 2, 0.05, { hint: 'FG 進入介面登場震動秒數' }],
@@ -931,7 +931,7 @@ const FX_META = [
     ['shkPrDur', '晉級震秒', 0, 2, 0.05, { hint: '升級演繹震動秒數' }],
     ['shkTotAmp', '結算震幅', 0, 40, 1, { hint: 'FG 結算：聖火台掉落時畫面震動幅度（px）' }],
     ['shkTotDur', '結算震秒', 0, 2, 0.05, { hint: 'FG 結算震動秒數' }],
-    ['anticip', '觸發期待強度', 0, 2, 0.1, { hint: '已有轉盤停在聖火格時，其餘轉盤的期待演出強度；0＝關' }],
+    ['anticip', '觸發期待強度', 0, 2, 0.1, { hint: '已有轉盤停在紅心格時，其餘轉盤的期待演出強度；0＝關' }],
  ] },
   { group: '得分與大獎分級', items: [
     ['pubFx1', '公版特效1', 0, 2, 0.05, { hint: '10≦贏分＜20 倍：公版特效(1) 光暈強度（企劃得分層級 C4）' }],
@@ -940,9 +940,9 @@ const FX_META = [
     ['zoom2', '圖示放大2', 1, 2, 0.01, { hint: '中獎圖示放大等級 2 的倍率（EPIC）' }],
     ['bgFx', '背景演繹', 0, 1, 0.05, { hint: '介面背景演繹（放射光）強度（MEGA、EPIC）' }] ] },
   { group: '角色影響輪盤', items: [
-    ['upgP', '升級輪盤機率', 0, 1, 0.005, { hint: '每個輪盤出現時各自判定（藍輪、紅輪都會）：左天使把所有倍數格升一階（5→10→15→20→25→50→100→250→500、×2→×3→×4→×5→×10→×15→×20，聖火格不變）；0.01＝1%' }],
+    ['upgP', '升級輪盤機率', 0, 1, 0.005, { hint: '每個輪盤出現時各自判定（藍輪、紅輪都會）：左天使把所有倍數格升一階（5→10→15→20→25→50→100→250→500、×2→×3→×4→×5→×10→×15→×20，紅心格不變）；0.01＝1%' }],
     ['upgTime', '升級演出秒數', 0.6, 4, 0.1, { hint: '升級輪盤：天使飛來打光 → 格子由正上方順時針依序翻牌 → 飛回，之後輪盤才開轉' }],
-    ['nudgeP', '轉動輪盤機率', 0, 1, 0.005, { hint: 'NG：藍輪停在聖火格前一格時判定，推一格進聖火格（觸發 FG）；FG：本局輪盤累計原本不到門檻、推一格就到門檻時判定（紅、藍輪都算）；0.01＝1%' }],
+    ['nudgeP', '轉動輪盤機率', 0, 1, 0.005, { hint: 'NG：藍輪停在紅心格前一格時判定，推一格進紅心格（觸發 FG）；FG：本局輪盤累計原本不到門檻、推一格就到門檻時判定（紅、藍輪都算）；0.01＝1%' }],
     ['nudgeX', 'FG 轉動門檻≥', 2, 1000, 1, { hint: 'FG 轉動輪盤：本局輪盤累計倍數（不含連線）推一格後 ≥ 此值才可能觸發（使用者：51）' }],
     ['nudgeTime', '轉動演出秒數', 0.6, 4, 0.1, { hint: '轉動輪盤：輪盤停下 → 天使飛來往上推 → 多轉一格 → 飛回，之後才出結果' }] ] },
 ];
@@ -978,11 +978,11 @@ const ODDS_META = [
     ['bet', '單局押注', 10, 1000, 10, { hint: '基本押注；機制購買期間派彩與大獎分級都以此計' }],
     ['payMul', '全域賠率乘數', 0.1, 5, 0.05, { hint: '調 RTP 用（RTP 未校準，非競品實值）' }] ] },
   { group: '轉盤圖示出現率', items: [
-    ['hamNG', 'NG藍聖心率', 0, 100, 0.5, { hint: '一般遊戲：第 1／3／5 輪各自出現藍聖心的機率 %（待數值組）' }],
-    ['ham10', 'B10藍聖心率', 0, 100, 0.5, { hint: 'BET×10 啟用時每輪藍聖心機率 %（提高但不保證）' }],
-    ['fgGold', 'FG紅聖心率', 0, 100, 0.5, { hint: 'FG：每輪紅聖心機率 %（兩種合計每輪最多 1 個）' }],
-    ['fgBlue', 'FG藍聖心率', 0, 100, 0.5, { hint: 'FG：每輪藍聖心（藍輪 藍-3）機率 %' }],
-    ['sfgGold', 'SFG紅聖心率', 0, 100, 0.5, { hint: 'SFG：每輪紅聖心機率 %（不出藍輪）' }],
+    ['hamNG', 'NG藍愛心率', 0, 100, 0.5, { hint: '一般遊戲：第 1／3／5 輪各自出現藍愛心的機率 %（待數值組）' }],
+    ['ham10', 'B10藍愛心率', 0, 100, 0.5, { hint: 'BET×10 啟用時每輪藍愛心機率 %（提高但不保證）' }],
+    ['fgGold', 'FG紅愛心率', 0, 100, 0.5, { hint: 'FG：每輪紅愛心機率 %（兩種合計每輪最多 1 個）' }],
+    ['fgBlue', 'FG藍愛心率', 0, 100, 0.5, { hint: 'FG：每輪藍愛心（藍輪 藍-3）機率 %' }],
+    ['sfgGold', 'SFG紅愛心率', 0, 100, 0.5, { hint: 'SFG：每輪紅愛心機率 %（不出藍輪）' }],
     ['gc1', '紅盤1個權重', 0, 100, 1, { hint: 'UFG／BET×50 每局紅輪 1 個的權重（每局必出）' }],
     ['gc2', '紅盤2個權重', 0, 100, 1, { hint: 'UFG／BET×50 每局紅輪 2 個的權重' }],
     ['gc3', '紅盤3個權重', 0, 100, 1, { hint: 'UFG／BET×50 每局紅輪 3 個的權重' }] ] },
@@ -994,10 +994,10 @@ const ODDS_META = [
     ['wRedC', '紅C盤權重', 0, 20, 1, { hint: '紅輪抽到 紅-C 的權重' }],
     ['wRedD', '紅D盤權重', 0, 20, 1, { hint: '紅輪抽到 紅-D 的權重' }],
     ['wRedE', '紅E盤權重', 0, 20, 1, { hint: '紅輪抽到 紅-E 的權重' }],
-    ['wSegStart', '聖火格權重', 0, 20, 0.1, { hint: '每一格聖火格的權重（格數不代表機率）' }],
+    ['wSegStart', '紅心格權重', 0, 20, 0.1, { hint: '每一格紅心格的權重（格數不代表機率）' }],
     ['wSegAdd', '加法格權重', 0, 20, 0.1, { hint: '每一格加法格的權重' }],
     ['wSegMul', '乘法格權重', 0, 20, 0.1, { hint: '每一格乘法格的權重' }] ] },
-  { group: '宙斯抽籤（每格權重）', items: [
+  { group: '天使抽籤（每格權重）', items: [
     ['deal5W', '5局格權重', 0, 20, 0.1, { hint: '每一格「5 局」的權重（共 4 格）' }],
     ['deal8W', '8局格權重', 0, 20, 0.1, { hint: '每一格「8 局」的權重（共 4 格）' }],
     ['deal12W', '12局格權重', 0, 20, 0.1, { hint: '「12 局」格的權重' }],
@@ -3104,17 +3104,17 @@ function drawFGIntroArt() {
   textCenter(pendingSpins + ' 局免費旋轉', px, G.ty.spins, 'bold 50px "Microsoft JhengHei", sans-serif', L.dark, '#fff7ed', 6);
   if (gamble) {
     ctx.font = 'bold 16px "Microsoft JhengHei", sans-serif'; ctx.fillStyle = '#57534e';
-    ctx.fillText('出賽前可請主審宙斯從聖甕重新抽籤排賽程（局數可能變多或變少）', px, G.ty.desc1);
-    ctx.fillText('停在晉級格直接晉級' + (pendingLevel === 1 ? '銀牌賽 SFG' : '金牌賽 UFG'), px, G.ty.desc2);
+    ctx.fillText('開始前可請天使重新抽籤決定局數（局數可能變多或變少）', px, G.ty.desc1);
+    ctx.fillText('停在晉級格直接晉級' + (pendingLevel === 1 ? '二重天 SFG' : '三重天 UFG'), px, G.ty.desc2);
     const on = canGamble();
-    [['start', '直接開始 ' + pendingSpins + ' 局'], ['deal', '請宙斯抽籤']].forEach(b => {
+    [['start', '直接開始 ' + pendingSpins + ' 局'], ['deal', '請天使抽籤']].forEach(b => {
       const r = lay[b[0]];
       if (!on) { ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(r.x, r.y, r.w, r.h); }
       textCenter(b[1], r.x + r.w / 2, r.y + r.h / 2, 'bold 26px "Microsoft JhengHei", sans-serif', '#ffffff', 'rgba(0,0,0,.5)', 5);
     });
   } else {
     ctx.font = 'bold 18px "Microsoft JhengHei", sans-serif'; ctx.fillStyle = '#57534e';
-    ctx.fillText(pendingLevel >= 3 ? '金牌賽不提供抽籤' : '本階已抽過籤', px, G.ty.note);
+    ctx.fillText(pendingLevel >= 3 ? '三重天不提供抽籤' : '本階已抽過籤', px, G.ty.note);
     ctx.globalAlpha = k * (0.6 + 0.4 * Math.sin(nowT() / 250));
     textCenter('點擊任意處繼續', px, G.ty.cont, 'bold 24px "Microsoft JhengHei", sans-serif', '#7c2d12', null);
   }
@@ -3176,10 +3176,10 @@ function drawDealArt() {
   if (dealPhase === 'delay') ctx.translate(Math.sin(nowT() / 45) * 2.5, 0);   // 開轉前聖甕搖籤
   ctx.drawImage(img, 0, 0, W, H);
   ctx.restore();
-  textCenter('宙斯抽籤', 640, 40, 'bold 34px "Microsoft JhengHei", sans-serif', '#fde68a', '#1e3a8a', 7);
+  textCenter('天使抽籤', 640, 40, 'bold 34px "Microsoft JhengHei", sans-serif', '#fde68a', '#1e3a8a', 7);
   if (dealPhase === 'delay') {
     roundRect(760, 470, 260, 70, 18, 'rgba(15,23,42,.8)', '#fde047', 3);
-    textCenter('主審宙斯從聖甕抽籤…', 890, 505, 'bold 22px "Microsoft JhengHei", sans-serif', '#fde047', '#7c2d12', 5);
+    textCenter('天使抽籤中…', 890, 505, 'bold 22px "Microsoft JhengHei", sans-serif', '#fde047', '#7c2d12', 5);
   }
   if (res) {
     const s = dealSeg(), n = Number(s);
@@ -3187,11 +3187,11 @@ function drawDealArt() {
     if (s === 'P') {
       textCenter('晉級！', 890, 478, 'bold 44px "Microsoft JhengHei", sans-serif', '#fde047', '#7c2d12', 8);
       textCenter(LEVEL_INFO[pendingLevel].name + ' → ' + LEVEL_INFO[Math.min(3, pendingLevel + 1)].name, 890, 522, 'bold 22px "Microsoft JhengHei", sans-serif', '#ffffff', null);
-      textCenter('主審破格晉級', 890, 556, '18px "Microsoft JhengHei", sans-serif', '#fde68a', null);
+      textCenter('破格晉級', 890, 556, '18px "Microsoft JhengHei", sans-serif', '#fde68a', null);
     } else {
-      textCenter((n > ODDS.fgSpins ? '抽到加賽籤' : '抽到短賽程籤'), 890, 478, 'bold 30px "Microsoft JhengHei", sans-serif', '#fde047', '#7c2d12', 6);
+      textCenter((n > ODDS.fgSpins ? '抽到更多局數' : '抽到較少局數'), 890, 478, 'bold 30px "Microsoft JhengHei", sans-serif', '#fde047', '#7c2d12', 6);
       textCenter(n + ' 局', 890, 524, 'bold 36px "Microsoft JhengHei", sans-serif', '#ffffff', '#1e293b', 5);
-      textCenter(n > ODDS.fgSpins ? '賽程變長，免費旋轉變多' : '賽程縮短，免費旋轉變少', 890, 560, '16px "Microsoft JhengHei", sans-serif', '#e2e8f0', null);
+      textCenter(n > ODDS.fgSpins ? '免費旋轉變多' : '免費旋轉變少', 890, 560, '16px "Microsoft JhengHei", sans-serif', '#e2e8f0', null);
     }
   }
   return true;
@@ -4259,17 +4259,17 @@ function drawFGIntro() {
   ctx.font = '18px "Microsoft JhengHei", sans-serif'; ctx.fillStyle = '#475569';
   const gamble = pendingLevel < 3 && !dealUsed[pendingLevel];
   if (gamble) {
-    ctx.fillText('出賽前可請主審宙斯從聖甕重新抽籤排賽程（局數可能變多或變少）', p.x + p.w / 2, p.y + 212);
-    ctx.fillText('停在晉級格直接晉級' + (pendingLevel === 1 ? '銀牌賽 SFG' : '金牌賽 UFG'), p.x + p.w / 2, p.y + 240);
+    ctx.fillText('開始前可請天使重新抽籤決定局數（局數可能變多或變少）', p.x + p.w / 2, p.y + 212);
+    ctx.fillText('停在晉級格直接晉級' + (pendingLevel === 1 ? '二重天 SFG' : '三重天 UFG'), p.x + p.w / 2, p.y + 240);
     const on = canGamble();
-    [['start', '直接開始 ' + pendingSpins + ' 局', '#16a34a'], ['deal', '請宙斯抽籤', '#ea580c']].forEach(b => {
+    [['start', '直接開始 ' + pendingSpins + ' 局', '#16a34a'], ['deal', '請天使抽籤', '#ea580c']].forEach(b => {
       const r = lay[b[0]];
       roundRect(r.x, r.y, r.w, r.h, 18, on ? b[2] : '#a8a29e', '#ffffff', 3);
       ctx.font = 'bold 24px "Microsoft JhengHei", sans-serif';
       textOutline(b[1], r.x + r.w / 2, r.y + r.h / 2, '#ffffff', 'rgba(0,0,0,.35)', 4);
     });
   } else {
-    ctx.fillText(pendingLevel >= 3 ? '金牌賽不提供抽籤' : '本階已抽過籤', p.x + p.w / 2, p.y + 220);
+    ctx.fillText(pendingLevel >= 3 ? '三重天不提供抽籤' : '本階已抽過籤', p.x + p.w / 2, p.y + 220);
     ctx.font = 'bold 22px "Microsoft JhengHei", sans-serif';
     ctx.globalAlpha = 0.6 + 0.4 * Math.sin(nowT() / 250);
     textOutline('點擊任意處繼續', p.x + p.w / 2, p.y + 318, '#1e293b', null);
@@ -4327,7 +4327,7 @@ function drawDeal() {
   ctx.fillStyle = 'rgba(2,6,23,.75)'; ctx.fillRect(0, 0, W, H);
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.font = 'bold 30px "Microsoft JhengHei", sans-serif';
-  textOutline('宙斯抽籤', DEAL_CX, 46, '#fde68a', '#7c2d12', 6);
+  textOutline('天使抽籤', DEAL_CX, 46, '#fde68a', '#7c2d12', 6);
   const res = dealPhase === 'result';
   for (let i = 0; i < 12; i++) {
     const s = DEAL_SEGS[i];
@@ -4363,7 +4363,7 @@ function drawDeal() {
     ctx.beginPath(); ctx.arc(DEAL_CX, DEAL_CY - DEAL_R - 10, 24 + pk * 50, 0, Math.PI * 2); ctx.stroke();
     ctx.restore();
     ctx.font = 'bold 26px "Microsoft JhengHei", sans-serif';
-    textOutline('主審宙斯從聖甕抽籤…', 1010, 300, '#fde047', '#7c2d12', 6);
+    textOutline('天使抽籤中…', 1010, 300, '#fde047', '#7c2d12', 6);
   }
   drawZeus(1010, 440, 70, pre);
   ctx.fillStyle = pre && Math.floor(nowT() / 200) % 2 ? '#fde047' : '#ffffff';
@@ -4382,12 +4382,12 @@ function drawDeal() {
       ctx.font = 'bold 24px "Microsoft JhengHei", sans-serif';
       textOutline(LEVEL_INFO[pendingLevel].name + ' → ' + LEVEL_INFO[Math.min(3, pendingLevel + 1)].name, 1020, 270, '#ffffff', null);
       ctx.font = '18px "Microsoft JhengHei", sans-serif';
-      textOutline('主審破格晉級', 1020, 302, '#fde68a', null);
+      textOutline('破格晉級', 1020, 302, '#fde68a', null);
     } else {
       ctx.font = 'bold 30px "Microsoft JhengHei", sans-serif';
-      textOutline((n > ODDS.fgSpins ? '抽到加賽籤' : '抽到短賽程籤') + '：' + n + ' 局', 1020, 236, '#fde047', '#7c2d12', 7);
+      textOutline((n > ODDS.fgSpins ? '抽到更多局數' : '抽到較少局數') + '：' + n + ' 局', 1020, 236, '#fde047', '#7c2d12', 7);
       ctx.font = 'bold 22px "Microsoft JhengHei", sans-serif';
-      textOutline(n > ODDS.fgSpins ? '賽程變長，免費旋轉變多' : '賽程縮短，免費旋轉變少', 1020, 284, '#ffffff', null);
+      textOutline(n > ODDS.fgSpins ? '免費旋轉變多' : '免費旋轉變少', 1020, 284, '#ffffff', null);
     }
   }
 }
@@ -4679,7 +4679,7 @@ function drawForceMenu() {
   roundRect(m.mx0 - 6, m.my0 - 4, m.w + 12, m.totalH + 4, 8, 'rgba(8,14,26,.96)', '#334155', 1.5);
   ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
   ctx.fillStyle = '#94a3b8'; ctx.font = '12px sans-serif';
-  ctx.fillText('強開（NG 類只在一般遊戲生效、FG 類只在免費遊戲生效；抽籤類下一次宙斯抽籤生效後清掉）', m.mx0, m.my0 + 11);
+  ctx.fillText('強開（NG 類只在一般遊戲生效、FG 類只在免費遊戲生效；抽籤類下一次天使抽籤生效後清掉）', m.mx0, m.my0 + 11);
   ctx.textAlign = 'center';
   m.opts.forEach((op, i) => {
     const r = m.rects[i];
@@ -4694,10 +4694,10 @@ function drawForceMenu() {
 
 /* --- 特殊遊戲購買：4 張卡片（機制購買 ACTIVATE／直購 BUY）＋確認框 [企劃 §美術 E63] --- */
 const BUY_CARDS = [
-  { key: 'b10', name: 'BET×10',     desc: '每局提高藍聖心出現機率', mul: 10,  btn: 'ACTIVATE' },
+  { key: 'b10', name: 'BET×10',     desc: '每局提高藍愛心出現機率', mul: 10,  btn: 'ACTIVATE' },
   { key: 'b50', name: 'BET×50',     desc: '每局必定出現紅輪',     mul: 50,  btn: 'ACTIVATE' },
-  { key: 'fg',  name: 'FG 銅牌賽', desc: '購買免費遊戲 FG（10 局）', mul: 100, btn: 'BUY' },
-  { key: 'sfg', name: 'SFG 銀牌賽', desc: '購買免費遊戲 SFG（10 局）', mul: 250, btn: 'BUY' },
+  { key: 'fg',  name: 'FG 一重天', desc: '購買免費遊戲 FG（10 局）', mul: 100, btn: 'BUY' },
+  { key: 'sfg', name: 'SFG 二重天', desc: '購買免費遊戲 SFG（10 局）', mul: 250, btn: 'BUY' },
 ];
 function buyMenuLayout() {
   const cards = BUY_CARDS.map((cd, i) => {
@@ -5905,7 +5905,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       segs.push({ t0: t, dur: SIX_PULSE, text: '聖心脈動(' + R1(SIX_PULSE) + 's)', fill: 'symbol' }); t += SIX_PULSE;
       segs.push({ t0: t, dur: T.buyWheelIntro, text: '轉盤登場(' + R1(T.buyWheelIntro) + 's)', fill: 'line' }); t += T.buyWheelIntro;
       segs.push({ t0: t, dur: T.buyWheelSpin, text: '轉盤轉動(' + R1(T.buyWheelSpin) + 's；不到 1 圈)', fill: 'reel' }); t += T.buyWheelSpin;
-      marks.push({ t: t, text: '停在聖火格' });
+      marks.push({ t: t, text: '停在紅心格' });
       segs.push({ t0: t, dur: T.buyWheelResult, text: '停定→彈跳(' + R1(T.buyWheelResult) + 's；不出 NX)', fill: 'lineHold' }); t += T.buyWheelResult;
       segs.push({ t0: t, dur: T.buyWheelPop, text: '聖火彈跳(' + R1(T.buyWheelPop) + 's)', fill: 'symbol' });
       if (i === 0) start += T.buyWheelGap;
@@ -5948,10 +5948,10 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       segs.push({ t0: t, dur: T.wheelResult, text: tag + '停定→NX(' + R1(T.wheelResult) + 's；最後 ' + R1(WHEEL_DIM_LEAD) + 's 壓灰亮格)', fill: 'lineHold' });
       t += T.wheelResult;
       if (kind === 'antic' && i === 1) {
-        segs.push({ t0: t - T.wheelSpin, dur: T.wheelSpin, text: '預報2：光暈＋大量金色光點＋聖火格變亮＋緩慢拉近', fill: 'gap' });
+        segs.push({ t0: t - T.wheelSpin, dur: T.wheelSpin, text: '預報2：光暈＋大量金色光點＋紅心格變亮＋緩慢拉近', fill: 'gap' });
         segs.push({ t0: t, dur: FX.shkAntDur, text: '轉到聖火：盤面震動(' + R1(FX.shkAntDur) + 's)', fill: 'big' });
         segs.push({ t0: t, dur: T.zoomOut, text: '畫面退回(' + R1(T.zoomOut) + 's)', fill: 'pause' });
-        notes.push('預報演繹（使用者 2026-10-21 定）：藍輪最後停在聖火格＝預報 2（停下震動）；沒停在聖火格以 ' + FX.anticFake + ' 機率播預報 1（假預報）。');
+        notes.push('預報演繹（使用者 2026-10-21 定）：藍輪最後停在紅心格＝預報 2（停下震動）；沒停在紅心格以 ' + FX.anticFake + ' 機率播預報 1（假預報）。');
       }
       const mulHere = kind === 'wheel3' && i === nW - 1;
       marks.push({ t: t, text: tag + 'NX 出現（倍數' + (i ? '累加' : '顯示') + '）' + (mulHere ? '＋乘號強回饋' : '') });
@@ -6053,7 +6053,7 @@ function sheetGantt() {
     scenarios.push({ T: m[1], kind: 'wheel3', tier: RHYTHM_TIERS[0],
       title: m[0] + ' 一般：3 個藍輪（第 3 個減速延長、停乘號強回饋）' });
     scenarios.push({ T: m[1], kind: 'antic', tier: RHYTHM_TIERS[0],
-      title: m[0] + ' 一般：2 個藍輪（第 2 個預報 2，停在聖火格）' });
+      title: m[0] + ' 一般：2 個藍輪（第 2 個預報 2，停在紅心格）' });
     scenarios.push({ T: m[1], kind: 'heart', tier: RHYTHM_TIERS[6],
       title: m[0] + ' 一般：≥500 倍（天使雙人愛心合體→大獎）' });
     scenarios.push({ T: m[1], kind: 'wheelBuy', tier: null,
