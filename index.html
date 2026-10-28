@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-102';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-103';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -1199,7 +1199,7 @@ const ART = {
   wheelRed: 'assets/ai/icon_14.png?v=holy-46',          // 紅聖心的輪（程式裡叫 red）原圖；2026-10-22 天使版輪盤，2026-10-24 拆層改紅輪
   wheelBlueBase: 'assets/ai/icon_13_base.png?v=holy-93', wheelBlueTorch: 'assets/ai/icon_13_torch.png?v=holy-46',   // tools/split_wheel_art.py 產（2026-10-26 中心圓縮小）
   wheelRedBase: 'assets/ai/icon_14_base.png?v=holy-93', wheelRedTorch: 'assets/ai/icon_14_torch.png?v=holy-46',
-  maxStar: 'assets/ai/maxwin_star_holo_strong_20261028.png',   // MAX WIN 格：天使臉頰的紅星做成雷射貼紙（使用者 2026-10-28 選 C 全部雷射，再加強成「強」版：繞射條紋＋星芒）
+  // MAX WIN 格的星星不在這裡：可在面板切換，見 MAXSTAR_SETS（loadArt 依目前選項載入）
   coin: 'assets/fx/coin.png',                 // 大獎噴金幣（交付包 05_特效/金幣.png 縮圖）
   dagger: 'assets/fx/arrow.png?v=holy-95',    // 聖心金箭（箭頭朝上；嘗試/FX_金箭_A_三角.png 裁邊縮圖）。2026-10-26 使用者「刀插心直接改成弓箭」→ 匕首換金箭，程式名稱沿用 dagger；舊匕首 assets/fx/dagger.png
   bill: 'assets/fx/bill.png',                 // EPIC 噴鈔票（交付包 05_特效/鈔票.png 縮圖）
@@ -1227,8 +1227,30 @@ function _loadImg(src) {
     im.src = src;
   });
 }
+// MAX WIN 格的星星（天使臉頰紅星做成貼紙）：調校面板「圖示大小」分頁的「MAX WIN 圖示」下拉選單切換（使用者 2026-10-28「要做可以給我替換」）
+// 預設＝雷射「強」（使用者 2026-10-28「MAX WIN 維持現在的雷射『強』版」）
+const MAXSTAR_SETS = {
+  holo:        { label: '雷射「強」（預設）',      src: 'assets/ai/maxwin_star_holo_strong_20261028.png' },
+  pastelRing:  { label: '淺色彩虹框：繞一圈',      src: 'assets/ai/maxwin_star_pastel_ring_20261028.png' },
+  pastelV:     { label: '淺色彩虹框：上到下',      src: 'assets/ai/maxwin_star_pastel_v_20261028.png' },
+  rainbowRing: { label: '彩虹框（原色）：繞一圈',  src: 'assets/ai/maxwin_star_rainbow_ring_20261028.png' },
+  white:       { label: '白色貼紙框',              src: 'assets/ai/maxwin_star_20261028.png' },
+};
+const DEFAULT_MAXSTAR = 'holo';
+let MAXSTAR_PICK = DEFAULT_MAXSTAR;
+function loadMaxStar() {                          // 載「當下」選項的星星；載完時選項沒變才套用（跟 loadIconAt 一樣，不會被慢的舊圖蓋掉）
+  const k = MAXSTAR_PICK;
+  return _loadImg(MAXSTAR_SETS[k].src).then(im => { if (im && MAXSTAR_PICK === k) sceneImgs.maxStar = im; });
+}
+function setMaxStarPick(k, noSave) {
+  if (!MAXSTAR_SETS[k]) return Promise.resolve();   // 不認得的值不套用
+  MAXSTAR_PICK = k;
+  if (!noSave) saveTuning();
+  return loadMaxStar();
+}
 async function loadArt() {
   const jobs = [];
+  jobs.push(loadMaxStar());
   // 圖示路徑在「這一刻」才算（loadTuning 已套用保存的圖示組合），載完時若組合又變了就不覆蓋：
   // 原本用開頭算好的 ART.sym（預設組合），會跟 setIconPick 搶，重新整理時最高分忽而鑰匙忽而十字架（使用者 2026-10-24）
   SYMBOLS.forEach((s, i) => jobs.push(loadIconAt(i)));
@@ -4930,7 +4952,7 @@ function saveTuning() {
       version: TUNE_VERSION, timing: TIMING_AUTO, timingTurbo: TIMING_TURBO,
       speedMode: SPEED_MODE,
       centerRun: CENTER_RUN_MODE, timeline: TIMING_START,
-      layout: LAYOUT, fx: FX, odds: ODDS, choice: CHOICE, icon: ICON, tint: TINT, iconPick: ICON_PICK, trigRev: TRIG_DEFAULT_REV,
+      layout: LAYOUT, fx: FX, odds: ODDS, choice: CHOICE, icon: ICON, tint: TINT, iconPick: ICON_PICK, trigRev: TRIG_DEFAULT_REV, maxStar: MAXSTAR_PICK,
     }));
     return true;
   } catch (e) { return false; }
@@ -4964,6 +4986,7 @@ function loadTuning() {
       if (d.iconPick) setIconPick(d.trigRev === TRIG_DEFAULT_REV ? d.iconPick                // 圖示自由組合（不認得的值不套用）
         : Object.assign({}, d.iconPick, { trig: DEFAULT_ICON_PICK.trig }), true);          // 觸發預設改過：舊保存值的 trig 換成新預設
       else if (LEGACY_ICON_SETS[d.iconSet]) setIconPick(LEGACY_ICON_SETS[d.iconSet], true);   // 舊保存值（A／B 圖示組）
+      if (d.maxStar && MAXSTAR_SETS[d.maxStar] && d.maxStar !== MAXSTAR_PICK) setMaxStarPick(d.maxStar, true);   // MAX WIN 圖示（舊保存值沒有這欄＝預設）
       if (d.timeline) for (const k in DEFAULT_TIMING_START) {
         const v = d.timeline[k];
         if (typeof v === 'number' && isFinite(v)) TIMING_START[k] = Math.min(8, Math.max(0, v));
@@ -5377,6 +5400,16 @@ function buildIconPickRows() {                    // 「圖示大小」分頁頂
     sel.addEventListener('change', () => { setIconPick({ [s.key]: sel.value }); refreshTuneBody(); });
     row.appendChild(sel); box.appendChild(row);
   });
+  {                                                // MAX WIN 圖示（轉盤上的星星）
+    const row = document.createElement('div'); row.className = 'tune-row';
+    const lab = document.createElement('label'); lab.textContent = 'MAX WIN 圖示'; row.appendChild(lab);
+    const sel = document.createElement('select'); sel.dataset.maxStar = '1';
+    sel.style.cssText = 'flex:1;min-width:0;padding:3px 6px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#e2e8f0;font-size:13px';
+    Object.keys(MAXSTAR_SETS).forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = MAXSTAR_SETS[k].label; sel.appendChild(o); });
+    sel.value = MAXSTAR_PICK;
+    sel.addEventListener('change', () => { setMaxStarPick(sel.value); refreshTuneBody(); });
+    row.appendChild(sel); box.appendChild(row);
+  }
   const mids = ['h1', 'h2', 'm1', 'm2'].map(k => ICON_PICK[k]);
   const dup = mids.filter((v, i) => mids.indexOf(v) !== i);
   if (dup.length) {                                // 同一個圖示放兩格：盤面與賠率表會分不出來，提醒但不擋
@@ -5470,6 +5503,7 @@ document.getElementById('tuneExport').addEventListener('click', () => {
     timing_seconds: TIMING, timeline_start_seconds: TIMING_START,
     layout_px: LAYOUT, fx: FX, odds: ODDS, choice: CHOICE, icon_scale: ICON, tint_hsl: TINT,
     icon_pick: ICON_PICK,                          // 圖示自由組合（2026-10-24 補：設為預設時才知道選了哪些圖示）
+    max_star: MAXSTAR_PICK,                        // MAX WIN 圖示（2026-10-28）
   }, null, 2);
   const done = ok => setTuneStatus(ok ? '設定已複製到剪貼簿 ✓' : '已開啟複製視窗', ok ? 'ok' : 'wait');
   if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -6575,6 +6609,7 @@ const SHOT_PRESETS = {
   wheelMul:      () => spinWith('ng1mul', atNX(0, 5)),
   wheelMaxSpin:  () => spinWith('vmax', atWheel(0, 'spin', 0.5)),     // MAX WIN 格（雷射星星）在轉盤上（使用者 2026-10-28）
   wheelMax:      () => spinWith('vmax', atNX(0, 5)),                  // 停在 MAX WIN 格
+  wheelMaxPastel: () => { setMaxStarPick('pastelRing', true); spinWith('vmax', atNX(0, 5)); },   // MAX WIN 圖示切成淺色彩虹框（繞一圈）
   wheelMaxDone:  () => spinWith('vmax', () => currentState === STATE.SCORE || currentState === STATE.BIGWIN || currentState === STATE.IDLE),   // 轉完：收合方塊顯示 MAX WIN
   sixPop:        () => spinWith('ng3mix', () => currentState === STATE.SPINNING && landT[2] >= Math.round(TF(TIMING.sixPopTime) / 2)),   // 聖心出現放大 30%
   wheelLeave:    () => { spinWith('ng3mix', () => currentState === STATE.IDLE); forceSpinType = null; startSpin(); for (let i = 0; i < 24; i++) update(); },   // 下一局開轉：上一局轉盤跟著舊盤面掉出、縮小淡出
