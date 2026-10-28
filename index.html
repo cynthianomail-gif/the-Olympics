@@ -247,7 +247,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-95';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-96';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -296,7 +296,7 @@ let REEL_MODE = DEFAULT_REEL_MODE;
 // --- 符號表 [企劃 §一般遊戲 E33～E35、§FREE GAME E35～E38、§美術 C 欄主色] ---
 // 沒有 WILD、沒有 SCATTER [企劃 §一般遊戲 D32]。藍／紅聖心＝轉盤圖示（落地後變藍輪／紅輪）。
 // demo 圖示用 emoji、不顯示名稱（使用者 2026-10-16：「demo圖示不要用名稱 用icon或emoji」，decisions「demo 圖示」節）；
-// 藍／紅聖心用圖檔（assets/icon_10、11）；程式退回版用 emoji ✝️。name 只留給賠率表 title／測試用，不畫在盤面上。
+// 藍／紅聖心用圖檔（面板可整組換：TRIG_SETS，assets/pick/<組>_1／_2；原版 assets/icon_10、11）；程式退回版用 emoji ✝️。name 只留給賠率表 title／測試用，不畫在盤面上。
 const SYMBOLS = [
   // 圖示：emoji（＋小配件 sub）或程式繪製（draw）；不顯示名稱。武器副色為金黃，聖物為銀藍。
   { name: '金十字架',   emoji: '✝️', color: '#4f8ec9', tier: 'hi', bg: ['#1e3a5f', '#0b172b'] },   // 最高分（2026-10-24：白鴿→紅寶石金十字架，位階高於 15 倍天堂生物；嘗試/H_最高分_金十字架_紅寶石.png；同日試過銀色版，使用者選回金色）
@@ -346,6 +346,17 @@ const LOW_SETS = {
   greekObj: { label: '希臘物件 橄欖樹枝／號角／蠟燭／羽毛／標槍（原色）', names: ['橄欖樹枝', '號角', '蠟燭', '羽毛筆', '標槍'],   // 交付包 10/21 版，豎琴換 10/22 胖蠟燭、雙耳陶瓶換 10/22 胖羽毛
               emoji: ['🫒', '📯', '🕯️', '🪶', '🗡️'] },
 };
+// 觸發 id10（藍）／11（紅）整組換（使用者 2026-10-28「藍色聖心 跟 紅色聖心 換成普通的大愛心 周圍有纏繞一些能量」「把這兩張圖也加入替換選項」）
+// heart：金箭在這組愛心上的位置（×圖示框，見 DAGGER_HEART）。量中線：flame 凹口描邊 -0.08、底尖 +0.36；mist -0.14／+0.35、兩瓣頂 -0.26；gloss -0.22／+0.32、兩瓣頂 -0.33
+// 規則：出口＝凹口描邊下 0.05、箭頭段下緣＝出口上 0.04、入口＝min(底尖描邊上 0.12, 箭羽起點上 0.03)
+const TRIG_SETS = {
+  flame: { label: '聖心＋火焰（原版）', names: ['藍聖心', '紅聖心'], heart: { pivot: -0.07, yOut: -0.03, yIn: 0.24 } },
+  mist:  { label: '愛心＋虛霧能量', names: ['藍愛心', '紅愛心'], heart: { pivot: -0.13, yOut: -0.09, yIn: 0.18 } },   // 嘗試/S_藍愛心_能量C_虛霧.png、S_紅愛心_能量C_虛霧.png
+  gloss: { label: '光滑愛心（使用者提供）', names: ['藍愛心', '紅愛心'], heart: { pivot: -0.21, yOut: -0.17, yIn: 0.10 } },   // 嘗試/S_藍愛心_光滑_使用者.png、S_紅愛心_光滑_使用者.png
+};
+// 聖心上的金箭（×圖示框）：hilt＝箭頭段長（全長 0.77 框）、pivot＝箭頭段下緣、yOut／yIn＝出口／入口洞；後三個跟著觸發組換（applyIconPickMeta 套 TRIG_SETS[].heart）
+// 宣告在這裡：開頁時 applyIconPickMeta 就會寫入（其餘金箭常數在 drawDagger 旁）
+const DAGGER_HEART = Object.assign({ hilt: 0.21 }, TRIG_SETS.flame.heart);
 const PICK_SLOTS = [                              // 面板下拉選單：key → 盤面 id
   { key: 'top', label: '最高分',   ids: [0] },
   { key: 'h1',  label: '15 倍 ①', ids: [1] },
@@ -353,36 +364,40 @@ const PICK_SLOTS = [                              // 面板下拉選單：key �
   { key: 'm1',  label: '10 倍 ①', ids: [3] },
   { key: 'm2',  label: '10 倍 ②', ids: [4] },
   { key: 'low', label: '低分（5 個一組）', ids: [5, 6, 7, 8, 9] },
+  { key: 'trig', label: '觸發（藍／紅）', ids: [10, 11] },
 ];
-const DEFAULT_ICON_PICK = { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'wings', m2: 'harp', low: 'greek' };   // 使用者 2026-10-24「預設組合換成 金十字架 兩隻動物 翅膀 銀豎琴 希臘數字」
+const DEFAULT_ICON_PICK = { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'wings', m2: 'harp', low: 'greek', trig: 'flame' };   // 使用者 2026-10-24「預設組合換成 金十字架 兩隻動物 翅膀 銀豎琴 希臘數字」
 const LEGACY_ICON_SETS = {                        // 舊保存值 iconSet（A／B 圖示組）對應的組合
   A: { top: 'crossGold', h1: 'unicorn', h2: 'bird', m1: 'harp', m2: 'chalice', low: 'akqj' },
   B: { top: 'crossGold', h1: 'harp', h2: 'wings', m1: 'laurel', m2: 'amphora', low: 'greek' },
 };
-const ICON_SET_VER = 'holy-93';
+const ICON_SET_VER = 'holy-96';
 let ICON_PICK = Object.assign({}, DEFAULT_ICON_PICK);
 const IS_LOCAL = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);   // 本機開的 demo（file:／localhost）
 function pickOptions(key, local = IS_LOCAL) {    // localOnly 的圖示只在本機選單出現（線上版沒上傳那些圖）
   if (key === 'low') return Object.keys(LOW_SETS);
+  if (key === 'trig') return Object.keys(TRIG_SETS);
   return (key === 'top' ? ICON_POOL.top : ICON_POOL.high).filter(k => local || !ICON_CATALOG[k].localOnly);
 }
 function pickSlotOf(id) { return PICK_SLOTS.find(s => s.ids.indexOf(id) >= 0) || null; }
-function pickKeyOf(id, pick) {                     // id0～4 → 目錄 key；id5～9 → 低分組 key；觸發 → null
+function pickKeyOf(id, pick) {                     // id0～4 → 目錄 key；id5～9 → 低分組 key；id10／11 → 觸發組 key
   const s = pickSlotOf(id); return s ? (pick || ICON_PICK)[s.key] : null;
 }
-function iconSrc(i, pick) {                        // id0～9 依自由組合取 assets/pick/；觸發 id10／11 固定 assets/
+function iconSrc(i, pick) {                        // 依自由組合取 assets/pick/（低分 <組>_1～5、觸發 <組>_1 藍／_2 紅）
   const k = pickKeyOf(i, pick), v = '.png?v=' + ICON_SET_VER;
   if (!k) return 'assets/icon_' + i + v;
-  return 'assets/pick/' + (i >= 5 ? k + '_' + (i - 4) : k) + v;
+  return 'assets/pick/' + (i >= 10 ? k + '_' + (i - 9) : i >= 5 ? k + '_' + (i - 4) : k) + v;
 }
 function applyIconPickMeta(patch) {                // 合併選項（不認得的值不套用）→ 名稱、退回 emoji、調色盤標籤（同步，不等圖載入）
   const next = Object.assign({}, ICON_PICK);
   PICK_SLOTS.forEach(s => { const v = patch && patch[s.key]; if (pickOptions(s.key).indexOf(v) >= 0) next[s.key] = v; });
   ICON_PICK = next;
   PICK_SLOTS.forEach(s => s.ids.forEach((id, n) => {
-    const c = s.key === 'low' ? { name: LOW_SETS[next.low].names[n], emoji: LOW_SETS[next.low].emoji[n] } : ICON_CATALOG[next[s.key]];
+    const c = s.key === 'low' ? { name: LOW_SETS[next.low].names[n], emoji: LOW_SETS[next.low].emoji[n] }
+      : s.key === 'trig' ? { name: TRIG_SETS[next.trig].names[n], emoji: SYMBOLS[id].emoji } : ICON_CATALOG[next[s.key]];
     SYMBOLS[id].name = c.name; SYMBOLS[id].emoji = c.emoji;
   }));
+  Object.assign(DAGGER_HEART, TRIG_SETS[next.trig].heart);   // 金箭在這組愛心上的出口／入口／箭頭位置
   TINT_SLOTS[0].label = '15 倍組（' + SYMBOLS[1].name + '＋' + SYMBOLS[2].name + '）';
   return next;
 }
@@ -1209,10 +1224,10 @@ function loadIconAt(i) {                          // 載第 i 格「當下」組
   const src = iconSrc(i);
   return _loadImg(src).then(im => { if (im && iconSrc(i) === src) { iconImgs[i] = im; iconImgSrc[i] = src; } });
 }
-function setIconPick(patch, noSave) {             // 面板下拉選單換圖示：套選項 → 載入 id0～9 的圖與調色盤遮罩 → 清著色快取 → 重畫賠率表
+function setIconPick(patch, noSave) {             // 面板下拉選單換圖示：套選項 → 載入 id0～11 的圖與調色盤遮罩 → 清著色快取 → 重畫賠率表
   applyIconPickMeta(patch);
   const jobs = [];
-  for (let i = 0; i <= 9; i++) jobs.push(loadIconAt(i));
+  for (let i = 0; i <= GOLD_ID; i++) jobs.push(loadIconAt(i));
   jobs.push(loadTintArt());
   iconPickLoading = Promise.all(jobs).then(() => {
     tintCache = {};
@@ -2502,7 +2517,7 @@ const TORCH_FIXED_DEG = 0;                        // 聖火層固定角度（朝
 // 使用者 2026-10-26「弓箭本身太長了 可以短一點嗎」：圖從 900px 剪掉箭身中段 78 列（舊圖 assets/fx/arrow.png.bak-20261026a）
 const DAGGER_CUT = 0.2737, DAGGER_SHAFT = 0.197;   // DAGGER_SHAFT＝箭身寬／圖寬（60／305px）
 const DAGGER_WHEEL = { hilt: 0.28, pivot: -0.06, hub: 0.197, blade: 0.150 };   // 輪盤上：箭頭段長 0.28R、支點在圓心上 0.06R → 箭頭尖在圓心上 0.34R（使用者 2026-10-26「尖端再更下移一點」，原 0.42R）；hub＝米白環外緣（格區內緣）、blade＝深藍中心圓半徑：圓心以下的箭身只露在深藍圓內。使用者 2026-10-26「輪盤中間的圈圈不用那麼大了」：中心圓 0.323→0.150R
-const DAGGER_HEART = { hilt: 0.21, pivot: -0.07, yOut: -0.03, yIn: 0.24 };   // 聖心上（×圖示框）：全長 0.77 框（原 1.1）、箭頭尖在框中心上 0.28、箭羽 +0.27～+0.49 整段在入口外；yOut／yIn＝出口／入口洞（量 icon_10／11 中線：凹口描邊 -0.10／-0.08、底尖描邊 +0.36）
+// DAGGER_HEART（聖心上的金箭位置）宣告在 TRIG_SETS 旁，跟著觸發組換；原版聖心：全長 0.77 框（原 1.1）、箭頭尖在框中心上 0.28、箭羽 +0.27～+0.49 整段在入口外
 let wheelDaggerNow = null;                        // 輪盤登場中：箭頭段長／支點由聖心尺寸接到輪盤尺寸（drawWheels 設、drawWheelDiscArt 用）
 function drawDagger(px, py, hilt, mode, clip) {   // mode：'pierce' 聖心上貫穿（clip.yOut／yIn）、'wheel' 箭頭段＋箭身（圓心以上全露、以下只露在 clip 圓內）
   const img = artImg('dagger');
@@ -5085,9 +5100,9 @@ function refreshTuneBody() {
     '機率與賠率：改動後於下一局生效。調 RTP 先動「全域賠率乘數」。');
 }
 
-function buildIconPickRows() {                    // 「圖示大小」分頁頂端：圖示自由組合（6 個下拉選單；觸發的藍／紅聖心固定）
+function buildIconPickRows() {                    // 「圖示大小」分頁頂端：圖示自由組合（7 個下拉選單；觸發的藍／紅一組換）
   const box = document.createElement('div'); box.style.cssText = 'margin:4px 0 10px;padding:6px 8px;border:1px solid #475569;border-radius:8px;background:#0f172a';
-  const h = document.createElement('div'); h.textContent = '圖示組合（自由搭配；觸發的藍／紅聖心固定）';
+  const h = document.createElement('div'); h.textContent = '圖示組合（自由搭配；低分、觸發的藍／紅各一組換）';
   h.style.cssText = 'font-size:13px;font-weight:bold;color:#fde68a;margin-bottom:4px';
   box.appendChild(h);
   PICK_SLOTS.forEach(s => {
@@ -5097,7 +5112,7 @@ function buildIconPickRows() {                    // 「圖示大小」分頁頂
     sel.style.cssText = 'flex:1;min-width:0;padding:3px 6px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#e2e8f0;font-size:13px';
     pickOptions(s.key).forEach(k => {
       const o = document.createElement('option'); o.value = k;
-      o.textContent = s.key === 'low' ? LOW_SETS[k].label : ICON_CATALOG[k].name + '（' + ICON_CATALOG[k].tone + '）';
+      o.textContent = s.key === 'low' ? LOW_SETS[k].label : s.key === 'trig' ? TRIG_SETS[k].label : ICON_CATALOG[k].name + '（' + ICON_CATALOG[k].tone + '）';
       sel.appendChild(o);
     });
     sel.value = ICON_PICK[s.key];
@@ -6281,6 +6296,10 @@ const SHOT_PRESETS = {
   daggerHit:     () => spinWith('ng1add', () => currentState === STATE.POSTSTOP && wheels.length && daggerStabK(wheels[0].c, wheels[0].r) >= 0.6),   // 金箭射穿（閃亮）
   daggerBurn:    () => spinWith('ng1add', () => currentState === STATE.WHEEL && wheelPhase === 'intro' && stateTimer >= TF(wheelT('wheelIntro')) * 0.45),   // 聖心燒成輪盤
   daggerWheel:   () => spinWith('ng1add', () => currentState === STATE.WHEEL && wheelPhase === 'spin' && stateTimer >= 40),   // 輪盤轉動中：金箭當指針
+  mistHit:       () => { setIconPick({ trig: 'mist' }, true); spinWith('ng1add', () => currentState === STATE.POSTSTOP && wheels.length && daggerStabK(wheels[0].c, wheels[0].r) >= 0.6); },   // 觸發換「愛心＋虛霧」：金箭射穿
+  glossHit:      () => { setIconPick({ trig: 'gloss' }, true); spinWith('ng1add', () => currentState === STATE.POSTSTOP && wheels.length && daggerStabK(wheels[0].c, wheels[0].r) >= 0.6); },   // 觸發換「光滑愛心」：金箭射穿
+  mistIdle:      () => { setIconPick({ trig: 'mist' }, true); forceSpinType = 'ng3mix'; startSpin(); runUntil(() => currentState === STATE.POSTSTOP); },   // 盤面上三顆虛霧愛心
+  glossIdle:     () => { setIconPick({ trig: 'gloss' }, true); forceSpinType = 'ng3mix'; startSpin(); runUntil(() => currentState === STATE.POSTSTOP); },   // 盤面上三顆光滑愛心
   wheelTopLeft:  () => wheelAtCell(0, 0),                              // 邊緣：左上角聖心的輪盤（以匕首為中心，不往內挪）
   wheelBotRight: () => wheelAtCell(COLS - 1, ROWS - 1),                // 邊緣：右下角
   wheelMidIntro: () => wheelAtCell(2, 1, () => currentState === STATE.WHEEL && wheelPhase === 'intro' && stateTimer >= TF(wheelT('wheelIntro')) * 0.5),   // 長大中
@@ -6391,6 +6410,7 @@ function demoGoto(name) {
   if (!fn) return false;
   localStorage.removeItem(TUNE_KEY);
   FX.anticFake = 0;                                 // 截圖要可重現：假預報機率先關（要看預報的預設自己打開）
+  setIconPick(DEFAULT_ICON_PICK, true);             // 圖示組合先回預設（換圖示的預設自己換；不然前一個預設換的觸發組會帶到下一個）
   fn();
   freezeForShot = true;
   draw();
