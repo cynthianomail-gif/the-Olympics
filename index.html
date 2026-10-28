@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-103';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-104';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -1050,6 +1050,7 @@ function forceMenuOptions() {
     { label: '停×20',      value: 'vx20',   kind: 'spin', color: '#f0abfc', mode: '皆可' },
     { label: '累計150倍',  value: 'nx150',  kind: 'spin', color: '#f0abfc', mode: '皆可' },
     { label: '停MAX WIN',  value: 'vmax',   kind: 'spin', color: '#f0abfc', mode: '皆可' },   // MAX WIN 格＝+1000 倍（使用者 2026-10-28）
+    { label: '停MAX WIN（紅輪）', value: 'vmaxR', kind: 'spin', color: '#f0abfc', mode: '皆可' },
     { label: '升級輪盤',   value: 'upg',    kind: 'spin', color: '#fde047', mode: '皆可' },   // 角色影響輪盤（使用者 2026-10-28）
     { label: '轉動輪盤',   value: 'nudge',  kind: 'spin', color: '#fde047', mode: '皆可' },   // NG 推進聖火格；FG 推一格輪盤累計跨過 51 倍
     { label: '進FG',       value: 'fg',     kind: 'spin', color: '#34d399', mode: 'NG' },
@@ -1228,15 +1229,16 @@ function _loadImg(src) {
   });
 }
 // MAX WIN 格的星星（天使臉頰紅星做成貼紙）：調校面板「圖示大小」分頁的「MAX WIN 圖示」下拉選單切換（使用者 2026-10-28「要做可以給我替換」）
-// 預設＝雷射「強」（使用者 2026-10-28「MAX WIN 維持現在的雷射『強』版」）
+// 預設＝雷射「強」只紅星（深紅）（使用者 2026-10-28「把…雷射『強』只紅星（深紅）設成預設」；之前是雷射「強」）
 const MAXSTAR_SETS = {
-  holo:        { label: '雷射「強」（預設）',      src: 'assets/ai/maxwin_star_holo_strong_20261028.png' },
+  holo:        { label: '雷射「強」',               src: 'assets/ai/maxwin_star_holo_strong_20261028.png' },
   pastelRing:  { label: '淺色彩虹框：繞一圈',      src: 'assets/ai/maxwin_star_pastel_ring_20261028.png' },
   pastelV:     { label: '淺色彩虹框：上到下',      src: 'assets/ai/maxwin_star_pastel_v_20261028.png' },
+  holoRedOnly: { label: '雷射「強」只紅星（白框・深紅）（預設）', src: 'assets/ai/maxwin_star_holo_reddeep_20261028.png' },   // 使用者 2026-10-28「雷射效果用強 但只用在紅色部分」「紅色部分再加深」
   rainbowRing: { label: '彩虹框（原色）：繞一圈',  src: 'assets/ai/maxwin_star_rainbow_ring_20261028.png' },
   white:       { label: '白色貼紙框',              src: 'assets/ai/maxwin_star_20261028.png' },
 };
-const DEFAULT_MAXSTAR = 'holo';
+const DEFAULT_MAXSTAR = 'holoRedOnly';
 let MAXSTAR_PICK = DEFAULT_MAXSTAR;
 function loadMaxStar() {                          // 載「當下」選項的星星；載完時選項沒變才套用（跟 loadIconAt 一樣，不會被慢的舊圖蓋掉）
   const k = MAXSTAR_PICK;
@@ -1248,9 +1250,36 @@ function setMaxStarPick(k, noSave) {
   if (!noSave) saveTuning();
   return loadMaxStar();
 }
+// 轉盤圖（使用者 2026-10-28「換成微淺那個看看」）：面板「圖示大小」分頁的「轉盤圖」下拉切換；預設＝我的轉盤圖：微淺（使用者 2026-10-28 設為預設；之前是 demo 原本）
+// 使用者的轉盤圖（紅色／藍色轉盤_整張.png 與調淺版）拆成兩層：base＝會轉的盤面（中心八芒星拿掉、填乳白）、
+// hub＝固定的乳白圓＋水晶八芒星（長尖角＝指針，取代金箭／八芒星圓章）。拆層與調淺見 images\wheel_lighter_20261028\
+const USER_WHEEL_GEO = { cx: 512, cy: 512, R: 511, band: [0.35, 0.91], dark: 0 };   // 格區 179～465px（÷511）；正上方（格 0）是深格
+const USER_WHEEL_HUB = { blue: 'assets/ai/wheel_user_blue_hub.png', red: 'assets/ai/wheel_user_red_hub.png' };
+const WHEEL_ART_SETS = {
+  demo:    { label: 'demo 原本' },
+  user:    { label: '我的轉盤圖：原色', blue: 'assets/ai/wheel_user_blue_base.png',     red: 'assets/ai/wheel_user_red_base.png' },
+  userL15: { label: '我的轉盤圖：微淺（預設）', blue: 'assets/ai/wheel_user_blue_l15_base.png', red: 'assets/ai/wheel_user_red_l15_base.png' },
+  userL25: { label: '我的轉盤圖：稍淺', blue: 'assets/ai/wheel_user_blue_l25_base.png', red: 'assets/ai/wheel_user_red_l25_base.png' },
+};
+const DEFAULT_WHEEL_ART = 'userL15';
+let WHEEL_ART_PICK = DEFAULT_WHEEL_ART;
+const userWheelCache = {};                       // 載過的轉盤圖組都留著（四張到齊才算數）：切回來馬上能用，載完前選項被換掉也不會白載
+function loadWheelArt() {                         // 載「當下」選項的轉盤圖
+  const k = WHEEL_ART_PICK, s = WHEEL_ART_SETS[k];
+  if (!s.blue || userWheelCache[k]) return Promise.resolve();
+  return Promise.all([s.blue, s.red, USER_WHEEL_HUB.blue, USER_WHEEL_HUB.red].map(_loadImg)).then(([b, r, bh, rh]) => {
+    if (b && r && bh && rh) userWheelCache[k] = { blue: b, red: r, blueHub: bh, redHub: rh };
+  });
+}
+function setWheelArtPick(k, noSave) {
+  if (!WHEEL_ART_SETS[k]) return Promise.resolve();   // 不認得的值不套用
+  WHEEL_ART_PICK = k;
+  if (!noSave) saveTuning();
+  return loadWheelArt();
+}
 async function loadArt() {
   const jobs = [];
-  jobs.push(loadMaxStar());
+  jobs.push(loadMaxStar(), loadWheelArt());
   // 圖示路徑在「這一刻」才算（loadTuning 已套用保存的圖示組合），載完時若組合又變了就不覆蓋：
   // 原本用開頭算好的 ART.sym（預設組合），會跟 setIconPick 搶，重新整理時最高分忽而鑰匙忽而十字架（使用者 2026-10-24）
   SYMBOLS.forEach((s, i) => jobs.push(loadIconAt(i)));
@@ -1595,6 +1624,8 @@ const SEG_FORCES = { v15: ['15'], v10: ['10'], v50: ['50'], v100: ['100'], vx10:
  *   BET×50 啟用中不出藍輪（規則優先），NG 轉盤類強開不生效 */
 function forcedWheels(force) {
   if (!force) return null;
+  if (force === 'vmaxR' && activeBuy !== 'b50')     // 停 MAX WIN（紅輪）：紅-A 的 MAX WIN 格（vmax 會先找藍輪）
+    return [wheelPlan(2, 'gold', '紅-A', WHEEL_BOARDS['紅-A'].indexOf('M'))];
   if (SEG_FORCES[force] && activeBuy !== 'b50') {
     const v = SEG_FORCES[force], cs = v.length === 1 ? [2] : [0, 4];
     const plans = v.map((str, i) => segPlan(cs[i], str));
@@ -2640,6 +2671,8 @@ function drawFrameArt() {
 // 藍輪／紅輪：外圈（base）整盤轉動，手握聖火（torch）固定朝上，停下時正上方那格即選中
 function wheelArt(kind) {
   const red = kind === 'gold';
+  const U = WHEEL_ART_PICK !== 'demo' && userWheelCache[WHEEL_ART_PICK];
+  if (U) return { base: U[red ? 'red' : 'blue'], torch: null, hub: U[red ? 'redHub' : 'blueHub'], geo: USER_WHEEL_GEO };   // 使用者的轉盤圖（還沒載完時先用 demo 原本的）
   const base = artImg(red ? 'wheelRedBase' : 'wheelBlueBase'), torch = artImg(red ? 'wheelRedTorch' : 'wheelBlueTorch');
   return base && torch ? { base: base, torch: torch, geo: ART_GEO.wheel[red ? 'red' : 'blue'] } : null;
 }
@@ -2711,6 +2744,16 @@ function drawStarMedal(r) {                        // 金色八芒星圓章（�
     ctx.lineWidth = Math.max(1, r * 0.035); ctx.strokeStyle = '#6b4410'; ctx.stroke();
   }
   ctx.beginPath(); ctx.arc(0, 0, r * 0.09, 0, Math.PI * 2); ctx.fillStyle = '#fff7d6'; ctx.fill();
+}
+function drawWheelHubArt(A, cx, cy, sc, pop) {   // 使用者轉盤圖的固定中心：跟 drawWheelHub 一樣在展開時淡入、停定時同幀彈跳、乘號時發光
+  const a = wheelDaggerNow ? wheelDaggerNow.e : 1;
+  if (a <= 0) return;
+  ctx.save();
+  ctx.globalAlpha *= a;
+  ctx.translate(cx, cy); ctx.scale(pop.s, pop.s);
+  if (pop.glow > 0) { ctx.shadowColor = '#fde047'; ctx.shadowBlur = 45 * Math.min(1.5, pop.glow); }
+  ctx.drawImage(A.hub, -A.geo.cx * sc, -A.geo.cy * sc, A.hub.width * sc, A.hub.height * sc);
+  ctx.restore();
 }
 function drawWheelHub(cx, cy, R, pop) {
   const a = wheelDaggerNow ? wheelDaggerNow.e : 1;
@@ -2858,7 +2901,8 @@ function drawWheelDiscArt(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, gl
   }
   // 指針：金箭（使用者 2026-10-24 匕首取代祈禱手；2026-10-26 換金箭）。固定朝正上方，箭頭在最上層、尖端伸進正上方那格；圓心以下的箭身只露在中心圓內。
   // 停定時與選中格同幀彈跳，乘號時發光；沒有金箭圖時退回祈禱手。觸發組不用金箭時（光滑愛心）改中央八芒星圓章＋圓章頂端指針
-  if (!trigArrow()) drawWheelHub(cx, cy, R, pop);
+  if (A.hub) drawWheelHubArt(A, cx, cy, sc, pop);    // 使用者的轉盤圖：固定中心（水晶八芒星的長尖角＝指針）
+  else if (!trigArrow()) drawWheelHub(cx, cy, R, pop);
   else {
     ctx.save();
     ctx.translate(cx, cy);
@@ -3693,7 +3737,7 @@ function segPerimeter(cx, cy, r0, r1, a0, a1, u) {  // 沿選中格邊框（外�
   const r = r0 + d; return [cx + Math.cos(a0) * r, cy + Math.sin(a0) * r];
 }
 function drawSegBurn(cx, cy, R, segDeg, k, t, kind) {
-  const band = (ART_GEO.wheel[kind === 'gold' ? 'red' : 'blue'] || {}).band || ART_GEO.wheel.band;
+  const WA = wheelArt(kind), band = (WA && WA.geo.band) || ART_GEO.wheel.band;   // 跟著目前的轉盤圖（使用者的轉盤圖格區不同）
   const r1 = R * band[1], r0 = R * band[0];
   const a0 = (segDeg - 15) * Math.PI / 180, a1 = (segDeg + 15) * Math.PI / 180;
   const fl = 0.75 + 0.25 * Math.sin(t * 0.9) * Math.sin(t * 0.37 + 1);
@@ -4952,7 +4996,7 @@ function saveTuning() {
       version: TUNE_VERSION, timing: TIMING_AUTO, timingTurbo: TIMING_TURBO,
       speedMode: SPEED_MODE,
       centerRun: CENTER_RUN_MODE, timeline: TIMING_START,
-      layout: LAYOUT, fx: FX, odds: ODDS, choice: CHOICE, icon: ICON, tint: TINT, iconPick: ICON_PICK, trigRev: TRIG_DEFAULT_REV, maxStar: MAXSTAR_PICK,
+      layout: LAYOUT, fx: FX, odds: ODDS, choice: CHOICE, icon: ICON, tint: TINT, iconPick: ICON_PICK, trigRev: TRIG_DEFAULT_REV, maxStar: MAXSTAR_PICK, wheelArt: WHEEL_ART_PICK,
     }));
     return true;
   } catch (e) { return false; }
@@ -4987,6 +5031,7 @@ function loadTuning() {
         : Object.assign({}, d.iconPick, { trig: DEFAULT_ICON_PICK.trig }), true);          // 觸發預設改過：舊保存值的 trig 換成新預設
       else if (LEGACY_ICON_SETS[d.iconSet]) setIconPick(LEGACY_ICON_SETS[d.iconSet], true);   // 舊保存值（A／B 圖示組）
       if (d.maxStar && MAXSTAR_SETS[d.maxStar] && d.maxStar !== MAXSTAR_PICK) setMaxStarPick(d.maxStar, true);   // MAX WIN 圖示（舊保存值沒有這欄＝預設）
+      if (d.wheelArt && WHEEL_ART_SETS[d.wheelArt] && d.wheelArt !== WHEEL_ART_PICK) setWheelArtPick(d.wheelArt, true);   // 轉盤圖（同上）
       if (d.timeline) for (const k in DEFAULT_TIMING_START) {
         const v = d.timeline[k];
         if (typeof v === 'number' && isFinite(v)) TIMING_START[k] = Math.min(8, Math.max(0, v));
@@ -5410,6 +5455,16 @@ function buildIconPickRows() {                    // 「圖示大小」分頁頂
     sel.addEventListener('change', () => { setMaxStarPick(sel.value); refreshTuneBody(); });
     row.appendChild(sel); box.appendChild(row);
   }
+  {                                                // 轉盤圖（demo 原本／使用者的轉盤圖原色、微淺、稍淺）
+    const row = document.createElement('div'); row.className = 'tune-row';
+    const lab = document.createElement('label'); lab.textContent = '轉盤圖'; row.appendChild(lab);
+    const sel = document.createElement('select'); sel.dataset.wheelArt = '1';
+    sel.style.cssText = 'flex:1;min-width:0;padding:3px 6px;border-radius:6px;border:1px solid #475569;background:#1e293b;color:#e2e8f0;font-size:13px';
+    Object.keys(WHEEL_ART_SETS).forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = WHEEL_ART_SETS[k].label; sel.appendChild(o); });
+    sel.value = WHEEL_ART_PICK;
+    sel.addEventListener('change', () => { setWheelArtPick(sel.value); refreshTuneBody(); });
+    row.appendChild(sel); box.appendChild(row);
+  }
   const mids = ['h1', 'h2', 'm1', 'm2'].map(k => ICON_PICK[k]);
   const dup = mids.filter((v, i) => mids.indexOf(v) !== i);
   if (dup.length) {                                // 同一個圖示放兩格：盤面與賠率表會分不出來，提醒但不擋
@@ -5504,6 +5559,7 @@ document.getElementById('tuneExport').addEventListener('click', () => {
     layout_px: LAYOUT, fx: FX, odds: ODDS, choice: CHOICE, icon_scale: ICON, tint_hsl: TINT,
     icon_pick: ICON_PICK,                          // 圖示自由組合（2026-10-24 補：設為預設時才知道選了哪些圖示）
     max_star: MAXSTAR_PICK,                        // MAX WIN 圖示（2026-10-28）
+    wheel_art: WHEEL_ART_PICK,                     // 轉盤圖（2026-10-28）
   }, null, 2);
   const done = ok => setTuneStatus(ok ? '設定已複製到剪貼簿 ✓' : '已開啟複製視窗', ok ? 'ok' : 'wait');
   if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -6610,6 +6666,11 @@ const SHOT_PRESETS = {
   wheelMaxSpin:  () => spinWith('vmax', atWheel(0, 'spin', 0.5)),     // MAX WIN 格（雷射星星）在轉盤上（使用者 2026-10-28）
   wheelMax:      () => spinWith('vmax', atNX(0, 5)),                  // 停在 MAX WIN 格
   wheelMaxPastel: () => { setMaxStarPick('pastelRing', true); spinWith('vmax', atNX(0, 5)); },   // MAX WIN 圖示切成淺色彩虹框（繞一圈）
+  // 使用者的轉盤圖（微淺）＋雷射「強」只紅星：藍輪／紅輪，轉動中與停在 MAX WIN
+  userWheelBlueSpin: () => { setWheelArtPick('userL15', true); setMaxStarPick('holoRedOnly', true); spinWith('vmax', atWheel(0, 'spin', 0.5)); },
+  userWheelBlueMax:  () => { setWheelArtPick('userL15', true); setMaxStarPick('holoRedOnly', true); spinWith('vmax', atNX(0, 5)); },
+  userWheelRedSpin:  () => { setWheelArtPick('userL15', true); setMaxStarPick('holoRedOnly', true); spinWith('vmaxR', atWheel(0, 'spin', 0.5)); },
+  userWheelRedMax:   () => { setWheelArtPick('userL15', true); setMaxStarPick('holoRedOnly', true); spinWith('vmaxR', atNX(0, 5)); },
   wheelMaxDone:  () => spinWith('vmax', () => currentState === STATE.SCORE || currentState === STATE.BIGWIN || currentState === STATE.IDLE),   // 轉完：收合方塊顯示 MAX WIN
   sixPop:        () => spinWith('ng3mix', () => currentState === STATE.SPINNING && landT[2] >= Math.round(TF(TIMING.sixPopTime) / 2)),   // 聖心出現放大 30%
   wheelLeave:    () => { spinWith('ng3mix', () => currentState === STATE.IDLE); forceSpinType = null; startSpin(); for (let i = 0; i < 24; i++) update(); },   // 下一局開轉：上一局轉盤跟著舊盤面掉出、縮小淡出
@@ -6713,6 +6774,7 @@ function demoGoto(name) {
   if (!fn) return false;
   localStorage.removeItem(TUNE_KEY);
   setIconPick(DEFAULT_ICON_PICK, true);             // 圖示組合先回預設（換圖示的預設自己換；不然前一個預設換的觸發組會帶到下一個）
+  setMaxStarPick(DEFAULT_MAXSTAR, true); setWheelArtPick(DEFAULT_WHEEL_ART, true);   // MAX WIN 圖示、轉盤圖同理
   fn();
   freezeForShot = true;
   draw();
