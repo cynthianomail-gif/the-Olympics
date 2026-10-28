@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>天使之心 demo</title>
+<!-- 轉盤倍數字用圓體（使用者 2026-10-28 選 M PLUS Rounded 1c Black）；沒網路時退回 sans-serif -->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@900&display=swap" rel="stylesheet">
 <style>
 /* ===== 版面：固定 1280×720，等比縮放置中 ===== */
 body {
@@ -220,9 +223,10 @@ canvas { display: block; width: 100%; height: 100%; }
         <p>• 藍愛心只出現在第 1、3、5 輪，每輪最多 1 個；落地後在同一格出現藍輪</p>
         <p>• 外圈轉盤轉動後逐漸停下，指針固定朝上，指到的正上方那格即選中；多個轉盤由左到右依序轉動並收集</p>
         <p>• 加法格把倍數加進累計；乘法格把目前累計乘上倍數，累計為 0 時以面值計入</p>
+        <p>• MAX WIN 格（雷射紅星）：藍輪、紅輪的每張盤面各有 1 格；轉到時累計 ＋1000 倍，之後轉到的乘法格可再乘上去</p>
         <p>• 轉盤彩金＝押注額 × 轉盤累計倍數，與連線彩金相加（乘法不乘連線彩金）</p>
-        <p>• 升級輪盤：轉盤展開時有機率由天使把所有倍數格升一階（紅心格不變），再開始轉動；藍輪與紅輪都會發生</p>
-        <p>• 轉動輪盤：一般遊戲藍輪停在紅心格前一格時，有機率由天使推動轉盤多轉一格，停進紅心格；免費遊戲中轉盤累計倍數差一格就到 51 倍以上時，也有機率由天使多推一格</p>
+        <p>• 升級輪盤：轉盤展開時有機率由天使把所有倍數格升一階（紅心格、MAX WIN 格不變；藍輪最高 100 倍／×10），再開始轉動；藍輪與紅輪都會發生</p>
+        <p>• 轉動輪盤：一般遊戲藍輪停在紅心格前一格時，有機率由天使推動轉盤多轉一格，停進紅心格；免費遊戲中轉盤累計倍數差一格就到 51 倍以上時，也有機率由天使多推一格（不會推進或推離 MAX WIN 格）</p>
         <h3>▌ 免費遊戲</h3>
         <p>• 1／2／3 個藍輪停在紅心格 → FG 一重天／SFG 二重天／UFG 三重天，各 10 局</p>
         <p>• FG：紅輪與藍輪出現率提升（藍輪沒有紅心格）；SFG：只出紅輪；UFG：每局必出紅輪</p>
@@ -249,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-100';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-101';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -427,24 +431,28 @@ const PAYLINES = [
 const WHEEL_REELS = [0, 2, 4];
 
 // --- 轉盤盤面（各 12 格，箭頭起順時針）[企劃 §一般遊戲 E63～E66、§FREE GAME E45～E49] ---
-// 'S'＝聖火格、'xN'＝乘法格、數字＝加法格。不放最高贏分格／10000 倍格（decisions Q14）。
+// 'S'＝聖火格、'xN'＝乘法格、數字＝加法格、'M'＝MAX WIN 格。
+// 使用者 2026-10-28 推翻 decisions Q14：MAX WIN 格加回藍輪、紅輪，每張盤面 1 格，取代該盤面面值最小的加法格（同值取第一個）；
+// 轉到＝+MAXWIN_X 倍的加法格（可被後面的乘法格乘）
 const WHEEL_BOARDS = {
-  '藍-1': ['S', '5', 'x2', '50', 'x10', '5', 'S', '5', 'x2', '100', 'x2', '20'],
-  '藍-2': ['10', 'x4', '10', '15', 'x3', '20', '10', 'S', '5', '25', 'x3', '15'],
-  '藍-3': ['5', '15', 'x4', '5', '10', 'x3', '5', '25', 'x2', '5', '10', 'x3'],
-  '紅-A': ['250', 'x4', 'x5', '100', '15', 'x20', 'x3', '50', '25', 'x4', 'x10', '20'],
-  '紅-B': ['x15', '50', '100', '250', 'x20', '50', '100', '250', 'x10', '50', '100', '500'],
-  '紅-C': ['20', 'x3', '50', '15', 'x4', '25', '15', 'x3', '20', '10', 'x5', '10'],
-  '紅-D': ['20', 'x5', '25', '50', '25', 'x4', '15', '100', '15', 'x4', '20', '50'],
-  '紅-E': ['15', 'x4', '10', '100', '15', 'x3', '25', '250', '15', 'x5', '20', '50'],
+  '藍-1': ['S', 'M', 'x2', '50', 'x10', '5', 'S', '5', 'x2', '100', 'x2', '20'],      // 格 1：5 → MAX WIN
+  '藍-2': ['10', 'x4', '10', '15', 'x3', '20', '10', 'S', 'M', '25', 'x3', '15'],     // 格 8：5 → MAX WIN
+  '藍-3': ['M', '15', 'x4', '5', '10', 'x3', '5', '25', 'x2', '5', '10', 'x3'],       // 格 0：5 → MAX WIN
+  '紅-A': ['250', 'x4', 'x5', '100', 'M', 'x20', 'x3', '50', '25', 'x4', 'x10', '20'],   // 格 4：15 → MAX WIN
+  '紅-B': ['x15', 'M', '100', '250', 'x20', '50', '100', '250', 'x10', '50', '100', '500'],   // 格 1：50 → MAX WIN
+  '紅-C': ['20', 'x3', '50', '15', 'x4', '25', '15', 'x3', '20', 'M', 'x5', '10'],     // 格 9：10 → MAX WIN
+  '紅-D': ['20', 'x5', '25', '50', '25', 'x4', 'M', '100', '15', 'x4', '20', '50'],    // 格 6：15 → MAX WIN
+  '紅-E': ['15', 'x4', 'M', '100', '15', 'x3', '25', '250', '15', 'x5', '20', '50'],    // 格 2：10 → MAX WIN
 };
+const MAXWIN_X = 1000;                            // MAX WIN 格倍數（使用者 2026-10-28「先暫設 1000 倍」）
 const BLUE_NG_BOARDS = ['藍-1', '藍-2'];          // 一般遊戲與 BET×10
 const BLUE_FG_BOARD = '藍-3';                     // FG 的藍輪（沒有聖火格）
 const GOLD_BOARDS = ['紅-A', '紅-B', '紅-C', '紅-D', '紅-E'];
 const BOARD_WKEY = { '藍-1': 'wBlue1', '藍-2': 'wBlue2', '紅-A': 'wRedA', '紅-B': 'wRedB',
   '紅-C': 'wRedC', '紅-D': 'wRedD', '紅-E': 'wRedE' };
 function parseSeg(s) {
-  if (s === 'S') return { type: 'start', v: 0, label: '聖火' };
+  if (s === 'S') return { type: 'start', v: 0, label: '紅心' };   // 紅心格（收合方塊上會畫這個字；2026-10-28 由「聖火」改）
+  if (s === 'M') return { type: 'max', v: MAXWIN_X, label: 'MAX WIN' };   // MAX WIN 格：累計時當加法格；格上畫雷射星星
   if (s[0] === 'x') return { type: 'mul', v: Number(s.slice(1)), label: '×' + s.slice(1) };
   return { type: 'add', v: Number(s), label: s + '倍' };
 }
@@ -853,7 +861,6 @@ const DEFAULT_FX = {
   nxBigScale: 1.30,   // 51 倍起倍數放大到
   sixFlare:   1.0,    // 聖火登場時火焰猛燒（變亮）強度（美術需求 15H）
   nxShakeAmp: 10,     // 倍數 >200 畫面震動幅度（px）
-  anticFake:  0.25,   // 預報演繹 1（假預報）：NG 藍輪沒有停在聖火格時，以這個機率播預報 1（使用者 2026-10-21 定；停在聖火格必播預報 2）
   anticZoom:  1.35,   // 預報演繹 1／2：轉盤轉動時畫面朝轉盤緩慢拉近的倍率上限（實際取轉盤不出畫面的最大值）
   anticDots:  1.0,   // 預報演繹的金色光點粒子量（預報 2 為 3 倍）
   winZoomHi:  1.2,   // 圖示中獎：金十字架、武器組／聖物組放大倍率（美術需求：20%）
@@ -914,7 +921,6 @@ const FX_META = [
     ['nxBigScale', '倍數放大', 1, 2, 0.05, { hint: '51 倍起倍數放大到（美術需求：130%）' }],
     ['sixFlare', '聖火登場猛燒', 0, 2, 0.05, { hint: '聖火圖示出現時火焰猛烈燃燒一次（變亮）的強度；0＝關' }],
     ['nxShakeAmp', '倍數震幅', 0, 40, 1, { hint: '累計 >200 時畫面震動幅度（px）' }],
-    ['anticFake', '假預報機率', 0, 1, 0.05, { hint: '預報演繹 1（假預報）：NG 藍輪沒有停在紅心格時，以這個機率播預報 1（使用者 2026-10-21 定；停在紅心格必播預報 2）' }],
     ['anticZoom', '預報拉近', 1, 2, 0.05, { hint: '預報演繹 1／2：轉盤轉動時畫面朝轉盤緩慢拉近的倍率上限（實際取轉盤不出畫面的最大值）' }],
     ['anticDots', '預報光點量', 0, 3, 0.1, { hint: '預報演繹的金色光點粒子量（預報 2 為 3 倍）' }],
     ['winZoomHi', '高分中獎放大', 1, 1.6, 0.01, { hint: '圖示中獎：最高分與 15／10 倍圖示放大倍率（美術需求：20%）' }],
@@ -963,6 +969,7 @@ const DEFAULT_ODDS = {
   wBlue1: 1, wBlue2: 1,
   wRedA: 1, wRedB: 1, wRedC: 1, wRedD: 1, wRedE: 1,
   wSegStart: 1, wSegAdd: 1, wSegMul: 1,
+  wSegMax: 0.01,       // MAX WIN 格權重（其他格都是 1 時，一個轉盤約 1／1100 轉到；正式機率交數值組）
   deal5W: 1, deal8W: 1, deal12W: 1, deal16W: 1, deal20W: 1, dealPW: 1,
   fgSpins:      10,    // 觸發局數 [企劃 §FREE GAME D17～D19]
   fgCap:        20,    // 局數上限 [企劃 §FREE GAME L27]
@@ -996,7 +1003,8 @@ const ODDS_META = [
     ['wRedE', '紅E盤權重', 0, 20, 1, { hint: '紅輪抽到 紅-E 的權重' }],
     ['wSegStart', '紅心格權重', 0, 20, 0.1, { hint: '每一格紅心格的權重（格數不代表機率）' }],
     ['wSegAdd', '加法格權重', 0, 20, 0.1, { hint: '每一格加法格的權重' }],
-    ['wSegMul', '乘法格權重', 0, 20, 0.1, { hint: '每一格乘法格的權重' }] ] },
+    ['wSegMul', '乘法格權重', 0, 20, 0.1, { hint: '每一格乘法格的權重' }],
+    ['wSegMax', 'MAX WIN 格權重', 0, 2, 0.01, { hint: '每一格 MAX WIN 格的權重（預設 0.01：其他格都是 1 時，一個轉盤約 1／1100 轉到）' }] ] },
   { group: '天使抽籤（每格權重）', items: [
     ['deal5W', '5局格權重', 0, 20, 0.1, { hint: '每一格「5 局」的權重（共 4 格）' }],
     ['deal8W', '8局格權重', 0, 20, 0.1, { hint: '每一格「8 局」的權重（共 4 格）' }],
@@ -1041,6 +1049,7 @@ function forceMenuOptions() {
     { label: '停×15',      value: 'vx15',   kind: 'spin', color: '#f0abfc', mode: '皆可' },
     { label: '停×20',      value: 'vx20',   kind: 'spin', color: '#f0abfc', mode: '皆可' },
     { label: '累計150倍',  value: 'nx150',  kind: 'spin', color: '#f0abfc', mode: '皆可' },
+    { label: '停MAX WIN',  value: 'vmax',   kind: 'spin', color: '#f0abfc', mode: '皆可' },   // MAX WIN 格＝+1000 倍（使用者 2026-10-28）
     { label: '升級輪盤',   value: 'upg',    kind: 'spin', color: '#fde047', mode: '皆可' },   // 角色影響輪盤（使用者 2026-10-28）
     { label: '轉動輪盤',   value: 'nudge',  kind: 'spin', color: '#fde047', mode: '皆可' },   // NG 推進聖火格；FG 推一格輪盤累計跨過 51 倍
     { label: '進FG',       value: 'fg',     kind: 'spin', color: '#34d399', mode: 'NG' },
@@ -1190,6 +1199,7 @@ const ART = {
   wheelRed: 'assets/ai/icon_14.png?v=holy-46',          // 紅聖心的輪（程式裡叫 red）原圖；2026-10-22 天使版輪盤，2026-10-24 拆層改紅輪
   wheelBlueBase: 'assets/ai/icon_13_base.png?v=holy-93', wheelBlueTorch: 'assets/ai/icon_13_torch.png?v=holy-46',   // tools/split_wheel_art.py 產（2026-10-26 中心圓縮小）
   wheelRedBase: 'assets/ai/icon_14_base.png?v=holy-93', wheelRedTorch: 'assets/ai/icon_14_torch.png?v=holy-46',
+  maxStar: 'assets/ai/maxwin_star_holo_20261028.png',   // MAX WIN 格：天使臉頰的紅星做成雷射貼紙（使用者 2026-10-28 選 C 全部雷射）
   coin: 'assets/fx/coin.png',                 // 大獎噴金幣（交付包 05_特效/金幣.png 縮圖）
   dagger: 'assets/fx/arrow.png?v=holy-95',    // 聖心金箭（箭頭朝上；嘗試/FX_金箭_A_三角.png 裁邊縮圖）。2026-10-26 使用者「刀插心直接改成弓箭」→ 匕首換金箭，程式名稱沿用 dagger；舊匕首 assets/fx/dagger.png
   bill: 'assets/fx/bill.png',                 // EPIC 噴鈔票（交付包 05_特效/鈔票.png 縮圖）
@@ -1384,6 +1394,7 @@ let nxFadeK = 0, nxShownVal = 0, nxTierCur = 0, nxPlantT = -1, nxShakeT = -1, nx
 let lineWin = 0, wheelWin = 0, spinWin = 0;
 let roundScore = 0, totalScore = 0;
 let scorePanel = null, bigTier = 0, bigTo = 0;
+let segTotal = 0;                                  // 這一段報獎看的整局總贏分（先結算連線時＝已付連線＋輪盤；使用者 2026-10-28 大獎／得分層級／天使高倍都看總贏分）
 let isAutoSpinning = false, isPaused = false, autoSpinCount = 0, autoResume = false;
 let isMouseHoverSpin = false, isMouseHoverAuto = false;
 let inFG = false, fgLevel = 0, fgLeft = 0, fgTotal = 0, fgPlayed = 0;
@@ -1493,6 +1504,7 @@ function pickWheelBoard(kind) {
   return BLUE_NG_BOARDS[weightedIndex(BLUE_NG_BOARDS.map(k => ODDS[BOARD_WKEY[k]]))];
 }
 function segWeight(s) {
+  if (s.type === 'max') return ODDS.wSegMax;
   return s.type === 'start' ? ODDS.wSegStart : (s.type === 'mul' ? ODDS.wSegMul : ODDS.wSegAdd);
 }
 // pred：只在符合條件的格子裡抽（強開用）；沒有符合的格子時回 -1
@@ -1553,7 +1565,7 @@ function segPlan(c, str) {
   return null;
 }
 const SEG_FORCES = { v15: ['15'], v10: ['10'], v50: ['50'], v100: ['100'], vx10: ['x10'], v250: ['250'], v500: ['500'],
-  vx15: ['x15'], vx20: ['x20'], nx150: ['15', 'x10'], nx250: ['25', 'x10'] };   // nx250：25 → ×10 ＝ 250（不拉近）     // nx150：15 倍 → ×10 ＝ 累計 150
+  vx15: ['x15'], vx20: ['x20'], nx150: ['15', 'x10'], nx250: ['25', 'x10'], vmax: ['M'] };   // vmax：停 MAX WIN 格   // nx250：25 → ×10 ＝ 250（不拉近）     // nx150：15 倍 → ×10 ＝ 累計 150
 
 /* ★ 強開的作用範圍：每個選項先決定「哪個模式下才有意義」再寫條件（SKILL.md「強開的作用範圍」）
  *   NG 類（含進FG／SFG／UFG）：只在 !inFG 生效 → FG 內不再種聖火格，FG 不會失控
@@ -1621,17 +1633,18 @@ function plantedBoard(spec) {
  *   例：前兩個輪盤 30 倍，第三個停在 +10＝40，隔壁是 ×2 → 推過去 30×2＝60）。連線得分不算。輪盤停下後右天使飛來往上推，多轉一格
  * 購買觸發局不出（競品購買局轉一下就停）。plan.upg／plan.nudge 在落定盤面時就決定，所以合體預判、跑分都用升級後／推完的結果 */
 const UPG_ADD = [5, 10, 15, 20, 25, 50, 100, 250, 500], UPG_MUL = [2, 3, 4, 5, 10, 15, 20];   // 升一階的階梯（頂端不再升）
-function upgradeSeg(s) {
-  if (s.type === 'start') return s;
-  const L = s.type === 'add' ? UPG_ADD : UPG_MUL, i = L.indexOf(s.v);
+const UPG_BLUE_CAP = { add: 100, mul: 10 };      // 藍輪升級封頂（使用者 2026-10-28：藍輪最高 100 倍／×10；紅輪照升到 500／×20）
+function upgradeSeg(s, blue) {
+  if (s.type === 'start' || s.type === 'max') return s;   // 紅心格、MAX WIN 格不升級（使用者 2026-10-28：天使不碰 MAX WIN）
+  const L = (s.type === 'add' ? UPG_ADD : UPG_MUL).filter(v => !blue || v <= UPG_BLUE_CAP[s.type]), i = L.indexOf(s.v);
   const v = i < 0 ? s.v : L[Math.min(L.length - 1, i + 1)];
   return parseSeg(s.type === 'add' ? String(v) : 'x' + v);
 }
-function upgradedSegs(key) { return WHEEL_SEGS[key].map(upgradeSeg); }
+function upgradedSegs(key) { const blue = key[0] === '藍'; return WHEEL_SEGS[key].map(s => upgradeSeg(s, blue)); }
 function nudgeReady(p) {                           // NG 藍輪停在聖火格前一格（下一格＝聖火格；輪盤往索引變大的方向轉）
   if (p.kind !== 'blue' || !triggerAllowed() || p.idx < 0) return false;
   const s = WHEEL_SEGS[p.key];
-  return s[p.idx].type !== 'start' && s[(p.idx + 1) % 12].type === 'start';
+  return s[p.idx].type !== 'start' && s[p.idx].type !== 'max' && s[(p.idx + 1) % 12].type === 'start';   // 停在 MAX WIN 格不推走
 }
 function planSegs(p) { return p.upg ? upgradedSegs(p.key) : WHEEL_SEGS[p.key]; }
 function planAcc(plans, nudgeJ) {                  // 本局輪盤累計倍數（依開輪順序）；nudgeJ＝推一格的那個輪盤（-1＝都不推）
@@ -1641,7 +1654,13 @@ function planAcc(plans, nudgeJ) {                  // 本局輪盤累計倍數�
 }
 function fgNudgeIdx(plans) {                       // FG：原本 < nudgeX、推一格就 ≥ nudgeX 的輪盤（有好幾個時取最後一個）；沒有回 -1
   if (!inFG || planAcc(plans, -1) >= FX.nudgeX) return -1;
-  for (let j = plans.length - 1; j >= 0; j--) if (plans[j].idx >= 0 && planAcc(plans, j) >= FX.nudgeX) return j;
+  for (let j = plans.length - 1; j >= 0; j--) {
+    const p = plans[j];
+    if (p.idx < 0) continue;
+    const s = planSegs(p);
+    if (s[p.idx].type === 'max' || s[(p.idx + 1) % 12].type === 'max') continue;   // 不推進、也不推離 MAX WIN 格（使用者 2026-10-28）
+    if (planAcc(plans, j) >= FX.nudgeX) return j;
+  }
   return -1;
 }
 function fgNudgePlans() {                          // 強開 FG 轉動：兩個紅輪，第 2 個推一格剛好跨過 nudgeX（從所有組合隨機挑一組）
@@ -1712,7 +1731,7 @@ function evaluateLines() {
 }
 // 轉盤累計：加法加進累計；乘法乘當下累計；累計為 0 時乘法以面值計入 [企劃 §一般遊戲 E46～E49]
 function applyWheelSeg(acc, seg) {
-  if (seg.type === 'add') return acc + seg.v;
+  if (seg.type === 'add' || seg.type === 'max') return acc + seg.v;   // MAX WIN＝+MAXWIN_X 倍（使用者 2026-10-28）
   if (seg.type === 'mul') return acc === 0 ? seg.v : acc * seg.v;
   return acc;
 }
@@ -1738,7 +1757,7 @@ function startSpin() {
   leavingWheels = wheelsSettled() ? wheelDrawList().map(d => Object.assign({}, d, { col: d.w.c })) : [];   // 上一局的轉盤：往下掉出（wheelLeave）
   leaveT = 0;
   wheels = []; wheelIdx = 0; wheelAcc = 0; nxPopT = -1; startCount = 0;
-  lineWin = 0; wheelWin = 0; spinWin = 0; bigTier = 0; hasHitThisSpin = false;
+  lineWin = 0; wheelWin = 0; spinWin = 0; segTotal = 0; bigTier = 0; hasHitThisSpin = false;
   particles = []; floatTexts = [];
   targetBoard = makeTargetBoard(forceSpinType);
   colOffsets = []; colBounce = []; colStopped = [];
@@ -1934,12 +1953,11 @@ function startWheel(i) {
   if (wheelPhase === 'intro') beginWheelIntro(wheels[i]);
   currentState = STATE.WHEEL;
 }
-// 預報演繹（美術需求 22～23，觸發條件使用者 2026-10-21 定）：NG 藍輪最後會停在聖火格 → 預報 2（停下盤面震動一次）；
-// 沒停在聖火格 → 以 FX.anticFake 機率播預報 1（假預報）。購買觸發局不播（競品購買局轉一下就停）
+// 預報演繹（美術需求說明 G22／G23；使用者 2026-10-28 改成照企劃書）：NG 中盤面上已有 1 個轉盤停在紅心格 → 下一個轉盤轉動時播預報 1；
+// 已有 2 個 → 播預報 2（停在紅心格時盤面震動一次）。第 1 個轉盤不播；購買觸發局不播（競品購買局轉一下就停）
 function wheelAnticLevel(w) {
   if (!w || w.kind !== 'blue' || !triggerAllowed() || isBuyRound()) return 0;
-  if (w.segs[w.nudgeFrom >= 0 ? w.nudgeFrom : w.idx].type === 'start') return 2;   // 轉動輪盤：先停的那格不是聖火格 → 照一般判定
-  return Math.random() < FX.anticFake ? 1 : 0;
+  return Math.min(2, startCount);                 // startCount＝這一局已停在紅心格的轉盤數（前一個轉盤 NX 時累加）
 }
 let wheelAnticNow = 0;                            // drawWheels() 畫某個轉盤時的預報等級（給聖火格變亮用）
 function beginWheelIntro(w) {
@@ -2043,6 +2061,7 @@ function wheelEaseP(w) { return isSlowWheel(w) ? 4.5 : 3; }        // 指數越�
    0＝一般（加法 5～20、×2～×5）；1＝燃火（加法 25～100、×10）；2＝拉近＋燃火（加法 250／500、×15／×20） */
 function segTier(sg) {
   if (!sg || sg.type === 'start') return 0;
+  if (sg.type === 'max') return 2;                 // MAX WIN 格＝最高級演出（燃燒＋拉近）
   if (sg.type === 'add') return sg.v >= FX.zoomAdd ? 2 : (sg.v >= FX.fireAdd ? 1 : 0);
   return sg.v >= FX.zoomMul ? 2 : (sg.v >= FX.fireMul ? 1 : 0);
 }
@@ -2105,13 +2124,18 @@ function wheelPopInfo(w) {                       // NX 出現那一刻起彈（�
 // 停下後格子狀態：選中格 hi、其餘壓灰（使用者 2026-10-19「沒轉到的倍數那些要壓灰」）
 // 轉盤字樣（美術需求 19E）：加法＝淡黃色底深色框、顯示「數字X」；乘法＝金色底深色框、顯示「X數字」；
 // 加法 25X 以上、乘法 X10 以上字放大 20%
-function wheelLabelStyle(sg) {
-  if (!sg || sg.type === 'start') return null;
+function wheelLabelStyle(sg, dark) {
+  if (!sg || sg.type === 'start' || sg.type === 'max') return null;   // 紅心格、MAX WIN 格畫圖示，不畫字
   const add = sg.type === 'add';
-  // 使用者 2026-10-22：加法格（弱）＝深藍字＋白邊；乘法格（強）＝白字＋深藍粗邊（sw＝描邊倍率）
-  return { text: add ? sg.v + 'X' : 'X' + sg.v, fill: add ? '#0b2a55' : '#ffffff', stroke: add ? '#ffffff' : '#0b2a55',
-    sw: add ? 1 : 1.6, big: false };   // 使用者 2026-10-22：倍數字一律同樣大小（原本大倍數放大 1.2）
+  // 使用者 2026-10-28：深色格＝白字黑邊、淺色格＝黑字白邊（加法乘法同色，乘法邊加粗；sw＝描邊倍率）
+  return { text: add ? sg.v + 'X' : 'X' + sg.v, fill: dark ? '#ffffff' : '#111111', stroke: dark ? '#111111' : '#ffffff',
+    sw: add ? 1 : 1.27, big: false };   // 使用者 2026-10-22：倍數字一律同樣大小（原本大倍數放大 1.2）
 }
+// 轉盤倍數字型（使用者 2026-10-28：圓體、更粗）；字型檔由 <head> 的 Google Fonts 載入，畫布要先 load 才會用到
+const WHEEL_FONT = '"M PLUS Rounded 1c", sans-serif';
+function wheelLabelFont(px) { return '900 ' + px + 'px ' + WHEEL_FONT; }
+if (document.fonts && document.fonts.load) document.fonts.load(wheelLabelFont(40), '0123456789X').catch(() => {});
+function wheelSegDark(geo, i) { return i % 2 === (geo && geo.dark !== undefined ? geo.dark : 1); }   // geo.dark＝深色格的奇偶（依輪盤圖）
 function wheelGrayAlpha() { return Math.max(0, Math.min(1, FX.wheelGray)); }
 function wheelSegShade(hiIdx, i) { return (hiIdx === null || hiIdx === undefined) ? null : (i === hiIdx ? 'hi' : 'gray'); }
 let wheelPopNow = null;                            // drawWheels() 畫某個轉盤時的回饋狀態
@@ -2147,12 +2171,15 @@ function bigRunSeconds(t) {
 function afterLines() {
   if (spinWin > 0) {
     hasHitThisSpin = true;
-    bigTier = bigTierOf(spinWin);
+    // 大獎用整局總贏分判（使用者 2026-10-28）：先結算連線、之後還要開輪盤的那一段先不判大獎；輪盤段用 已付連線＋輪盤 判，大獎畫面跑總贏分
+    const total = (linesPaid ? paidWin : 0) + spinWin;
+    segTotal = total;
+    bigTier = lineFirst && !linesPaid ? 0 : bigTierOf(total);
     if (bigTier > 0) {                           // 大獎：不出中央得分面板，直接在大獎畫面跑分
-      bigTo = spinWin; scorePanel = null;
+      bigTo = total; scorePanel = null;
       currentState = STATE.BIGWIN; stateTimer = 0;
     } else {                                     // 面板在跑分開始那一刻才建立 → 第 0 幀就在跑
-      scorePanel = { final: spinWin, run: centerRunEnabled(spinWin), lvl: scoreLevel(spinWin) };
+      scorePanel = { final: total, run: centerRunEnabled(total), lvl: scoreLevel(total) };   // 得分層級看總贏分；輪盤段顯示累計的總贏分
       currentState = STATE.SCORE; stateTimer = 0;
     }
   } else roundDone();
@@ -2542,9 +2569,9 @@ const ART_GEO = {
   frame: { win: [132, 286, 1403, 911], plaque: [482, 20, 1055, 245],
            cols: [[132, 370], [388, 627], [645, 881], [899, 1140], [1158, 1403]] },   // 5 條深藍窗格（原圖 x，顏色門檻實量）：寬度不一，見 colDX
   // 藍輪／紅輪：tools/split_wheel_art.py 拆層。AI 圖分隔線不均（±4°），格區依原圖格色重畫成精準 30°、格 0 置中在正上方；
-  // band＝格區內外緣（相對 R，給倍數字、壓灰、亮框、燃火用）
-  wheel: { blue: { cx: 628.5, cy: 620.5, R: 622.0, band: [0.197, 0.93] },   // blue＝藍聖心的輪；天使版輪盤（白手套祈禱手），細框無回紋；2026-10-24 改藍輪（格子淺／深藍、藍框）；2026-10-26 中心圓縮小（格區內緣 0.372→0.197）
-    red: { cx: 628.0, cy: 620.5, R: 621.2, band: [0.197, 0.93] }, band: [0.39, 0.84] },   // red＝紅聖心的輪；天使版輪盤（白手套祈禱手），細框無回紋；2026-10-24 改紅輪（格子淺／深紅、紅框）
+  // band＝格區內外緣（相對 R，給倍數字、壓灰、亮框、燃火用）；dark＝深色格的奇偶（目前兩張都是奇數格較深；換輪盤圖要重量）
+  wheel: { blue: { cx: 628.5, cy: 620.5, R: 622.0, band: [0.197, 0.93], dark: 1 },   // blue＝藍聖心的輪；天使版輪盤（白手套祈禱手），細框無回紋；2026-10-24 改藍輪（格子淺／深藍、藍框）；2026-10-26 中心圓縮小（格區內緣 0.372→0.197）
+    red: { cx: 628.0, cy: 620.5, R: 621.2, band: [0.197, 0.93], dark: 1 }, band: [0.39, 0.84] },   // red＝紅聖心的輪；天使版輪盤（白手套祈禱手），細框無回紋；2026-10-24 改紅輪（格子淺／深紅、紅框）
   cupidL: [10, 2, 1121, 1353, 1173],   // character_01 左天使（黑髮、黃頭帶＋愛心蝴蝶結；2026-10-23 拿掉腰帶與小劍，1139×1381）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度，沿用前一版 1173 讓畫面上大小不變
   cupidR: [212, 21, 865, 1193, 1124],   // 右天使（舊圓臉＋黑頭帶，身體為吊帶裙；2026-10-23 拿掉腰帶與藥瓶，1254×1254）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度（前一版人物可見高 1339×1137/1355≈1124），畫面上大小不變
   // ui_02 FG 進入介面（全幅）：拱形標題匾、米白大面板、綠／紅兩顆按鈕；blank＝面板空白處（不提供抽籤時蓋掉按鈕用），ty＝面板內各行文字的 y
@@ -2712,7 +2739,12 @@ function drawSegCross(R) {                       // 聖火格的紅聖心（原�
   }
   ctx.font = Math.max(10, Math.round(R * 0.2)) + 'px ' + EMOJI_FONT; ctx.fillStyle = '#000'; ctx.fillText('✝️', 0, 0);
 }
-function wheelLabelRot(sg) { return sg && sg.type === 'start' ? Math.PI / 2 : 0; }
+function drawSegMax(R) {                         // MAX WIN 格：雷射星星貼紙（原點＝格中心，已轉成朝外直立）；圖未載入時退回 MAX 字樣
+  const im = artImg('maxStar'), s = R * 0.36;
+  if (im) { ctx.drawImage(im, -s / 2, -s / 2, s, s); return; }
+  ctx.font = wheelLabelFont(Math.max(9, Math.round(R * 0.11))); textOutline('MAX', 0, 0, '#ffffff', '#111111', Math.max(3, R * 0.024));
+}
+function wheelLabelRot(sg) { return sg && (sg.type === 'start' || sg.type === 'max') ? Math.PI / 2 : 0; }
 function drawWheelDiscArt(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, glow) {
   const A = wheelArt(kind);
   if (!A) return false;
@@ -2776,10 +2808,12 @@ function drawWheelDiscArt(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, gl
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (sg.type === 'start') {
       drawSegCross(R);
+    } else if (sg.type === 'max') {
+      drawSegMax(R);
     } else {
-      const ls = wheelLabelStyle(sg);
-      ctx.font = 'bold ' + Math.max(9, Math.round(R * 0.15 * (ls.big ? 1.2 : 1))) + 'px sans-serif';
-      textOutline(ls.text, 0, 0, hiIdx !== null && hiIdx !== undefined && wheelGrayAlpha() > 0.5 ? '#a3a3a3' : ls.fill, ls.stroke, 3 * ls.sw);
+      const ls = wheelLabelStyle(sg, wheelSegDark(A.geo, i));
+      ctx.font = wheelLabelFont(Math.max(9, Math.round(R * 0.15 * (ls.big ? 1.2 : 1))));
+      textOutline(ls.text, 0, 0, hiIdx !== null && hiIdx !== undefined && wheelGrayAlpha() > 0.5 ? '#a3a3a3' : ls.fill, ls.stroke, Math.max(3, R * 0.024) * ls.sw);
     }
     ctx.restore();
   }
@@ -2826,11 +2860,15 @@ function drawWheelDiscArt(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, gl
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (sg.type === 'start') {
       drawSegCross(R);
+    } else if (sg.type === 'max') {
+      if (!pop.on && (pop.k || 0) >= 1) { ctx.shadowColor = '#fffbe6'; ctx.shadowBlur = 14; }   // 跟倍數字一樣：縮放回原大小後提亮
+      drawSegMax(R * 1.25);                          // 選中格的字放大 0.19／0.15，星星跟著放大
+      ctx.shadowBlur = 0;
     } else {
-      const ls = wheelLabelStyle(sg);
-      ctx.font = 'bold ' + Math.max(9, Math.round(R * 0.19 * (ls.big ? 1.2 : 1))) + 'px sans-serif';
+      const ls = wheelLabelStyle(sg, wheelSegDark(A.geo, hiIdx));
+      ctx.font = wheelLabelFont(Math.max(9, Math.round(R * 0.19 * (ls.big ? 1.2 : 1))));
       if (!pop.on && (pop.k || 0) >= 1) { ctx.shadowColor = '#fffbe6'; ctx.shadowBlur = 14; }   // 縮放回原大小後提亮（美術需求 20H）
-      textOutline(ls.text, 0, 0, pop.glow > 0 ? '#fde047' : ls.fill, ls.stroke, 5 * ls.sw);
+      textOutline(ls.text, 0, 0, pop.glow > 0 ? '#fde047' : ls.fill, pop.glow > 0 ? '#111111' : ls.stroke, Math.max(5, R * 0.04) * ls.sw);
       ctx.shadowBlur = 0;
     }
     ctx.restore();
@@ -2870,7 +2908,7 @@ function angelMood() {
   if (currentState === STATE.HEART) return { m: 'heart' };
   if (currentState === STATE.BIGWIN && bigShownTier() >= 1) return { m: 'big', tier: bigShownTier() };
   if ((currentState === STATE.WIN_SHOW || currentState === STATE.SCORE) && spinWin > 0) {
-    const r = spinWin / Math.max(1, ODDS.bet);
+    const r = (segTotal || spinWin) / Math.max(1, ODDS.bet);   // 天使高倍看總贏分（WIN_SHOW 時還沒進 afterLines，先用該段）
     if (r >= 20 && r < 25) return { m: 'hi2' };
     if (r >= 10 && r < 20) return { m: 'hi1' };
   }
@@ -3107,7 +3145,7 @@ function drawFGIntroArt() {
     ctx.fillText('開始前可請天使重新抽籤決定局數（局數可能變多或變少）', px, G.ty.desc1);
     ctx.fillText('停在晉級格直接晉級' + (pendingLevel === 1 ? '二重天 SFG' : '三重天 UFG'), px, G.ty.desc2);
     const on = canGamble();
-    [['start', '直接開始 ' + pendingSpins + ' 局'], ['deal', '請天使抽籤']].forEach(b => {
+    [['start', pendingSpins + '次免費遊戲'], ['deal', '請天使抽籤']].forEach(b => {
       const r = lay[b[0]];
       if (!on) { ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(r.x, r.y, r.w, r.h); }
       textCenter(b[1], r.x + r.w / 2, r.y + r.h / 2, 'bold 26px "Microsoft JhengHei", sans-serif', '#ffffff', 'rgba(0,0,0,.5)', 5);
@@ -3116,7 +3154,7 @@ function drawFGIntroArt() {
     ctx.font = 'bold 18px "Microsoft JhengHei", sans-serif'; ctx.fillStyle = '#57534e';
     ctx.fillText(pendingLevel >= 3 ? '三重天不提供抽籤' : '本階已抽過籤', px, G.ty.note);
     ctx.globalAlpha = k * (0.6 + 0.4 * Math.sin(nowT() / 250));
-    textCenter('點擊任意處繼續', px, G.ty.cont, 'bold 24px "Microsoft JhengHei", sans-serif', '#7c2d12', null);
+    textCenter('點擊任意處以繼續', px, G.ty.cont, 'bold 24px "Microsoft JhengHei", sans-serif', '#7c2d12', null);
   }
   ctx.restore();
   return true;
@@ -3251,7 +3289,7 @@ function drawFGTotalArt() {
   textCenter(fmtNum(fgTotal), px, G.ty[2], 'bold 70px Arial, sans-serif', '#fde047', '#1f2937', 8);
   ctx.shadowBlur = 0;
   ctx.globalAlpha = k * (0.6 + 0.4 * Math.sin(nowT() / 250));
-  textCenter('點擊任意處繼續', px, G.ty[3], '18px "Microsoft JhengHei", sans-serif', '#e2e8f0', null);
+  textCenter('點擊任意處以繼續', px, G.ty[3], '18px "Microsoft JhengHei", sans-serif', '#e2e8f0', null);
   ctx.globalAlpha = k;
   textCenter('本次免費遊戲進行 ' + fgPlayed + ' 局', G.plate[0] + G.plate[2] / 2, G.plate[1] + G.plate[3] / 2, 'bold 26px "Microsoft JhengHei", sans-serif', '#5b3413', null);
   ctx.restore();
@@ -3494,10 +3532,12 @@ function drawWheelDisc(cx, cy, R, kind, segs, angleDeg, hiIdx, t, running, glow)
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (sg.type === 'start') {                       // 聖火格：紅聖心
       drawSegCross(R);
+    } else if (sg.type === 'max') {
+      drawSegMax(R);
     } else {
-      const ls = wheelLabelStyle(sg);
-      ctx.font = 'bold ' + Math.max(9, Math.round(R * 0.15 * (ls.big ? 1.2 : 1))) + 'px sans-serif';
-      textOutline(ls.text, 0, 0, ls.fill, ls.stroke, 3 * ls.sw);
+      const ls = wheelLabelStyle(sg, true);        // 退回版格色都偏深：一律白字黑邊
+      ctx.font = wheelLabelFont(Math.max(9, Math.round(R * 0.15 * (ls.big ? 1.2 : 1))));
+      textOutline(ls.text, 0, 0, ls.fill, ls.stroke, Math.max(3, R * 0.024) * ls.sw);
     }
     ctx.restore();
   }
@@ -3722,7 +3762,7 @@ function upgradeFlip(w, cur) {
   for (let i = 0; i < 12; i++) {
     const q = (k - 0.3 - i * 0.033) / 0.1, p = Math.max(0, Math.min(1, q));
     segs.push(p < 0.5 ? w.segsOld[i] : w.segs[i]);
-    f.push(w.segsOld[i].type === 'start' ? null : { s: Math.abs(Math.cos(Math.PI * p)), lit: q >= 0.5 ? Math.max(0, 1 - (q - 0.5) / 2.5) : 0 });
+    f.push(w.segsOld[i].type === 'start' || w.segsOld[i].type === 'max' ? null : { s: Math.abs(Math.cos(Math.PI * p)), lit: q >= 0.5 ? Math.max(0, 1 - (q - 0.5) / 2.5) : 0 });
   }
   return { segs: segs, f: f, k: k };
 }
@@ -4262,7 +4302,7 @@ function drawFGIntro() {
     ctx.fillText('開始前可請天使重新抽籤決定局數（局數可能變多或變少）', p.x + p.w / 2, p.y + 212);
     ctx.fillText('停在晉級格直接晉級' + (pendingLevel === 1 ? '二重天 SFG' : '三重天 UFG'), p.x + p.w / 2, p.y + 240);
     const on = canGamble();
-    [['start', '直接開始 ' + pendingSpins + ' 局', '#16a34a'], ['deal', '請天使抽籤', '#ea580c']].forEach(b => {
+    [['start', pendingSpins + '次免費遊戲', '#16a34a'], ['deal', '請天使抽籤', '#ea580c']].forEach(b => {
       const r = lay[b[0]];
       roundRect(r.x, r.y, r.w, r.h, 18, on ? b[2] : '#a8a29e', '#ffffff', 3);
       ctx.font = 'bold 24px "Microsoft JhengHei", sans-serif';
@@ -4272,7 +4312,7 @@ function drawFGIntro() {
     ctx.fillText(pendingLevel >= 3 ? '三重天不提供抽籤' : '本階已抽過籤', p.x + p.w / 2, p.y + 220);
     ctx.font = 'bold 22px "Microsoft JhengHei", sans-serif';
     ctx.globalAlpha = 0.6 + 0.4 * Math.sin(nowT() / 250);
-    textOutline('點擊任意處繼續', p.x + p.w / 2, p.y + 318, '#1e293b', null);
+    textOutline('點擊任意處以繼續', p.x + p.w / 2, p.y + 318, '#1e293b', null);
     ctx.globalAlpha = 1;
   }
   ctx.restore();
@@ -4487,7 +4527,7 @@ function drawFGTotal() {
   textOutline('本次免費遊戲進行 ' + fgPlayed + ' 局', 0, 84, '#ffffff', null);
   ctx.font = '20px "Microsoft JhengHei", sans-serif';
   ctx.globalAlpha = 0.6 + 0.4 * Math.sin(nowT() / 250);
-  textOutline('點擊任意處繼續', 0, 150, '#e2e8f0', null);
+  textOutline('點擊任意處以繼續', 0, 150, '#e2e8f0', null);
   ctx.restore();
 }
 // 公版大獎：逐級跑分（1 → BIG 門檻才跳 BIG 版 → SUPER 門檻時 BIG 版縮小淡出、SUPER 版彈出 …），文字縮放＋掃光；
@@ -5919,7 +5959,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
     notes.push('購買觸發局（競品 §6）：轉盤轉 ' + R1(T.buyWheelSpin) + 's 就停在聖火，不出 NX 不跑分；轉盤開始→下一個開始 ' + R1(T.buyWheelGap) + 's，最後一個開始 ' + R1(T.buyWheelEnd) + 's 後收黑進 FG。');
     return { segs: segs, marks: marks, skips: skips, notes: notes, total: t };
   }
-  const nW = kind === 'wheel3' ? 3 : (kind === 'wheel2' || kind === 'antic') ? 2 : (kind === 'wheel' || kind === 'wheelZoom') ? 1 : 0;   // antic：第 2 個藍輪預報 2   // wheel3：第 3 個停乘號；wheelZoom：紅輪停 250
+  const nW = kind === 'wheel3' ? 3 : (kind === 'wheel2' || kind === 'antic') ? 2 : (kind === 'wheel' || kind === 'wheelZoom') ? 1 : 0;   // antic：第 1 個停紅心格、第 2 個藍輪預報 1   // wheel3：第 3 個停乘號；wheelZoom：紅輪停 250
   const zoomSc = kind === 'wheelZoom';
   if (nW) {
     segs.push({ t0: t, dur: T.sixLand - SIX_PULSE, text: '全部輪停→等待(' + R1(T.sixLand - SIX_PULSE) + 's)', fill: 'pause' });
@@ -5948,10 +5988,9 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       segs.push({ t0: t, dur: T.wheelResult, text: tag + '停定→NX(' + R1(T.wheelResult) + 's；最後 ' + R1(WHEEL_DIM_LEAD) + 's 壓灰亮格)', fill: 'lineHold' });
       t += T.wheelResult;
       if (kind === 'antic' && i === 1) {
-        segs.push({ t0: t - T.wheelSpin, dur: T.wheelSpin, text: '預報2：光暈＋大量金色光點＋紅心格變亮＋緩慢拉近', fill: 'gap' });
-        segs.push({ t0: t, dur: FX.shkAntDur, text: '轉到聖火：盤面震動(' + R1(FX.shkAntDur) + 's)', fill: 'big' });
+        segs.push({ t0: t - T.wheelSpin, dur: T.wheelSpin, text: '預報1：光暈＋金色光點＋紅心格變亮＋緩慢拉近', fill: 'gap' });
         segs.push({ t0: t, dur: T.zoomOut, text: '畫面退回(' + R1(T.zoomOut) + 's)', fill: 'pause' });
-        notes.push('預報演繹（使用者 2026-10-21 定）：藍輪最後停在紅心格＝預報 2（停下震動）；沒停在紅心格以 ' + FX.anticFake + ' 機率播預報 1（假預報）。');
+        notes.push('預報演繹（企劃書美術需求說明 G22／G23）：已有 1 個轉盤停在紅心格 → 下一個轉盤播預報 1；已有 2 個 → 預報 2（停在紅心格時盤面震動一次）；第 1 個轉盤不播。');
       }
       const mulHere = kind === 'wheel3' && i === nW - 1;
       marks.push({ t: t, text: tag + 'NX 出現（倍數' + (i ? '累加' : '顯示') + '）' + (mulHere ? '＋乘號強回饋' : '') });
@@ -6053,7 +6092,7 @@ function sheetGantt() {
     scenarios.push({ T: m[1], kind: 'wheel3', tier: RHYTHM_TIERS[0],
       title: m[0] + ' 一般：3 個藍輪（第 3 個減速延長、停乘號強回饋）' });
     scenarios.push({ T: m[1], kind: 'antic', tier: RHYTHM_TIERS[0],
-      title: m[0] + ' 一般：2 個藍輪（第 2 個預報 2，停在紅心格）' });
+      title: m[0] + ' 一般：2 個藍輪（第 1 個停紅心格、第 2 個預報 1）' });
     scenarios.push({ T: m[1], kind: 'heart', tier: RHYTHM_TIERS[6],
       title: m[0] + ' 一般：≥500 倍（天使雙人愛心合體→大獎）' });
     scenarios.push({ T: m[1], kind: 'wheelBuy', tier: null,
@@ -6534,6 +6573,9 @@ const SHOT_PRESETS = {
   wheelSpin:     () => spinWith('ng1add', atWheel(0, 'spin', 0.5)),
   wheelResult:   () => spinWith('ng1add', atNX(0, 5)),
   wheelMul:      () => spinWith('ng1mul', atNX(0, 5)),
+  wheelMaxSpin:  () => spinWith('vmax', atWheel(0, 'spin', 0.5)),     // MAX WIN 格（雷射星星）在轉盤上（使用者 2026-10-28）
+  wheelMax:      () => spinWith('vmax', atNX(0, 5)),                  // 停在 MAX WIN 格
+  wheelMaxDone:  () => spinWith('vmax', () => currentState === STATE.SCORE || currentState === STATE.BIGWIN || currentState === STATE.IDLE),   // 轉完：收合方塊顯示 MAX WIN
   sixPop:        () => spinWith('ng3mix', () => currentState === STATE.SPINNING && landT[2] >= Math.round(TF(TIMING.sixPopTime) / 2)),   // 聖心出現放大 30%
   wheelLeave:    () => { spinWith('ng3mix', () => currentState === STATE.IDLE); forceSpinType = null; startSpin(); for (let i = 0; i < 24; i++) update(); },   // 下一局開轉：上一局轉盤跟著舊盤面掉出、縮小淡出
   redBurst:      () => { toFG(1, 'fgG1'); startSpin(); runUntil(atWheel(0, 'intro', 0.5)); },   // 紅輪彈出聖火炸開
@@ -6545,9 +6587,9 @@ const SHOT_PRESETS = {
   nxTier2:       () => spinWith('v50', afterWheelsFor(40)),      // 25～50：彈出＋翠綠植栽
   nxTier3:       () => spinWith('nx150', afterWheelsFor(40)),    // 51～199：放大 130%＋金色植栽
   nxTier4:       () => spinWith('nx250', afterWheelsFor(40)),    // ≥200：130%＋震動＋紅果金色植栽
-  antic1Spin:    () => { FX.anticFake = 1; spinWith('ng1add', atWheel(0, 'spin', 0.6)); },   // 預報 1（假預報）：光暈＋光點＋拉近
-  antic2Spin:    () => spinWith('fg', atWheel(0, 'spin', 0.6)),                               // 預報 2：大量光點＋聖火格變亮＋拉近
-  antic2Stop:    () => spinWith('fg', atWheel(0, 'result', 0.05)),                            // 預報 2 轉到聖火：盤面震動
+  antic1Spin:    () => spinWith('sfg', atWheel(1, 'spin', 0.6)),                              // 預報 1：第 1 個停紅心格，第 2 個轉動中（光暈＋光點＋拉近）
+  antic2Spin:    () => spinWith('ufg', atWheel(2, 'spin', 0.6)),                              // 預報 2：已有 2 個停紅心格，第 3 個轉動中（大量光點＋拉近）
+  antic2Stop:    () => spinWith('ufg', atWheel(2, 'result', 0.05)),                           // 預報 2 轉到紅心格：盤面震動
   angelHi1:      () => spinWith('run', () => currentState === STATE.SCORE && stateTimer >= 20),   // 10～20 倍：天使高倍 1
   angelHi2:      () => spinWith('hi2', () => currentState === STATE.SCORE && stateTimer >= 20),   // 20～25 倍：天使高倍 2
   heartFly:      () => spinWith('big4', () => currentState === STATE.HEART && stateTimer >= Math.round(TF(TIMING.heartTime) * 0.25)),
@@ -6635,7 +6677,6 @@ function demoGoto(name) {
   const fn = SHOT_PRESETS[name] || SHOT_PRESETS[SHOT_ALIASES[name]];
   if (!fn) return false;
   localStorage.removeItem(TUNE_KEY);
-  FX.anticFake = 0;                                 // 截圖要可重現：假預報機率先關（要看預報的預設自己打開）
   setIconPick(DEFAULT_ICON_PICK, true);             // 圖示組合先回預設（換圖示的預設自己換；不然前一個預設換的觸發組會帶到下一個）
   fn();
   freezeForShot = true;
