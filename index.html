@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-101';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-102';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -1199,7 +1199,7 @@ const ART = {
   wheelRed: 'assets/ai/icon_14.png?v=holy-46',          // 紅聖心的輪（程式裡叫 red）原圖；2026-10-22 天使版輪盤，2026-10-24 拆層改紅輪
   wheelBlueBase: 'assets/ai/icon_13_base.png?v=holy-93', wheelBlueTorch: 'assets/ai/icon_13_torch.png?v=holy-46',   // tools/split_wheel_art.py 產（2026-10-26 中心圓縮小）
   wheelRedBase: 'assets/ai/icon_14_base.png?v=holy-93', wheelRedTorch: 'assets/ai/icon_14_torch.png?v=holy-46',
-  maxStar: 'assets/ai/maxwin_star_holo_20261028.png',   // MAX WIN 格：天使臉頰的紅星做成雷射貼紙（使用者 2026-10-28 選 C 全部雷射）
+  maxStar: 'assets/ai/maxwin_star_holo_strong_20261028.png',   // MAX WIN 格：天使臉頰的紅星做成雷射貼紙（使用者 2026-10-28 選 C 全部雷射，再加強成「強」版：繞射條紋＋星芒）
   coin: 'assets/fx/coin.png',                 // 大獎噴金幣（交付包 05_特效/金幣.png 縮圖）
   dagger: 'assets/fx/arrow.png?v=holy-95',    // 聖心金箭（箭頭朝上；嘗試/FX_金箭_A_三角.png 裁邊縮圖）。2026-10-26 使用者「刀插心直接改成弓箭」→ 匕首換金箭，程式名稱沿用 dagger；舊匕首 assets/fx/dagger.png
   bill: 'assets/fx/bill.png',                 // EPIC 噴鈔票（交付包 05_特效/鈔票.png 縮圖）
