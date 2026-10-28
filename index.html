@@ -222,7 +222,7 @@ canvas { display: block; width: 100%; height: 100%; }
         <p>• 加法格把倍數加進累計；乘法格把目前累計乘上倍數，累計為 0 時以面值計入</p>
         <p>• 轉盤彩金＝押注額 × 轉盤累計倍數，與連線彩金相加（乘法不乘連線彩金）</p>
         <p>• 升級輪盤：轉盤展開時有機率由天使把所有倍數格升一階（聖火格不變），再開始轉動；藍輪與紅輪都會發生</p>
-        <p>• 轉動輪盤：一般遊戲藍輪停在聖火格前一格時，有機率由天使推動轉盤多轉一格，停進聖火格</p>
+        <p>• 轉動輪盤：一般遊戲藍輪停在聖火格前一格時，有機率由天使推動轉盤多轉一格，停進聖火格；免費遊戲中轉盤累計倍數差一格就到 51 倍以上時，也有機率由天使多推一格</p>
         <h3>▌ 免費遊戲</h3>
         <p>• 1／2／3 個藍輪停在聖火格 → FG 銅牌賽／SFG 銀牌賽／UFG 金牌賽，各 10 局</p>
         <p>• FG：紅輪與藍輪出現率提升（藍輪沒有聖火格）；SFG：只出紅輪；UFG：每局必出紅輪</p>
@@ -249,7 +249,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-98';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-99';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '奧林匹亞';
 const LOGO_TEXT = '奧林匹亞', LOGO_SUB = 'OLYMPIA';
 
@@ -301,10 +301,10 @@ let REEL_MODE = DEFAULT_REEL_MODE;
 // 藍／紅聖心用圖檔（面板可整組換：TRIG_SETS，assets/pick/<組>_1／_2；原版 assets/icon_10、11）；程式退回版用 emoji ✝️。name 只留給賠率表 title／測試用，不畫在盤面上。
 const SYMBOLS = [
   // 圖示：emoji（＋小配件 sub）或程式繪製（draw）；不顯示名稱。武器副色為金黃，聖物為銀藍。
-  { name: '金十字架',   emoji: '✝️', color: '#4f8ec9', tier: 'hi', bg: ['#1e3a5f', '#0b172b'] },   // 最高分（2026-10-24：白鴿→紅寶石金十字架，位階高於 15 倍天堂生物；嘗試/H_最高分_金十字架_紅寶石.png；同日試過銀色版，使用者選回金色）
+  { name: '十字架',     emoji: '✝️', color: '#4f8ec9', tier: 'hi', bg: ['#1e3a5f', '#0b172b'] },   // 最高分（2026-10-28 使用者：名稱改「十字架」；2026-10-24：白鴿→紅寶石金十字架，位階高於 15 倍天堂生物；嘗試/H_最高分_金十字架_紅寶石.png；同日試過銀色版，使用者選回金色）
   { name: '獨角獸',     emoji: '🦄', color: '#b58b33', tier: 'hi' },   // 15 倍天堂生物組（2026-10-24：SixSixSix「地獄生物」反過來＝天堂生物；黃色系、簡單點點眼；嘗試/H15_獨角獸頭像_黃_簡單臉.png）
   { name: '天堂鳥',     emoji: '🐦', color: '#b58b33', tier: 'hi' },   // 15 倍天堂生物組（嘗試/H15_天堂鳥頭像_黃_簡單臉.png）
-  { name: '銀豎琴',     emoji: '🎵', color: '#64748b', tier: 'hi' },   // 10 倍組（2026-10-24：生命之水瓶 → 銀色無翅聖水 → 使用者「聖水換成豎琴」；與 B 組 15 倍同圖 嘗試/H15B_銀豎琴_無翅.png）
+  { name: '豎琴',       emoji: '🎵', color: '#64748b', tier: 'hi' },   // 10 倍組（2026-10-24：生命之水瓶 → 銀色無翅聖水 → 使用者「聖水換成豎琴」；與 B 組 15 倍同圖 嘗試/H15B_銀豎琴_無翅.png）
   { name: '聖杯',       emoji: '🏆', color: '#64748b', tier: 'hi' },   // 10 倍生命象徵組（嘗試/H10_聖杯_黃無臉.png）
   { name: 'A',          emoji: 'A', color: '#8a7f6e', tier: 'lo' },   // 低分：AKQJ10（2026-10-24 參考 Red Rascal 胖圓卡通字、土色系：A 磚紅、K 橄欖綠、Q 米棕、J 芥末黃、10 陶土棕）
   { name: 'K',          emoji: 'K', color: '#7c6f5d', tier: 'lo' },
@@ -319,7 +319,7 @@ const SIX_ID = 10, GOLD_ID = 11;
 // 最高分 id0、15 倍 id1／2、10 倍 id3／4 各自從目錄挑（15 倍與 10 倍共用同一批候選），低分 id5～9 整組挑；觸發 id10／11 固定。
 // 圖檔：assets/pick/<key>.png（tools/build_icon_pick.py 產）；調色盤遮罩：assets/pick/tint/<key>_gray|_mask.png（tools/make_tint_masks.py --pick）。
 const ICON_CATALOG = {                            // tone：下拉選單名稱後面標的顏色（使用者 2026-10-24），只用在選單、不改盤面名稱
-  crossGold:   { name: '金十字架', emoji: '✝️', tone: '金' },   // 紅寶石金十字架；2026-10-24 反光金屬版跑風格 → 照美術風格重生的卡通 B 高光帶（扁平色塊＋硬邊高光帶）
+  crossGold:   { name: '十字架',   emoji: '✝️', tone: '金' },   // 名稱：使用者 2026-10-28「十字架、獨角獸、天堂鳥、翅膀、豎琴」   // 紅寶石金十字架；2026-10-24 反光金屬版跑風格 → 照美術風格重生的卡通 B 高光帶（扁平色塊＋硬邊高光帶）
   crossSilver: { name: '銀十字架', emoji: '✝️', tone: '銀' },   // 紅寶石銀十字架（2026-10-24 試過的銀色版）
   chaliceGold: { name: '金聖杯',        emoji: '🏆', tone: '金／紅寶石' },   // 2026-10-26 使用者「全金 鑲紅寶石的 飽滿造型不過度複雜的聖杯」
   angelFS:     { name: '金天使',        emoji: '👼', tone: '金' },   // 2026-10-26 有翅幽靈天使轉正面、去尾巴留裙擺、派眼＋微笑（無微笑版、短裙兩版都試過，使用者「原本的好了」）
@@ -329,8 +329,8 @@ const ICON_CATALOG = {                            // tone：下拉選單名稱�
   pegasus:     { name: '飛馬',     emoji: '🐴', tone: '黃', localOnly: true },   // 2026-10-24 照獨角獸／天堂鳥同風格生；localOnly＝只在本機出現（使用者「白鴿 跟 飛馬不用推上去」）
   dove:        { name: '白鴿',     emoji: '🕊️', tone: '白', localOnly: true },
   // asset-skip: pegasus  // asset-skip: dove  // asset-skip: pegasus_gray  // asset-skip: pegasus_mask  // asset-skip: dove_gray  // asset-skip: dove_mask
-  harp:        { name: '銀豎琴',   emoji: '🎵', tone: '銀' },
-  wings:       { name: '天使之翼', emoji: '🪽', tone: '白' },
+  harp:        { name: '豎琴',     emoji: '🎵', tone: '銀' },
+  wings:       { name: '翅膀',     emoji: '🪽', tone: '白' },
   trumpet:     { name: '天使號角', emoji: '🎺', tone: '銀' },   // 超粗銀號角（被天使之翼取代，留在目錄）
   chalice:     { name: '聖杯',     emoji: '🏆', tone: '銀' },   // 銀聖杯（波浪粗花紋）
   holyWater:   { name: '聖水',     emoji: '🧪', tone: '銀／淺藍' },   // 聖水：10/22 十字瓶塞聖水瓶造型、玻璃與瓶塞白銀、水淺藍（2026-10-24 使用者「整體改白銀色」→「內容物的水可以是淺藍色」）
@@ -879,7 +879,8 @@ const DEFAULT_FX = {
   reelJitter: 0.5,
   upgP:       0.01,   // 升級輪盤機率：每個輪盤出現時各自判定（藍輪、紅輪都會；使用者 2026-10-28 占設 1%）
   upgTime:    1.8,    // 升級輪盤演出秒數（左天使飛來打光 → 倍數格依序翻牌升一階 → 飛回）
-  nudgeP:     0.01,   // 轉動輪盤機率：NG 藍輪停在聖火格前一格時判定（使用者 2026-10-28 占設 1%）
+  nudgeP:     0.01,   // 轉動輪盤機率：NG 藍輪停在聖火格前一格／FG 推一格輪盤累計就到 nudgeX 時判定（使用者 2026-10-28 占設 1%）
+  nudgeX:     51,     // FG 轉動輪盤門檻：本局輪盤累計倍數（不含連線）推一格後 ≥ 此值（使用者 2026-10-28「改成51倍以上」）
   nudgeTime:  1.6,    // 轉動輪盤演出秒數（右天使飛來推輪盤 → 多轉一格進聖火格 → 飛回）
 };
 const FX_META = [
@@ -916,7 +917,7 @@ const FX_META = [
     ['anticFake', '假預報機率', 0, 1, 0.05, { hint: '預報演繹 1（假預報）：NG 藍輪沒有停在聖火格時，以這個機率播預報 1（使用者 2026-10-21 定；停在聖火格必播預報 2）' }],
     ['anticZoom', '預報拉近', 1, 2, 0.05, { hint: '預報演繹 1／2：轉盤轉動時畫面朝轉盤緩慢拉近的倍率上限（實際取轉盤不出畫面的最大值）' }],
     ['anticDots', '預報光點量', 0, 3, 0.1, { hint: '預報演繹的金色光點粒子量（預報 2 為 3 倍）' }],
-    ['winZoomHi', '高分中獎放大', 1, 1.6, 0.01, { hint: '圖示中獎：金十字架、武器組／聖物組放大倍率（美術需求：20%）' }],
+    ['winZoomHi', '高分中獎放大', 1, 1.6, 0.01, { hint: '圖示中獎：最高分與 15／10 倍圖示放大倍率（美術需求：20%）' }],
     ['winZoomLo', '低分中獎放大', 1, 1.6, 0.01, { hint: '圖示中獎：低分圖示放大倍率（美術需求：10%）' }],
     ['heartX', '合體倍數≥', 50, 5000, 10, { hint: '單盤總贏分 ≥ 此倍數 → 轉盤轉動前播天使雙人愛心合體（美術需求 54G）' }],
     ['bigCoins', '大獎金幣量', 0, 3, 0.1, { hint: '大獎時天使身後噴出金幣／鈔票的量（BIG 少量、MEGA 大量、EPIC 加鈔票）' }],
@@ -941,7 +942,8 @@ const FX_META = [
   { group: '角色影響輪盤', items: [
     ['upgP', '升級輪盤機率', 0, 1, 0.005, { hint: '每個輪盤出現時各自判定（藍輪、紅輪都會）：左天使把所有倍數格升一階（5→10→15→20→25→50→100→250→500、×2→×3→×4→×5→×10→×15→×20，聖火格不變）；0.01＝1%' }],
     ['upgTime', '升級演出秒數', 0.6, 4, 0.1, { hint: '升級輪盤：天使飛來打光 → 格子由正上方順時針依序翻牌 → 飛回，之後輪盤才開轉' }],
-    ['nudgeP', '轉動輪盤機率', 0, 1, 0.005, { hint: 'NG 藍輪停在聖火格前一格時判定：右天使推輪盤多轉一格、進聖火格（觸發 FG）；0.01＝1%' }],
+    ['nudgeP', '轉動輪盤機率', 0, 1, 0.005, { hint: 'NG：藍輪停在聖火格前一格時判定，推一格進聖火格（觸發 FG）；FG：本局輪盤累計原本不到門檻、推一格就到門檻時判定（紅、藍輪都算）；0.01＝1%' }],
+    ['nudgeX', 'FG 轉動門檻≥', 2, 1000, 1, { hint: 'FG 轉動輪盤：本局輪盤累計倍數（不含連線）推一格後 ≥ 此值才可能觸發（使用者：51）' }],
     ['nudgeTime', '轉動演出秒數', 0.6, 4, 0.1, { hint: '轉動輪盤：輪盤停下 → 天使飛來往上推 → 多轉一格 → 飛回，之後才出結果' }] ] },
 ];
 
@@ -1040,7 +1042,7 @@ function forceMenuOptions() {
     { label: '停×20',      value: 'vx20',   kind: 'spin', color: '#f0abfc', mode: '皆可' },
     { label: '累計150倍',  value: 'nx150',  kind: 'spin', color: '#f0abfc', mode: '皆可' },
     { label: '升級輪盤',   value: 'upg',    kind: 'spin', color: '#fde047', mode: '皆可' },   // 角色影響輪盤（使用者 2026-10-28）
-    { label: '轉動輪盤',   value: 'nudge',  kind: 'spin', color: '#fde047', mode: 'NG' },
+    { label: '轉動輪盤',   value: 'nudge',  kind: 'spin', color: '#fde047', mode: '皆可' },   // NG 推進聖火格；FG 推一格輪盤累計跨過 51 倍
     { label: '進FG',       value: 'fg',     kind: 'spin', color: '#34d399', mode: 'NG' },
     { label: '進SFG',      value: 'sfg',    kind: 'spin', color: '#34d399', mode: 'NG' },
     { label: '進UFG',      value: 'ufg',    kind: 'spin', color: '#34d399', mode: 'NG' },
@@ -1614,7 +1616,9 @@ function plantedBoard(spec) {
 }
 /* --- 角色影響輪盤（使用者 2026-10-28）---
  * 升級輪盤：輪盤展開後、開轉前，左天使飛來打光，倍數格由正上方順時針依序翻牌、各升一階（聖火格不變）。藍輪、紅輪都會，每個輪盤各自以 FX.upgP 判定
- * 轉動輪盤：NG 藍輪停在聖火格「前一格」時以 FX.nudgeP 判定；輪盤停下後右天使飛來往上推，多轉一格進聖火格（觸發 FG）
+ * 轉動輪盤：NG＝藍輪停在聖火格「前一格」時以 FX.nudgeP 判定，推一格進聖火格（觸發 FG）；
+ *   FG（使用者 2026-10-28）＝本局輪盤累計倍數原本 < FX.nudgeX（51），某個輪盤多轉一格就 ≥ 51 時以 FX.nudgeP 判定（紅輪、藍輪都算，一局最多推一次；
+ *   例：前兩個輪盤 30 倍，第三個停在 +10＝40，隔壁是 ×2 → 推過去 30×2＝60）。連線得分不算。輪盤停下後右天使飛來往上推，多轉一格
  * 購買觸發局不出（競品購買局轉一下就停）。plan.upg／plan.nudge 在落定盤面時就決定，所以合體預判、跑分都用升級後／推完的結果 */
 const UPG_ADD = [5, 10, 15, 20, 25, 50, 100, 250, 500], UPG_MUL = [2, 3, 4, 5, 10, 15, 20];   // 升一階的階梯（頂端不再升）
 function upgradeSeg(s) {
@@ -1629,18 +1633,40 @@ function nudgeReady(p) {                           // NG 藍輪停在聖火格�
   const s = WHEEL_SEGS[p.key];
   return s[p.idx].type !== 'start' && s[(p.idx + 1) % 12].type === 'start';
 }
+function planSegs(p) { return p.upg ? upgradedSegs(p.key) : WHEEL_SEGS[p.key]; }
+function planAcc(plans, nudgeJ) {                  // 本局輪盤累計倍數（依開輪順序）；nudgeJ＝推一格的那個輪盤（-1＝都不推）
+  let acc = 0;
+  plans.forEach((p, i) => { acc = applyWheelSeg(acc, planSegs(p)[i === nudgeJ ? (p.idx + 1) % 12 : p.idx]); });
+  return acc;
+}
+function fgNudgeIdx(plans) {                       // FG：原本 < nudgeX、推一格就 ≥ nudgeX 的輪盤（有好幾個時取最後一個）；沒有回 -1
+  if (!inFG || planAcc(plans, -1) >= FX.nudgeX) return -1;
+  for (let j = plans.length - 1; j >= 0; j--) if (plans[j].idx >= 0 && planAcc(plans, j) >= FX.nudgeX) return j;
+  return -1;
+}
+function fgNudgePlans() {                          // 強開 FG 轉動：兩個紅輪，第 2 個推一格剛好跨過 nudgeX（從所有組合隨機挑一組）
+  const ok = [];
+  GOLD_BOARDS.forEach(k1 => GOLD_BOARDS.forEach(k2 => { for (let i = 0; i < 12; i++) for (let j = 0; j < 12; j++) {
+    const ps = [wheelPlan(0, 'gold', k1, i), wheelPlan(4, 'gold', k2, j)];
+    if (fgNudgeIdx(ps) === 1) ok.push(ps);
+  } }));
+  return ok.length ? ok[Math.floor(Math.random() * ok.length)] : null;
+}
 function rollWheelEvents(plans, force) {
   if (pendingBuy && !inFG) return;
-  if (force === 'nudge' && triggerAllowed()) {     // 強開：一個藍輪停在聖火格前一格，必推
+  if (force === 'nudge' && triggerAllowed()) {     // 強開 NG：一個藍輪停在聖火格前一格，必推
     const p = blueAt(2, 'start');
     p.idx = (p.idx + 11) % 12;
     plans.length = 0; plans.push(p);
   }
+  if (force === 'nudge' && inFG) { const ps = fgNudgePlans(); if (ps) { plans.length = 0; plans.push(...ps); } }
   if (force === 'upg' && !plans.length) plans.push(inFG || activeBuy === 'b50' ? goldAt(2) : blueAt(2, 'any'));
   plans.forEach((p, i) => {                        // 機率只在沒有強開時判定（強開「停 50 倍」就該停 50 倍，不被 1% 升級改掉）
     p.upg = force ? force === 'upg' && i === 0 : Math.random() < FX.upgP;
     p.nudge = nudgeReady(p) && (force ? force === 'nudge' : Math.random() < FX.nudgeP);
   });
+  const j = fgNudgeIdx(plans);                     // FG：差一格到 51 倍（升級後的格子也算進去）
+  if (j >= 0 && (force ? force === 'nudge' : Math.random() < FX.nudgeP)) plans[j].nudge = true;
 }
 // 依強開與模式產生落定盤面（targetBoard＝id 陣列；轉盤計畫存 targetWheels）
 function makeTargetBoard(force) {
@@ -6575,6 +6601,8 @@ const SHOT_PRESETS = {
   redSixLand:    () => { toFG(1, 'fgG2'); startSpin(); runUntil(() => currentState === STATE.POSTSTOP && stateTimer >= 4); },
   goldWheelCollapse: () => { toFG(1, 'fgMix'); startSpin(); runUntil(() => wheels.length > 0 && currentState === STATE.WIN_SHOW); },   // FG：轉完的轉盤保持顯示進入中獎演出
   fgGold:        () => { toFG(1, 'fgMix'); startSpin(); runUntil(atWheel(0, 'spin', 0.5)); },
+  fgNudge:       () => { toFG(1, 'nudge'); startSpin(); runUntil(() => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= TF(FX.nudgeTime) * 0.5); },   // FG 轉動輪盤：差一格到 51 倍，右天使推第 2 個紅輪
+  fgNudgeEnd:    () => { toFG(1, 'nudge'); startSpin(); runUntil(() => currentState === STATE.WHEEL && wheelPhase === 'after' && wheelIdx === wheels.length - 1 && stateTimer >= 5); },   // 推完：LOGO 倍數 ≥ 51
   sfgGold:       () => { toFG(2, 'fgG2'); startSpin(); runUntil(atNX(1, 5)); },
   ufgGold:       () => { toFG(3, 'fgG3'); startSpin(); runUntil(atNX(2, 5)); },
   fgTotal:       () => { toFG(1, 'small'); fgLeft = 1; runUntil(() => currentState === STATE.FG_TOTAL && stateTimer >= TF(TIMING.totalDrop) + 25); },
