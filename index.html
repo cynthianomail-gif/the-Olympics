@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-115';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-116';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -971,7 +971,6 @@ const DEFAULT_FX = {
   shkMwAmp:   14,    // MAX WIN 星星撞到倍數欄位旁時畫面震動幅度（px；美術需求 V3 第 19 列 ⑥「像是額外加分的感覺」，使用者 2026-10-29）
   shkMwDur:   0.35,  // MAX WIN 撞到欄位旁震動秒數
   mwDimA:     0.6,   // MAX WIN 登場演繹：畫面壓暗強度（0～1；第 19 列 ①）
-  anticip:    1,      // 觸發期待演出強度（0＝關）
   pubFx1:     0.5,    // 得分 10～20 倍：公版特效(1) 光暈強度
   pubFx2:     0.9,    // 得分 20～25 倍：公版特效(2)
   zoom1:      1.12,   // 中獎圖示放大等級 1～2
@@ -1051,7 +1050,6 @@ const FX_META = [
     ['shkMwAmp', 'MAX WIN 震幅', 0, 40, 1, { hint: 'MAX WIN 登場演繹：星星帶著 1000X 撞到倍數欄位旁停住時，畫面震動幅度（px；美術需求 V3 第 19 列 ⑥）' }],
     ['shkMwDur', 'MAX WIN 震秒', 0, 2, 0.05, { hint: 'MAX WIN 撞到倍數欄位旁的震動秒數' }],
     ['mwDimA', 'MAX WIN 壓暗', 0, 1, 0.05, { hint: 'MAX WIN 登場演繹的畫面壓暗強度（0＝不壓、1＝全黑；第 19 列 ①）；星星、兩位天使畫在壓暗層之上' }],
-    ['anticip', '觸發期待強度', 0, 2, 0.1, { hint: '已有轉盤停在紅心格時，其餘轉盤的期待演出強度；0＝關' }],
  ] },
   { group: '得分與大獎分級', items: [
     ['pubFx1', '公版特效1', 0, 2, 0.05, { hint: '10≦贏分＜20 倍：公版特效(1) 光暈強度（企劃得分層級 C4）' }],
@@ -1326,7 +1324,6 @@ const ART = {
   dagger: 'assets/fx/arrow.png?v=holy-95',    // 聖心金箭（箭頭朝上；嘗試/FX_金箭_A_三角.png 裁邊縮圖）。2026-10-26 使用者「刀插心直接改成弓箭」→ 匕首換金箭，程式名稱沿用 dagger；舊匕首 assets/fx/dagger.png
   bill: 'assets/fx/bill.png',                 // EPIC 噴鈔票（交付包 05_特效/鈔票.png 縮圖）
   // 副本B（使用者 2026-10-29，美術需求 V8）：FG 進入介面（ui_02）、宙斯抽籤（ui_03）、FG 結算（ui_04）、大獎標題（bigwin_01～04）改程式繪製，不再載入
-  anticip: 'assets/ai/ui_05.png',             // 觸發期待（取閃電光框）
   trans: 'assets/fx/feather_A.png',           // 進退場轉場（V8 第 92 列）：白羽毛蓋滿畫面的那一刻用這張整張羽毛圖（images\angel_art_20261028\feather_A.png）；舊火焰轉場 ai/transition_01.png 不用
   wand: 'assets/ui/magic_wand.png',           // 天使的星星魔法棒（V8 第 62／73 列；images\props_20261029\）
   fgScroll: 'assets/ui/scroll_blank.png',     // FREE SPINS 局數欄卷軸（V8 第 77 列；空白卷軸，字由程式畫）
@@ -2951,8 +2948,6 @@ const ART_GEO = {
     red: { cx: 628.0, cy: 620.5, R: 621.2, band: [0.197, 0.93], dark: 1 }, band: [0.39, 0.84] },   // red＝紅聖心的輪；天使版輪盤（白手套祈禱手），細框無回紋；2026-10-24 改紅輪（格子淺／深紅、紅框）
   cupidL: [10, 2, 1121, 1353, 1173],   // character_01 左天使（黑髮、黃頭帶＋愛心蝴蝶結；2026-10-23 拿掉腰帶與小劍，1139×1381）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度，沿用前一版 1173 讓畫面上大小不變
   cupidR: [212, 21, 865, 1193, 1124],   // 右天使（同尺寸的無臉頰星版沿用同一組 bbox）（舊圓臉＋黑頭帶，身體為吊帶裙；2026-10-23 拿掉腰帶與藥瓶，1254×1254）alpha>128 bbox [x,y,w,h]；末項＝顯示基準高度（前一版人物可見高 1339×1137/1355≈1124），畫面上大小不變
-  // ui_05 觸發期待：第 3 輪那條藍色閃電光框
-  anticCol: [545, 168, 180, 470],
 };
 // 天使臉頰紅星在原圖上的位置（tools/make_cheek_nostar.py 輸出，原圖 px）：x,y,w,h＝clean 圖在原圖的裁切框；cx,cy＝星星中心；r＝星星半徑
 const CHEEK_STAR = [
@@ -3286,19 +3281,6 @@ function drawUsedBlockArt(x, y, used) {
   ctx.globalAlpha = 1;
   ctx.font = 'bold 20px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   textOutline(used.label, cx, cy, used.type === 'start' ? '#fde68a' : '#ffffff', '#1f2937', 5);
-  ctx.restore();
-  return true;
-}
-// 觸發期待：ui_05 的藍色閃電光框（只取外框一圈，疊在正在轉的那一輪）
-function drawAnticArt(w, antic) {
-  const img = artImg('anticip');
-  if (!img) return false;
-  const s = ART_GEO.anticCol, x = GRID_X + w.c * CELL_SIZE + colDX(w.c) - 12, y = GRID_Y - 12, ww = CELL_SIZE + 24, hh = GRID_H + 24;
-  ctx.save();
-  ctx.beginPath(); ctx.rect(x, y, ww, hh); ctx.rect(x + 22, y + 22, ww - 44, hh - 44); ctx.clip('evenodd');
-  ctx.globalCompositeOperation = 'lighter';
-  ctx.globalAlpha = Math.min(1, antic) * (0.65 + 0.35 * Math.sin(nowT() / 120));
-  ctx.drawImage(img, s[0], s[1], s[2], s[3], x, y, ww, hh);
   ctx.restore();
   return true;
 }
@@ -4457,21 +4439,10 @@ function drawWheels() {
   if (!list.length) return;
   list.forEach(d => {
     const w = d.w, cx = d.cx, cy = d.cy, R = d.R;
-    // 觸發期待：已有轉盤停在聖火格，其餘藍輪轉動中 [企劃 §美術 E54]
+    // 預報演繹（美術需求說明第 24／25 列）：只做在轉盤上——轉盤周圍光暈＋金色光點、紅愛心圖樣變亮、畫面拉近；
+    // 滾輪上不畫框（使用者 2026-10-29「應該只有輪盤有預報框」：拿掉舊版疊在那一輪的藍色閃電光框 ui_05 與備用放射光）
     const anticLv = (d.cur && wheelPhase === 'spin') ? (w.antic || 0) : 0;
-    const antic = anticLv > 0 ? FX.anticip : 0;
     if (anticLv > 0) drawAnticGlow(cx, cy, R, anticLv, t);
-    if (antic > 0 && !drawAnticArt(w, antic)) {
-      ctx.save();
-      ctx.globalAlpha = Math.min(1, 0.35 * antic);
-      ctx.fillStyle = '#fde047';
-      for (let i = 0; i < 16; i++) {
-        const a = i * Math.PI / 8 + t * 0.05;
-        ctx.beginPath(); ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, R * 1.6, a, a + 0.12); ctx.closePath(); ctx.fill();
-      }
-      ctx.restore();
-    }
     ctx.save();
     ctx.fillStyle = 'rgba(0,0,0,.25)';
     ctx.beginPath(); ctx.ellipse(cx, cy + R * 0.95, R * 0.8, R * 0.12, 0, 0, Math.PI * 2); ctx.fill();
@@ -4492,7 +4463,7 @@ function drawWheels() {
     const fk = d.hi !== null ? wheelFireK(w) : 0;      // 高倍數：格邊框＋外圈燃燒（在 drawWheelDiscArt 裡、結果字之前畫）
     wheelBurnNow = fk > 0 ? { k: fk, kind: w.kind } : null;
     wheelFlipNow = upgradeFlip(w, d.cur);
-    drawWheelDisc(cx, cy, R, w.kind, wheelFlipNow ? wheelFlipNow.segs : w.segs, w.angle, d.hi, t, d.cur && wheelPhase === 'spin', antic);
+    drawWheelDisc(cx, cy, R, w.kind, wheelFlipNow ? wheelFlipNow.segs : w.segs, w.angle, d.hi, t, d.cur && wheelPhase === 'spin', anticLv > 0 ? 1 : 0);   // 預報時轉盤周圍發光（原本的預設強度 1）
     wheelPopNow = null; wheelBurnNow = null; wheelAnticNow = 0; wheelDaggerNow = null; wheelFlipNow = null;
     if (wheelDrawTrace) wheelDrawTrace.push('disc');
     if (heartIn) drawHeartBurn(cx, cy, R, w.kind, heartIn.hid, heartIn.box0, heartIn.p, t, true);   // 聖心放大＋往左上的殘影，蓋在長大中的輪盤上、淡出後露出輪盤
