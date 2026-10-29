@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-108';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-109';   // 驗證用識別值：測到的是不是最新版，看這個
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -570,7 +570,7 @@ const TIMING_META = [
     ['nxShake', '倍數震動', { hint: '累計倍數 >200 時一次性畫面震動的時間（只在倍數出現那一下；大獎期間盤面不震動照舊）' }] ] },
   { group: '中獎／得分', items: [
     ['winPause', '中獎前停頓', { hint: '停輪（或轉盤收合）後到圖示中獎演繹前的停頓' }],
-    ['winDisplay', '圖示中獎演繹', { hint: '中獎圖示亮起／放大、未中獎壓暗（不畫得分線）。預設＝競品 WIN 欄顯示 1.53s' }],
+    ['winDisplay', '圖示中獎演繹（每組）', { hint: '逐組演繹：同一圖示的中獎線一組、分數高的先演，每組這麼久；這組圖示亮起／放大、其他壓暗，旁邊顯示這組加總小得分（不畫得分線）。總長＝組數×此值' }],
     ['scoreHold', '得分數字演繹', { hint: '盤面中央得分數字（10 倍以上在這段跑分；<10 倍直接顯示）' }],
     ['scoreStay', '得分停留', { hint: '得分數字跑完後的停留；結束時下方 WIN 直接切換' }] ] },
   { group: '大獎', items: [
@@ -705,7 +705,7 @@ const RHYTHM_MAP = [
   ['plantGrow',        '倍數植栽長出',     '倍數欄位旁植栽長出的時間（25 倍起翠綠、101 倍起金色、>200 加紅果）', null],
   ['nxShake',          '倍數畫面震動',     '累計倍數 >200 時一次性畫面震動的時間',                   null],
   ['winPause',         '中獎前停頓',       '停輪後，到播放圖示中獎演繹前的停頓時間',                 '停頓時間(中獎)'],
-  ['winDisplay',       '圖示中獎演繹',     '圖示中獎（中獎圖示亮起、未中獎壓暗；不畫得分線）的持續時間', '圖示演繹'],
+  ['winDisplay',       '圖示中獎演繹（每組）', '逐組演繹每一組（同一圖示的中獎線）的持續時間：這組圖示亮起、其他壓暗，旁邊顯示加總小得分；不畫得分線', '圖示演繹'],
   ['scoreHold',        '得分數字演繹',     '播放得分數字演繹的持續時間（10 倍以上含跑分）',           '得分演繹'],
   ['scoreStay',        '得分停留',         '得分數字演繹後的停留時間，結束時公版 WIN 切換',           null],
   ['bigRunBig',        '大獎跑分(到SUPER)', '跑分開始→碰到 SUPER 門檻的時點（BIG 級的跑分速度）',      null],
@@ -838,6 +838,9 @@ function iconScaleOf(id) { const v = ICON[iconTierKey(id)]; return (Number.isFin
 // --- 特效強度 ---
 const DEFAULT_FX = {
   dimAlpha:   0.40,   // 未中獎圖示壓暗至
+  winTagX:    1.00,   // 逐組小得分中心：錨點格寬的倍數（1＝格子右邊線，跟下一輪交界；使用者 2026-10-29「右下方一點點的位置 不要蓋到圖示」）
+  winTagY:    0.97,   // 同上：錨點格高的倍數（1＝格子下邊線，跟下一列交界）
+  winTagSize: 26,     // 小得分字級 px
   bounceAmp:  35,     // 落定回彈深度：圖示 1/3（企劃 §節奏表 V13；105/3≈35）
   landPop:    0.30,   // 聖心落地（出現）時整體放大 30%（使用者 2026-10-19）
   wheelBig:   2.0,    // 轉盤放大後約幾格寬（企劃 §美術 H26：約 2 格）
@@ -892,7 +895,10 @@ const DEFAULT_FX = {
 };
 const FX_META = [
   { group: '中獎演繹', items: [
-    ['dimAlpha', '未中獎壓暗', 0, 1, 0.05, { hint: '0～1，越小越暗（企劃：未中獎圖示壓暗）；不畫得分線（使用者 2026-10-19）' }] ] },
+    ['dimAlpha', '未中獎壓暗', 0, 1, 0.05, { hint: '0～1，越小越暗（企劃：未中獎圖示壓暗）；不畫得分線（使用者 2026-10-19）' }],
+    ['winTagX', '小得分左右位置', 0.5, 1.3, 0.02, { hint: '逐組演繹的小得分中心，以「中間那個中獎圖示」的格寬為單位：1＝格子右邊線（跟下一輪交界）' }],
+    ['winTagY', '小得分上下位置', 0.5, 1.3, 0.02, { hint: '同上，以格高為單位：1＝格子下邊線（跟下一列交界）' }],
+    ['winTagSize', '小得分字級', 14, 48, 1, { hint: 'px' }] ] },
   { group: '滾輪與轉盤', items: [
     ['bounceAmp', '落定回彈幅度', 0, 60, 1,
       { hint: '落定下沉再彈回的深度（px）；企劃：回彈深度＝圖示 1/3（35px）。時長在節奏分頁' }],
@@ -1464,6 +1470,7 @@ let spinOldBoard = null, spinOldDrops = [];
 let spinTimer = 0, stateTimer = 0;
 let landT = [];            // 各輪聖心落地演繹計時（-1＝沒有）
 let winLines = [], winCells = null;
+let winGroups = [], winGroupIdx = -1;      // 逐組得分演繹（使用者 2026-10-29）：同一圖示的中獎線併成一組，winGroupIdx＝正在演的那組
 let wheels = [], wheelIdx = 0, wheelPhase = 'intro', wheelAcc = 0, nxPopT = -1, startCount = 0;
 let nxFadeK = 0, nxShownVal = 0, nxTierCur = 0, nxPlantT = -1, nxShakeT = -1, nxStale = true;   // nxStale：新的一局，下一個倍數要重新長植栽   // LOGO 匾額：0＝顯示 LOGO、1＝顯示倍數（中間＝交叉淡入淡出）
 let lineWin = 0, wheelWin = 0, spinWin = 0;
@@ -1831,7 +1838,7 @@ function startSpin() {
     fgLeft--; fgPlayed++;
   }
   roundScore = 0;
-  winLines = []; winCells = null; scorePanel = null;
+  winLines = []; winCells = null; scorePanel = null; winGroups = []; winGroupIdx = -1;
   leavingWheels = wheelsSettled() ? wheelDrawList().map(d => Object.assign({}, d, { col: d.w.c })) : [];   // 上一局的轉盤：往下掉出（wheelLeave）
   leaveT = 0;
   wheels = []; wheelIdx = 0; wheelAcc = 0; nxPopT = -1; startCount = 0;
@@ -1985,7 +1992,8 @@ function enterPostStop() {
   heartPending = predictSpinWin() >= FX.heartX * Math.max(1, ODDS.bet);
   stats.wheels += wheels.length;
   linesPaid = false; postGap = false; paidWin = 0;
-  lineFirst = lineFirstEnabled && wheels.length > 0 && !isBuyRound() && evaluateLines().length > 0;   // 購買觸發局維持競品節奏（不先結算）
+  // 有連線得分就先逐組演完線獎才展開輪盤；購買觸發局也一樣（使用者 2026-10-29「都演繹完畢了 輪盤才會展開」；之前購買局照競品先轉輪盤）
+  lineFirst = lineFirstEnabled && wheels.length > 0 && evaluateLines().length > 0;
   currentState = STATE.POSTSTOP; stateTimer = 0;
 }
 // 第 5 輪落地就進 POSTSTOP，回彈還在播；競品是「全部靜止（回彈結束）後」才開始等 0.30＋脈動 0.25 → 這裡把回彈時間加上
@@ -2003,12 +2011,42 @@ function postStopFrames() {
   return TF(TIMING.landBounce) + TF(wheelT('sixLand'));
 }
 function startLineFirst() {                       // 停輪→先演連線得分（輪盤還沒展開）
-  winLines = evaluateLines();
-  lineWin = winLines.reduce((s, l) => s + l.score, 0);
+  const lines = evaluateLines();
+  lineWin = lines.reduce((s, l) => s + l.score, 0);
   spinWin = lineWin;
-  winCells = new Set();
-  winLines.forEach(l => l.cells.forEach(([c, r]) => winCells.add(c + ',' + r)));
+  beginWinShow(lines);
+}
+// 逐組得分演繹（使用者 2026-10-29「得分應該是逐線演繹 每一條線都會有一個小得分在旁邊；同一個圖示在同一盤有多條得分 就顯示一組加總後的得分數字」）：
+// 同一圖示的中獎線併成一組、分數高的組先演，每組 winDisplay 秒：只亮這組的中獎圖示（其他壓暗、不畫線），旁邊顯示這組加總的小得分。
+// 小得分位置：這組最長那條線「中間那個中獎圖示」的右下方（3 連＝第 2 輪、4 連＝第 2 輪、5 連＝第 3 輪；使用者「三連就在第二輪中獎圖示右下方一點點的位置 不要蓋到圖示」）
+function buildWinGroups(lines) {
+  const by = {};
+  lines.forEach(l => {
+    const g = by[l.symbol] || (by[l.symbol] = { symbol: l.symbol, lines: [], score: 0, cells: new Set(), anchor: null, len: 0 });
+    g.lines.push(l); g.score += l.score;
+    l.cells.forEach(([c, r]) => g.cells.add(c + ',' + r));
+    if (l.count > g.len) { g.len = l.count; g.anchor = l.cells[Math.floor((l.count - 1) / 2)]; }   // 同長度取線號小的那條
+  });
+  return Object.values(by).sort((a, b) => b.score - a.score || a.symbol - b.symbol);
+}
+function beginWinShow(lines) {
+  winLines = lines; winGroups = buildWinGroups(lines);
+  setWinGroup(0);
   currentState = STATE.WIN_SHOW; stateTimer = 0;
+}
+function setWinGroup(i) { winGroupIdx = i; winCells = winGroups[i] ? winGroups[i].cells : new Set(); }
+function winGroupAt(t) {                          // WIN_SHOW 第 t 幀在演第幾組（中獎停頓 winPause 期間算第 0 組）
+  return Math.max(0, Math.min(winGroups.length - 1, Math.floor((t - FR(TIMING.winPause)) / Math.max(1, TF(TIMING.winDisplay)))));
+}
+function winShowDone() {
+  if (lineFirst && !linesPaid) {                  // 先結算連線：逐組演完直接展開輪盤，不出中央總分（使用者 2026-10-29）；WIN 欄先寫入線獎，輪盤轉完再顯示整局總贏分
+    hasHitThisSpin = true; commitWin(); scoreDone();
+    return;
+  }
+  winCells = new Set();                           // 沒有輪盤：逐組演完 → 全部中獎圖示一起亮＋中央總分
+  winLines.forEach(l => l.cells.forEach(([c, r]) => winCells.add(c + ',' + r)));
+  winGroupIdx = -1;
+  afterLines();
 }
 function scoreDone() {                            // 跑分演完：先結算連線的那一段 → 等間隔再展開輪盤；否則本局結束
   if (lineFirst && !linesPaid) {
@@ -2220,16 +2258,13 @@ let wheelPopNow = null;                            // drawWheels() 畫某個轉�
 function afterWheels() {
   wheelWin = Math.round(ODDS.bet * wheelAcc * ODDS.payMul);
   if (linesPaid) { winLines = []; winCells = null; lineWin = 0; spinWin = wheelWin; afterLines(); return; }   // 連線已先結算
-  winLines = evaluateLines();
-  lineWin = winLines.reduce((s, l) => s + l.score, 0);
+  const lines = evaluateLines();
+  lineWin = lines.reduce((s, l) => s + l.score, 0);
   spinWin = lineWin + wheelWin;                 // 轉盤彩金與連線彩金相加；乘法不乘線獎（decisions Q10）
-  if (winLines.length) {
-    winCells = new Set();
-    winLines.forEach(l => l.cells.forEach(([c, r]) => winCells.add(c + ',' + r)));
-    currentState = STATE.WIN_SHOW; stateTimer = 0;
-  } else afterLines();
+  if (lines.length) beginWinShow(lines);
+  else { winLines = []; afterLines(); }
 }
-function winShowFrames() { return FR(TIMING.winPause) + TF(TIMING.winDisplay); }
+function winShowFrames() { return FR(TIMING.winPause) + TF(TIMING.winDisplay) * Math.max(1, winGroups.length); }   // 每組 winDisplay 秒
 function scoreLevel(v) {
   const r = v / Math.max(1, ODDS.bet);
   return r >= ODDS.pub2Ratio ? 2 : (r >= ODDS.pub1Ratio ? 1 : 0);
@@ -2540,7 +2575,8 @@ function update() {
     case STATE.WHEEL: updateWheel(); break;
     case STATE.WIN_SHOW:
       stateTimer++;
-      if (stateTimer >= winShowFrames()) afterLines();
+      if (stateTimer >= winShowFrames()) { winShowDone(); break; }
+      { const gi = winGroupAt(stateTimer); if (gi !== winGroupIdx) { setWinGroup(gi); winFxT = -1; } }   // 換下一組：中獎演繹（放大／刷光）重播
       break;
     case STATE.SCORE:
       stateTimer++;
@@ -4305,7 +4341,24 @@ function drawBoard() {
       ctx.restore();
     }
   }
-  // 不畫得分線（連線線條與線上金額）：使用者 2026-10-19「不需要得分線」；中獎只留圖示亮起／放大＋未中獎壓暗
+  // 不畫得分線（連線線條）：使用者 2026-10-19「不需要得分線」；中獎只留圖示亮起／放大＋未中獎壓暗。
+  // 逐組演繹時，正在演的那組在旁邊顯示加總小得分（使用者 2026-10-29）
+  drawWinGroupScore();
+  ctx.restore();
+}
+function drawWinGroupScore() {                    // 位置／字級：FX.winTagX／winTagY／winTagSize（調校面板「中獎演繹」組）
+  if (currentState !== STATE.WIN_SHOW || stateTimer < FR(TIMING.winPause)) return;
+  const g = winGroups[winGroupIdx];
+  if (!g || !g.anchor) return;
+  const [c, r] = g.anchor;
+  const gt = stateTimer - FR(TIMING.winPause) - winGroupIdx * TF(TIMING.winDisplay);   // 這組演了幾幀
+  const pop = 0.55 + 0.45 * easeOutBack(Math.min(1, gt / 8));
+  const x = GRID_X + c * CELL_SIZE + colDX(c) + CELL_SIZE * FX.winTagX, y = GRID_Y + r * CELL_SIZE + CELL_SIZE * FX.winTagY;
+  ctx.save();
+  ctx.translate(x, y); ctx.scale(pop, pop);
+  ctx.font = wheelLabelFont(Math.round(FX.winTagSize)); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 6;
+  textOutline(fmtNum(g.score), 0, 0, '#fde047', '#3b1d0a', Math.max(4, FX.winTagSize * 0.22));
   ctx.restore();
 }
 // 盤面中央得分：<10 倍＝等級 1 直接顯示；10 倍起＝等級 2 跑分＋公版特效(1)(2) [企劃 §得分層級演繹 C3:E5]
@@ -6156,16 +6209,14 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
     t += T.winPause;
     marks.push({ t: t, text: '盤面壓暗' });
     skips.push(t);
-    const groups = (kind === 'multi') ? 3 : 1;
+    const groups = (kind === 'multi') ? 3 : 1;      // 逐組演繹（使用者 2026-10-29）：一組演完才換下一組
     const winStart = t;
     for (let g = 0; g < groups; g++) {
-      const g0 = winStart + g * SYMBOL_GAP;
-      segs.push({ t0: g0, dur: T.winDisplay, text: '圖示中獎演繹(' + R1(T.winDisplay) + 's)', fill: 'symbol' });
+      const g0 = winStart + g * T.winDisplay;
+      segs.push({ t0: g0, dur: T.winDisplay, text: (groups > 1 ? '第' + (g + 1) + '組' : '') + '圖示中獎＋小得分(' + R1(T.winDisplay) + 's)', fill: 'symbol' });
+      if (g > 0) marks.push({ t: g0, text: '換第' + (g + 1) + '組中獎圖示' });
     }
-    if (groups > 1) {
-      segs.push({ t0: winStart, dur: SYMBOL_GAP, text: '多組中獎圖示同時演繹', fill: 'gap' });
-    }
-    t = winStart + T.winDisplay;
+    t = winStart + T.winDisplay * groups;
   }
   const isBig = tier && tier[0] >= 25;
   if (!isBig) {
@@ -6203,7 +6254,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
   t += T.autoSpinDelay;
   marks.push({ t: t, text: '下局自動啟動', red: true });
   notes.push('同時啟動、依序停輪（AUTO）／同時停輪（TURBO）、按 STOP 同時停止。');
-  notes.push('中獎不畫得分線（只有圖示亮起／放大＋未中獎壓暗）；大獎期間盤面不震動。');
+  notes.push('中獎逐組演繹：同一圖示的中獎線併成一組、分數高的先演，每組 ' + R1(T.winDisplay) + 's，只亮這組圖示＋旁邊顯示這組加總小得分（不畫得分線）；有輪盤時線獎逐組演完才展開輪盤（購買觸發局也是），中間不出中央總分。大獎期間盤面不震動。');
   notes.push('點擊跳過：滾輪齊停、轉盤直接停在結果、得分直接顯示最終分數。');
   return { segs: segs, marks: marks, skips: skips, notes: notes, total: t };
 }
@@ -6766,6 +6817,8 @@ const SHOT_PRESETS = {
   wheelsDone:    () => spinWith('ng2aa', () => currentState === STATE.SCORE || currentState === STATE.BIGWIN || currentState === STATE.IDLE),
   anticipation:  () => spinWith('sfg', atWheel(1, 'spin', 0.4)),
   lineWin:       () => spinWith('small', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20),
+  lineGroup1:    () => spinWith('big2', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20),   // 逐組演繹（使用者 2026-10-29）：第 1 組金十字架 5 連＋小得分
+  lineGroup2:    () => spinWith('big2', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + TF(TIMING.winDisplay) + 20),   // 第 2 組天使之劍 5 連＋小得分
   iconMax:       () => { Object.keys(ICON).forEach(k => { ICON[k] = 2.0; }); SHOT_PRESETS.promoBoard(); },   // 圖示大小五組都 2.0
   iconMaxWin:    () => { Object.keys(ICON).forEach(k => { ICON[k] = 2.0; }); spinWith('big1', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20); },
   topLineWin:    () => spinWith('big1', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20),   // 最高分（金十字架）5 連中獎演出（大獎版出現前）
