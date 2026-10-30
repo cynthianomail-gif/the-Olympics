@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-123';   // 驗證用識別值：測到的是不是最新版，看這個（holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
+const APP_BUILD = 'olympia-holy-124';   // 驗證用識別值：測到的是不是最新版，看這個（holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -689,7 +689,7 @@ const DEFAULT_TIMING = {
   fgTotalHold:      3.00,   // 結算畫面：競品不會自己關、要點擊；demo 只有 AUTO 中才在這個秒數後自動關（競品自動玩沒量到）
   totalCountDelay:  0.083,  // 結算全亮→TOTAL 開始跑分（競品 4～6 幀）
   totalCount:       1.00,   // TOTAL 跑分（競品 60 幀線性，不論金額）
-  autoSpinDelay:    0.13,   // NG 自動玩、沒中獎：可再按→開下一局（競品可再按後第 9 幀開始掉＝8 幀＋1）
+  autoSpinDelay:    0.15,   // NG 自動玩、沒中獎：可再按→開下一局。使用者 2026-10-30 改 0.15（原＝競品 0.13：可再按後第 9 幀開始掉＝8 幀＋1）
   autoWinDelay:     0.20,   // NG 自動玩、中獎局：可再按→開下一局。使用者 2026-10-30 改 0.2（原 0.13＝同沒中獎；競品一般速度沒有分開量）
   wheelNoRunGap:    0.20,   // 沒跑分的輪盤局（有輪盤倍數、<10 倍不出中央跑分）局間額外停頓：加在中獎局間停頓／FG局間停頓之後。使用者 2026-10-30 定 0.2
   fgSpinDelay:      0.25,   // 意思改了（2b）：FG 這一局結束（沒中獎＝結算下一幀）→下一局開始掉的幀數；競品 R→下一局 16 幀（TURBO 1 幀）。第 1 局在轉場結束下一幀開始
@@ -7366,7 +7366,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 34;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（34：演繹秒數改成企劃書 V14 美術需求說明、新增節奏鍵 idleActTimeR／wheelNoRunGap、中獎局間停頓 0.2、落定回彈 0.18，2026-10-30；33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
+const TUNE_VERSION = 35;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（35：局間停頓 autoSpinDelay 0.13 → 0.15，2026-10-30；34：演繹秒數改成企劃書 V14 美術需求說明、新增節奏鍵 idleActTimeR／wheelNoRunGap、中獎局間停頓 0.2、落定回彈 0.18，2026-10-30；33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
