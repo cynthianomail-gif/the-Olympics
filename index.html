@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-127';   // 驗證用識別值：測到的是不是最新版，看這個（holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
+const APP_BUILD = 'olympia-holy-129';   // 驗證用識別值：測到的是不是最新版，看這個（holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -1309,12 +1309,12 @@ const FX_META = [
     ['bgFx', '大獎聖光強度', 0, 1, 0.05, { hint: '大獎聖光：四階都從畫面上方中央同一點灑落，只用強度分級（BIG 一道聚光燈 → EPIC 最多光束＋大量光點；美術需求 V8 第 95～98 列）；0＝關' }] ] },
   { group: '角色影響輪盤', items: [
     ['upgP', '升級輪盤機率', 0, 1, 0.005, { hint: '每個輪盤出現時各自判定（藍輪、紅輪都會）：右天使揮魔法棒把所有倍數格升一階（5→10→15→20→25→50→100→250→500、×2→×3→×4→×5→×10→×15→×20，紅心格不變）；0.01＝1%' }],
-    ['upgAngel', '升級：天使段秒數', 0.1, 4, 0.05, { hint: '升級段先播右天使【升級轉盤演繹】這麼久，剩下（升級演出秒數−本值）才是轉盤【倍數升級演繹】（V14 H75 1.7 秒、H26 1.5 秒）' }],
-    ['upgTime', '升級演出秒數', 0.6, 4, 0.1, { hint: '升級輪盤：右天使原地從身後掏出星星魔法棒揮棒（金星飛向轉盤＝倍數升級漩渦）→ 格子由正上方順時針依序翻牌 → 收棒、挑眉慵懶比讚，之後輪盤才開轉（V8 第 73 列）' }],
+    ['upgAngel', '升級：天使段秒數', 0.1, 4, 0.05, { hint: '右天使【升級轉盤演繹】整段秒數；揮完魔法棒（本段 66% 處）就接轉盤【倍數升級演繹】，長度＝升級演出秒數−本值；天使收棒後等升級演完才比讚（V15 視覺流程圖、holy-129；V14 H75 1.7 秒、H26 1.5 秒）' }],
+    ['upgTime', '升級演出秒數', 0.6, 4, 0.1, { hint: '升級輪盤：天使段＋轉盤段的秒數和（揮棒與轉盤段不重疊、收棒與轉盤段重疊，實際整段較短）。右天使原地掏出星星魔法棒揮棒 → 揮完就接倍數升級漩渦、格子由正上方順時針依序翻牌（天使收棒）→ 升級演完天使挑眉慵懶比讚 → 輪盤才開轉（V15 視覺流程圖、holy-129）' }],
     ['nudgeP', '轉動輪盤機率', 0, 1, 0.005, { hint: 'NG：藍輪停在紅心格前一格時判定，推一格進紅心格（觸發 FG）；FG：本局輪盤累計原本不到門檻、推一格就到門檻時判定（紅、藍輪都算）；0.01＝1%' }],
     ['nudgeX', 'FG 轉動門檻≥', 2, 1000, 1, { hint: 'FG 轉動輪盤：本局輪盤累計倍數（不含連線）推一格後 ≥ 此值才可能觸發（使用者：51）' }],
-    ['nudgeAngel', '轉動：天使段秒數', 0.1, 4, 0.05, { hint: '額外轉動段先播左天使【額外旋轉演繹】這麼久，剩下（轉動演出秒數−本值）才是轉盤【額外轉動演繹】（V14 H64 1.7 秒、H27 1.3 秒）' }],
-    ['nudgeTime', '轉動演出秒數', 0.6, 4, 0.1, { hint: '轉動輪盤：輪盤停下 → 左天使原地從身後掏出星星魔法棒揮棒（金星飛向轉盤外圈＝額外轉動星環）→ 多轉一格 → 收棒、雙手高舉原地跳一下，之後才出結果（V8 第 62 列）' }],
+    ['nudgeAngel', '轉動：天使段秒數', 0.1, 4, 0.05, { hint: '左天使【額外旋轉演繹】整段秒數；揮完魔法棒（本段 60% 處）就接轉盤【額外轉動演繹】，長度＝轉動演出秒數−本值；天使收棒後等轉動演完才原地跳一下（V15 視覺流程圖、holy-129；V14 H64 1.7 秒、H27 1.3 秒）' }],
+    ['nudgeTime', '轉動演出秒數', 0.6, 4, 0.1, { hint: '轉動輪盤：天使段＋轉盤段的秒數和（揮棒與轉盤段不重疊、收棒與轉盤段重疊，實際整段較短）。輪盤停下 → 左天使原地掏出星星魔法棒揮棒 → 揮完就接額外轉動星環、多轉一格（天使收棒）→ 轉動演完天使雙手高舉原地跳一下 → 才出結果（V15 視覺流程圖、holy-129）' }],
     ['upgStars', '升級漩渦星數', 0, 80, 1, { hint: '倍數升級演繹：大小不一的金黃色星星以漩渦方式旋轉覆蓋轉盤（美術需求 V3 第 27／34 列）；0＝關' }],
     ['upgGlow', '升級轉盤發光', 0, 2, 0.05, { hint: '倍數升級演繹：星星蓋住轉盤時轉盤發光的強度（倍數照舊逐格翻牌換成更高倍數）；0＝關' }],
     ['nudgeStars', '額外轉動星環', 0, 80, 1, { hint: '額外轉動演繹：金色星星包圍轉盤外圍、帶著轉盤順時鐘多轉一格、停下後散開（V3 第 28／35 列）；0＝關' }] ] },
@@ -2835,9 +2835,9 @@ function updateWheel() {
   } else if (wheelPhase === 'intro') {
     if (stateTimer >= TF(TIMING.wheelIntro)) { wheelPhase = w.upgDone === false ? 'upgrade' : 'spin'; stateTimer = 0; }
   } else if (wheelPhase === 'upgrade') {           // 升級輪盤：翻牌演完才開轉
-    if (stateTimer >= TF(FX.upgTime)) { w.upgDone = true; wheelPhase = 'spin'; stateTimer = 0; }
+    if (stateTimer >= helperPhaseF('upg')) { w.upgDone = true; wheelPhase = 'spin'; stateTimer = 0; }
   } else if (wheelPhase === 'nudge') {             // 轉動輪盤：推的那段順時針多轉 30°（回彈一下停穩）；外圍金星星環跟著轉（drawNudgeRing）
-    const F = Math.max(1, TF(FX.nudgeTime)), pk = Math.max(0, Math.min(1, (helperWheelK('nudge') - 0.3) / 0.35));   // 轉一格在轉盤段的 0.3～0.65
+    const F = helperPhaseF('nudge'), pk = Math.max(0, Math.min(1, (helperWheelK('nudge') - 0.3) / 0.35));   // 轉一格在轉盤段的 0.3～0.65
     w.angle = w.toAngle + 30 * (pk > 0 ? easeOutBack(pk) : 0);
     if (stateTimer >= F) { w.nudgeDone = true; finishWheelSpin(w); }
   } else if (wheelPhase === 'spin') {
@@ -4178,16 +4178,31 @@ function drawCharactersArt() {
 //   升級轉盤＝右天使（轉盤展開後、開轉前）原地從身後掏出星星魔法棒揮棒（銜接倍數升級金星漩渦）→ 收棒挑眉慵懶比讚
 //   額外轉動＝左天使（轉盤停止後）原地從身後掏出星星魔法棒揮棒（銜接額外轉動星環）→ 收棒雙手高舉原地跳一下
 //   天使都不飛；「倍數升級！」「再轉一格！」字樣 V8 沒寫 → 拿掉
-// 升級／額外轉動（V14：天使【升級轉盤】【額外旋轉】約 1.7 秒，轉盤【倍數升級】約 1.5／【額外轉動】約 1.3 秒「銜接於天使之後」，2026-10-30）：段內先天使、後轉盤
+// 升級／額外轉動（V14：天使【升級轉盤】【額外旋轉】約 1.7 秒，轉盤【倍數升級】約 1.5／【額外轉動】約 1.3 秒）
+// V15 視覺流程圖（holy-128，2026-10-30）：天使揮完魔法棒（WAND_SEG 揮棒結束）就接轉盤演繹
+// holy-129（使用者 2026-10-30）：天使收棒後先停（回一般漂浮），升級／轉動演完才比讚／原地跳；都演完才開轉／出結果
+//   時間軸：0 掏棒 → 揮棒 → [揮棒結束] 轉盤段開始＋天使收棒 → 轉盤段結束 → 天使後段（比讚／跳，長度＝天使段×(1−收棒結束)）
 function helperAngelF(kind) { const tot = TF(kind === 'upg' ? FX.upgTime : FX.nudgeTime); return Math.max(1, Math.min(tot, TF(kind === 'upg' ? FX.upgAngel : FX.nudgeAngel))); }
-function helperWheelK(kind) { const tot = TF(kind === 'upg' ? FX.upgTime : FX.nudgeTime), A = helperAngelF(kind); return cl01((stateTimer - A) / Math.max(1, tot - A)); }
+function helperWheelStartF(kind) { return Math.round(helperAngelF(kind) * WAND_SEG[kind][1]); }   // 轉盤段起點＝天使揮棒結束
+function helperWheelDurF(kind) { return Math.max(1, TF(kind === 'upg' ? FX.upgTime : FX.nudgeTime) - helperAngelF(kind)); }   // 轉盤段長度＝演出秒數−天使段秒數
+function helperPreEndF(kind) { return Math.round(helperAngelF(kind) * WAND_SEG[kind][2]); }   // 天使前段（掏棒→揮棒→收棒）結束
+function helperPostStartF(kind) { return Math.max(helperWheelStartF(kind) + helperWheelDurF(kind), helperPreEndF(kind)); }   // 天使後段起點＝轉盤段演完
+function helperPhaseF(kind) { return helperPostStartF(kind) + Math.max(1, helperAngelF(kind) - helperPreEndF(kind)); }   // 整段：天使後段演完
+function helperWheelK(kind) { return cl01((stateTimer - helperWheelStartF(kind)) / helperWheelDurF(kind)); }
+function helperAngelK(kind) {                      // 天使段進度 0～1（WAND_SEG 刻度）；收棒後等轉盤段的空檔回 -1（天使回一般漂浮）
+  const A = helperAngelF(kind), pre = helperPreEndF(kind), t = stateTimer;
+  if (t < pre) return t / A;
+  const ps = helperPostStartF(kind);
+  if (t < ps) return -1;
+  const k = WAND_SEG[kind][2] + (t - ps) / A;
+  return k < 1 ? k : -1;
+}
 function wheelHelperNow() {
   if (currentState !== STATE.WHEEL) return null;
   const w = wheels[wheelIdx];
-  if (!w) return null;
-  if (wheelPhase === 'upgrade' && stateTimer < helperAngelF('upg')) return { who: 1, kind: 'upg', w: w, k: stateTimer / helperAngelF('upg') };      // 天使段
-  if (wheelPhase === 'nudge' && stateTimer < helperAngelF('nudge')) return { who: 0, kind: 'nudge', w: w, k: stateTimer / helperAngelF('nudge') };
-  return null;
+  if (!w || (wheelPhase !== 'upgrade' && wheelPhase !== 'nudge')) return null;
+  const kd = wheelPhase === 'upgrade' ? 'upg' : 'nudge', k = helperAngelK(kd);
+  return k >= 0 ? { who: kd === 'upg' ? 1 : 0, kind: kd, w: w, k: k } : null;
 }
 // 天使道具（驗證也用）：目前要畫的道具（螢幕座標）[{ kind: 'wand'|'trumpet', who, x, y（握點）, hh, ww, ang, flip, a, tip（棒頭星星／喇叭口）}]
 function angelProps(mood, t) {
@@ -9174,9 +9189,9 @@ const SHOT_PRESETS = {
   glossWheel:    () => { setIconPick({ trig: 'gloss' }, true); spinWith('ng1add', () => currentState === STATE.WHEEL && wheelPhase === 'spin' && stateTimer >= 40); },   // 光滑愛心的輪盤：頂端三角指針
   glossBurn:     () => { setIconPick({ trig: 'gloss' }, true); spinWith('ng1add', () => currentState === STATE.WHEEL && wheelPhase === 'intro' && stateTimer >= TF(wheelT('wheelIntro')) * 0.45); },   // 光滑愛心燒成輪盤（指針淡入）
   mistIdle:      () => { setIconPick({ trig: 'mist' }, true); forceSpinType = 'ng3mix'; startSpin(); runUntil(() => currentState === STATE.POSTSTOP); },   // 盤面上三顆虛霧愛心
-  wheelUpg:      () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= TF(FX.upgTime) * 0.55),   // 升級輪盤：右天使揮魔法棒、倍數格翻牌中（2026-10-29 改右天使）
+  wheelUpg:      () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && helperWheelK('upg') >= 0.5),   // 升級輪盤：右天使揮魔法棒、倍數格翻牌中（2026-10-29 改右天使）
   wheelUpgDone:  () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'spin' && stateTimer >= 30),   // 升級完開轉
-  wheelNudge:    () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= TF(FX.nudgeTime) * 0.5),   // 轉動輪盤：左天使揮魔法棒（2026-10-29 改左天使）
+  wheelNudge:    () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= helperAngelF('nudge') * 0.35),   // 轉動輪盤：左天使揮魔法棒（2026-10-29 改左天使）
   wheelNudgeEnd: () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'after'),   // 推進聖火格
   glossIdle:     () => { setIconPick({ trig: 'gloss' }, true); forceSpinType = 'ng3mix'; startSpin(); runUntil(() => currentState === STATE.POSTSTOP); },   // 盤面上三顆光滑愛心
   wheelTopLeft:  () => wheelAtCell(0, 0),                              // 邊緣：左上角聖心的輪盤（以匕首為中心，不往內挪）
@@ -9245,10 +9260,10 @@ const SHOT_PRESETS = {
   wheelGhostRed: () => { toFG(1, 'fgG1'); startSpin(); runUntil(atWheel(0, 'intro', 0.3)); },          // 紅輪登場：紅聖心殘影＋金色聖光環繞閃耀
   wheelGoldLight: () => spinWith('v100', atNX(0, 20)),                                                  // 高倍演繹 1：格子周圍金色聖光環繞（原紅橙燃燒）
   wheelGoldLight2: () => spinWith('v500', atNX(0, 12)),                                                 // 高倍演繹 2：停下後格子周圍燃起金色聖光
-  upgSwirl:      () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= TF(FX.upgTime) * 0.5),   // 倍數升級：金星漩渦覆蓋轉盤、轉盤發光、翻牌中
-  upgSwirlIn:    () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= TF(FX.upgTime) * 0.15),  // 倍數升級：星星剛捲進來
-  nudgeRing:     () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= TF(FX.nudgeTime) * 0.45),  // 額外轉動：星環包圍外圍、帶著轉盤順時針轉一格
-  nudgeScatter:  () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= TF(FX.nudgeTime) * 0.86), // 額外轉動：停下後星星散開
+  upgSwirl:      () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && helperWheelK('upg') >= 0.5),   // 倍數升級：金星漩渦覆蓋轉盤、轉盤發光、翻牌中
+  upgSwirlIn:    () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && helperWheelK('upg') >= 0.15),  // 倍數升級：星星剛捲進來
+  nudgeRing:     () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && helperWheelK('nudge') >= 0.45),  // 額外轉動：星環包圍外圍、帶著轉盤順時針轉一格
+  nudgeScatter:  () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && helperWheelK('nudge') >= 0.86), // 額外轉動：停下後星星散開
   sixFlare:      () => spinWith('ng3mix', () => currentState === STATE.POSTSTOP || (currentState === STATE.SPINNING && landT.some(v => v >= 6))),
   promoteShrink: () => { toFGIntro(1); forceDeal = 'dealP'; chooseDeal(); runUntil(() => currentState === STATE.PROMOTE && stateTimer >= Math.round(TF(TIMING.promoteHold) * 0.1)); },
   promoteLift:   () => { toFGIntro(1); forceDeal = 'dealP'; chooseDeal(); runUntil(() => currentState === STATE.PROMOTE && stateTimer >= Math.round(TF(TIMING.promoteHold) * 0.45)); },
@@ -9296,10 +9311,10 @@ const SHOT_PRESETS = {
   dealGrow:      () => { toFGIntro(1); forceDeal = 'deal12'; chooseDeal(); runUntil(() => dealPhase === 'intro' && stateTimer >= dealIntroPhase().pre + 16); },   // 挑戰轉盤照競品 APPEAR 長出中
   totalCount:    () => { toFG(1, 'small'); fgLeft = 1; runUntil(() => currentState === STATE.FG_TOTAL && stateTimer >= fgTotalCountAt() + Math.round(TF(TIMING.totalCount) * 0.6)); },   // 結算全亮、TOTAL 線性跑分到 60%
   // 副本A（天使／轉場／卷軸／背景）：美術需求 V8 第 41～44、55～77、92 列（使用者 2026-10-29）
-  angelUpgWave:    () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= Math.round(TF(FX.upgTime) * 0.42)),     // 升級：右天使原地揮魔法棒，金星飛向轉盤漩渦
-  angelUpgThumb:   () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= Math.round(TF(FX.upgTime) * 0.88)),     // 升級：收棒後挑眉慵懶比讚
-  angelNudgeWave:  () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= Math.round(TF(FX.nudgeTime) * 0.30)), // 額外轉動：左天使原地揮魔法棒，金星飛向轉盤外圈
-  angelNudgeJump:  () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= Math.round(TF(FX.nudgeTime) * 0.86)), // 額外轉動：收棒後雙手高舉跳一下
+  angelUpgWave:    () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= Math.round(helperAngelF('upg') * 0.42)),     // 升級：右天使原地揮魔法棒，金星飛向轉盤漩渦
+  angelUpgThumb:   () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= helperPostStartF('upg') + Math.round((helperPhaseF('upg') - helperPostStartF('upg')) * 0.45)),     // 升級：倍數升級演完後挑眉慵懶比讚（holy-129）
+  angelNudgeWave:  () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= Math.round(helperAngelF('nudge') * 0.30)), // 額外轉動：左天使原地揮魔法棒，金星飛向轉盤外圈
+  angelNudgeJump:  () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= helperPostStartF('nudge') + Math.round((helperPhaseF('nudge') - helperPostStartF('nudge')) * 0.5)), // 額外轉動：多轉一格演完後雙手高舉跳一下（holy-129）
   angelIdleL1:     () => idleShot(0, 0.5),       // 待機動態：左1 張嘴哼歌（音符）
   angelIdleR1:     () => idleShot(1, 0.4),       // 待機動態：右1 打瞌睡（泡泡＋Zz）
   angelIdleWake:   () => idleShot(1, 0.8),       // 待機動態：右1 驚醒（泡泡破掉＋驚醒線）
@@ -9370,7 +9385,7 @@ const SHOT_PRESETS = {
   epicTouch:     () => spinWith('big4', () => currentState === STATE.BIGWIN && bigShownTier() === 4 && stateTimer >= epicTouchFrame() + 5),    // EPIC：指尖相碰迸出閃光
   epicGenesis:   () => spinWith('big4', () => currentState === STATE.BIGWIN && bigShownTier() === 4 && stateTimer >= epicTouchFrame() + 50),   // EPIC：大量金幣與鈔票
   fgGold:        () => { toFG(1, 'fgMix'); startSpin(); runUntil(atWheel(0, 'spin', 0.5)); },
-  fgNudge:       () => { toFG(1, 'nudge'); startSpin(); runUntil(() => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= TF(FX.nudgeTime) * 0.5); },   // FG 轉動輪盤：差一格到 51 倍，右天使推第 2 個紅輪
+  fgNudge:       () => { toFG(1, 'nudge'); startSpin(); runUntil(() => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= helperAngelF('nudge') * 0.35); },   // FG 轉動輪盤：差一格到 51 倍，右天使推第 2 個紅輪
   fgNudgeEnd:    () => { toFG(1, 'nudge'); startSpin(); runUntil(() => currentState === STATE.WHEEL && wheelPhase === 'after' && wheelIdx === wheels.length - 1 && stateTimer >= 2); },   // 推完：LOGO 倍數 ≥ 51
   sfgGold:       () => { toFG(2, 'fgG2'); startSpin(); runUntil(atNX(1, 5)); },
   ufgGold:       () => { toFG(3, 'fgG3'); startSpin(); runUntil(atNX(2, 5)); },
