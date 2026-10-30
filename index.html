@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-124';   // 驗證用識別值：測到的是不是最新版，看這個（holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
+const APP_BUILD = 'olympia-holy-125';   // 驗證用識別值：測到的是不是最新版，看這個（holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -672,6 +672,7 @@ const DEFAULT_TIMING = {
   fgIntroHalo:      0.60,   // V14 試版（見 fgIntroAnim）
   fgIntroOut:       0.50,   // V14 試版：進入介面退場約 0.5 秒（H83）；原 0.30（疊在轉場下面）
   dealIntro:        1.00,   // V14 試版：挑戰演繹／挑戰輪盤登場約 1 秒（H84／H85）；原＝競品 1.15
+  dealHold:         0.50,   // 挑戰轉盤長到全尺寸後停頓這麼久才開轉（使用者 2026-10-30：進入畫面後停頓一下再開始轉）
   dealOut:          0.50,   // V14 試版：局數演繹約 0.5 秒（H87）；原 0.40（疊在轉場下面）
   totalDoorOpen:    0.65,   // V14 試版：結算登場 1.3 秒（H90）＝門升起 0.65＋開門 0.65；原＝競品 0.5＋0.5
   totalOut:         1.00,   // V14 試版：結算退場約 1 秒（H92）；原 0.45（疊在轉場下面）
@@ -816,6 +817,7 @@ const TIMING_META = [
     ['fgIntroHalo', '進入介面②光環', 0.05, 3, 0.01, { hint: '天使光環從上方降下；落定後祝福資訊與選項淡入（fgIntroAnim）才能選（第 79 列 ②）。②＋③＝競品合約淡入 0.5s；預設＝0.30s' }],
     ['fgIntroOut', '進入介面退場', 0.05, 2, 0.05, { hint: '按「10次免費遊戲」或 UFG 點擊任意處後，整體物件淡出（第 81 列）；2b 起淡出疊在羽毛轉場下面，轉場照競品按下後第 2 幀開始' }],
     ['dealIntro', '挑戰演繹', 0.05, 3, 0.001, { hint: '按「挑戰」→挑戰轉盤長到全尺寸、開始轉：前段文字資訊淡出、天使光環轉成正圓發光（第 82～83 列），最後 24 幀轉盤照競品 APPEAR 長出（八芒星先出、外圈前 8 幀不出現）。預設＝競品 1.15s（69 幀；TURBO 0.867s＝52 幀）' }],
+    ['dealHold', '挑戰轉盤停頓', 0, 3, 0.01, { hint: '挑戰轉盤長到全尺寸後，停在這個畫面等這麼久才開始轉（使用者 2026-10-30）；0＝長好下一幀就轉（原本）。預設 0.50s（TURBO 0.30s）' }],
     ['dealOut', '局數演繹淡出', 0.05, 2, 0.05, { hint: '挑戰轉盤停在局數格：整個轉盤淡出（第 85 列）；2b 起淡出疊在羽毛轉場下面（停下後第 15 幀轉場就開始）' }],
     ['totalDoorOpen', '結算開門', 0.05, 3, 0.01, { hint: '天國之門由中間往兩邊慢慢打開、強光透出，分數與資訊從門後的光裡浮出（第 88 列）；門升起結束下一幀開始，結束＝全亮（收場開始後第 61 幀）。預設＝競品結算畫面淡入 0.50s' }],
     ['totalOut', '結算退場光芒', 0.05, 2, 0.05, { hint: '點擊後門後的光芒變強、覆蓋畫面（第 90 列）；2b 起光芒疊在羽毛轉場下面，轉場照競品點擊後第 5 幀開始' }],
@@ -835,7 +837,7 @@ const DEFAULT_TIMING_START = {
   bigTierIn: 4.217, bigEpicIn: 4.217, bigTierOut: 6.483, bigDim: 4.2, bigEndAt: 4.8, bigDone: 4.8, bigLinkMove: 3.817,
   // FG（第二部分 2b）：進入介面以觸發轉盤停下 W＝0（W+30 進 FG、天使 1.2s 後登場）；挑戰轉盤以按「挑戰」＝0（W＝8.167）；轉場以開始＝0；收場以最後一局結算 R＝0
   fgIntroAnim: 2.517, dealSpin: 1.15, dealWinAnim: 8.167, dealResult: 8.167, dealPromoteAt: 8.167, promoteHold: 8.783,
-  fgIntroScene: 1.7, fgIntroHalo: 2.217, fgIntroOut: 0, dealIntro: 0, dealOut: 8.417, totalDoorOpen: 1.267, totalOut: 0, bigTouch: 0,   // 副本B
+  fgIntroScene: 1.7, fgIntroHalo: 2.217, fgIntroOut: 0, dealIntro: 0, dealHold: 1.0, dealOut: 8.417, totalDoorOpen: 1.267, totalOut: 0, bigTouch: 0,   // 副本B
   transCover: 0, transFull: 0.8, transOpen: 1.3, transOpenNG: 1.3,
   fgEndDelay: 0, fgTotalHold: 0.75, totalCountDelay: 1.767, totalCount: 1.85, autoSpinDelay: 0, autoWinDelay: 0, fgSpinDelay: 0, wheelNoRunGap: 0, heartTime: 1.4, totalDrop: 0.75,
   fgWinAngel: 0, idleGapMin: 0, idleGapMax: 0, idleActTime: 0, idleActTimeR: 0,   // 副本A（天使與場景）
@@ -908,6 +910,7 @@ const DEFAULT_TIMING_TURBO = {
   fgIntroHalo:      0.30,
   fgIntroOut:       0.30,
   dealIntro:        0.867,  // 競品 TURBO 按「挑戰」+28 幀出現＋APPEAR 24 幀＝52 幀
+  dealHold:         0.30,   // 挑戰轉盤長到全尺寸後的停頓（TURBO 縮短，不略過）
   dealOut:          0.40,
   totalDoorOpen:    0.50,
   totalOut:         0.45,
@@ -1017,6 +1020,7 @@ const RHYTHM_MAP = [
   ['fgIntroHalo',  'FG進入介面登場②', '天使光環從上方降下的持續時間（之後資訊淡入；變黑結束下一幀開始）', null],
   ['fgIntroOut',   'FG進入介面退場', '按「10次免費遊戲」／UFG 點任意處後整體淡出的時間（第 81 列）；淡出疊在轉場下面，轉場按下後第 2 幀就開始', null],
   ['dealIntro',    '挑戰演繹', '按「挑戰」→挑戰轉盤長到全尺寸開始轉：文字淡出、光環轉成正圓發光，最後 24 幀轉盤照競品 APPEAR 長出（第 82～83 列）', null],
+  ['dealHold',     '挑戰轉盤停頓', '挑戰轉盤長到全尺寸後，停頓多久才開始轉', null],
   ['dealOut',      '挑戰局數演繹', '挑戰轉盤停在局數格：整個轉盤淡出的時間（第 85 列）；淡出疊在轉場下面', null],
   ['totalDoorOpen', 'FG結算開門', '天國之門由中間往兩邊打開、分數與資訊從光裡浮出的時間（第 88 列；＝競品結算畫面淡入 0.5s）', null],
   ['totalOut',     'FG結算退場', '點擊後門後光芒變強的時間（第 90 列）；光芒疊在轉場下面，轉場點擊後第 5 幀就開始', null],
@@ -3273,7 +3277,7 @@ const dealSpinCurve = x => sssQuadOut(sssQuadOut(x));   // 競品 Deal 轉盤：
 function updateDeal() {
   stateTimer++;
   if (dealPhase === 'intro') {                     // 按「挑戰」→轉盤長到全尺寸（競品按下 +45／+28 幀出現＋APPEAR 24 幀）
-    if (stateTimer >= TF(TIMING.dealIntro)) { dealPhase = 'spin'; stateTimer = 0; }
+    if (stateTimer >= TF(TIMING.dealIntro + TIMING.dealHold)) { dealPhase = 'spin'; stateTimer = 0; }   // 長到全尺寸後再停 dealHold 才開轉（停頓期間停在最後一幀）
   } else if (dealPhase === 'spin') {
     const F = TF(TIMING.dealSpin);
     dealAngle = dealTo * dealSpinCurve(Math.min(1, stateTimer / F));
@@ -7366,7 +7370,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 35;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（35：局間停頓 autoSpinDelay 0.13 → 0.15，2026-10-30；34：演繹秒數改成企劃書 V14 美術需求說明、新增節奏鍵 idleActTimeR／wheelNoRunGap、中獎局間停頓 0.2、落定回彈 0.18，2026-10-30；33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
+const TUNE_VERSION = 36;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（36：新增節奏鍵 dealHold 挑戰轉盤停頓，2026-10-30；35：局間停頓 autoSpinDelay 0.13 → 0.15，2026-10-30；34：演繹秒數改成企劃書 V14 美術需求說明、新增節奏鍵 idleActTimeR／wheelNoRunGap、中獎局間停頓 0.2、落定回彈 0.18，2026-10-30；33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
