@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-121';   // 驗證用識別值：測到的是不是最新版，看這個
+const APP_BUILD = 'olympia-holy-123';   // 驗證用識別值：測到的是不是最新版，看這個（holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -306,7 +306,7 @@ const HEART_LAND_FX_SEC = 0.6;                     // demo 自己加的愛心落
 //     金額字退場（0.2s back.in）＝可再按前 2 幀（一般）／3 幀（TURBO）＝下一組開始；可再按＝max（彈出＋winTextStay＋4 幀，最後一欄圖示動作結束＋2／3 幀）
 //     連線退場：單線＝可再按前 1 幀（低分）／2 幀（高分）、同圖示多線＝畫完就退（L＋25／TURBO L＋19）、多組＝下一組開始；翻向 0.1s 後每段 1→0（0.08s），由左往右每段間隔 0.08s
 //   沒中獎的圖示維持壓暗到下一次 SPIN，邊掉邊 6 幀回亮
-const WIN_FX = { rebrightF: 6, lineAt: 6, segF: 4.8, segN: 4, pulseAt: { auto: 9, turbo: 7 }, pulseF: 18, colDelay: { auto: 0.035, turbo: 0 },
+const WIN_FX = { rebrightF: 6, lineAt: 6, segF: 4.8, segN: 4, pulseAt: { auto: 9, turbo: 7 }, pulseF: 16,   /* V14 試版：低分中獎 0.27 秒（H9）＝16 幀；原競品 18 幀 */ colDelay: { auto: 0.035, turbo: 0 },
   textInF: 18, textOutF: 12, eraseDelayF: 6 };
 function winSegAt(i) { return Math.floor(i * WIN_FX.segF + 1e-9); }   // 第 i 段的起點（0／4／9／14 幀）
 const easePower2Out = k => 1 - (1 - k) * (1 - k);
@@ -616,17 +616,17 @@ const DEFAULT_TIMING = {
   cellStagger:      0.05,   // 'cell' 專用
   spinClear:        0.40,   // 舊圖示整輪往下掉出 4 格（競品 startDuration 0.4，power3.in）
   spinDropIn:       0.20,   // 新圖示從 4 格上方掉入（競品 stopDuration 0.2，power2.in，不過衝）
-  landBounce:       0.15,   // 落地回彈：往下沉 0.125 格再回來一次（競品 0.15s，power2.out 去回）
-  sixPopTime:       0.125,  // 聖心落地閃光：落地那幀亮度 ×3、放大 ×1.5，0.125s 內退回（競品「6」落地；取代 10-22 的 0.6s 縮放）
+  landBounce:       0.18,   // 落地回彈：往下沉 0.125 格再回來一次（power2.out 去回）。使用者 2026-10-30 改 0.18（原＝競品 0.15s）
+  sixPopTime:       0.67,   // V14 試版：愛心登場演繹 0.67 秒（美術需求 H15／H17）；原＝競品 0.125
   // 轉盤（使用者 2026-10-29 要求照競品，第二部分 2a；競品一般速度引擎值，result_phase2.md §2、§3）
   wheelWait:        0.50,   // 轉盤前後等待 S：結算→聖心脈動 R+30；連線演完→脈動（演完後第 29 幀）；最後一個轉盤停下→跑分或結束 W+29
   sixPulse:         0.125,  // 聖心脈動單程：亮度 1→3→1、縮放 1→1.5→1，各半程 quadOut（R+30～R+45）
   wheelIntro:       0.40,   // 轉盤登場 APPEAR（24 幀，兩種模式相同）：脈動結束前 1 幀開始（R+44）
-  wheelSpin:        5.00,   // 轉盤轉動（300 幀，R+68～R+368）：角度＝停格−K 圈±0.35 格，曲線三選一
+  wheelSpin:        2.50,   // V14 試版：旋轉約 2～3 秒取 2.5（美術需求 H22／H30）；原＝競品 5.00
   wheelWinAnim:     0.833,  // 停下後 WIN 動畫（50 幀）：其他 11 格淡到 26.7%（競品，2026-10-30）、中獎格＋中央圓章 1→0.77→1.34→1
   nxDelay:          0.45,   // 停下→倍數欄位 NX 翻出（W+27 看得到）
-  nxFlip:           0.40,   // NX 翻出：LOGO back.in 縮掉、NX back.out 長出（24 幀）；下一局換回 LOGO 也是這個時長
-  nxBump:           0.20,   // NX 增加：1→1.3（circOut），再 0.1s 回 1（每次都彈）
+  nxFlip:           0.33,   // V14 試版：倍數欄位觸發演繹 1／2 0.33 秒（H47／H48）；原＝競品 0.40
+  nxBump:           0.22,   // V14 試版：增加時 1→1.3 0.22s＋回 1 0.11s＝0.33 秒；原＝競品 0.20
   nxBack:           0.60,   // 下一局按下→NX 收掉、LOGO 長回（第 36～60 幀）
   wheelNextGap:     1.00,   // 連開轉盤：前一個停下→下一個聖心開始脈動（W+60，競品設定推算）
   wheelGone:        0.367,  // 下一局按下：舊轉盤 DISAPPEAR（22 幀、第 23 幀移除；照轉盤建立時的模式）
@@ -636,14 +636,14 @@ const DEFAULT_TIMING = {
   zoomIn:           1.00,   // 拉近段：停下前鏡頭朝轉盤拉近的時間
   zoomHold:         0.60,   // 拉近段：停下後維持拉近（格子燃火）的時間
   zoomOut:          0.40,   // 拉近段：畫面退回一般大小的時間
-  plantGrow:        0.60,   // 倍數欄位旁植栽長出的時間
+  plantGrow:        1.00,   // V14 試版：倍數欄位觸發演繹 3～5 1 秒（H49～H51）；原 0.60
   nxShake:          0.40,   // 倍數 >200：一次性畫面震動的時間
   winPause:         0.00,   // 結算→中獎演出的停頓（競品 0：結算後下一幀就壓暗）
   // 連線中獎演出（第二部分 2b，取代 winDisplay：競品每組長度＝max（金額字 delay＋0.5s，圖示動作含欄間隔））
   winTextDelay:     0.30,   // 金額字：這組連線開始→建立（競品 delay 0.3s；建立後第 2 幀彈出，數字直接到位）
-  winTextStay:      0.50,   // 金額字：彈出→（再 4 幀）可再按（競品 Instant step 0.5s；低分組 R→I 61 幀）
+  winTextStay:      0.44,   // V14 試版：圖示得分數字彈出到退場完約 0.67 秒（H55）；原＝競品 0.50
   winHiAnim:        1.667,  // 高分前 4 名：局部動作（競品 spine win 1.667s；高分不脈動）
-  winHi5Anim:       1.033,  // 高分第 5 名（照賠率排名）：局部動作（競品 HIGH_5 spine win 1.033s）
+  winHi5Anim:       1.667,  // V14 試版：豎琴（高分第 5 名）也 1.67 秒（H8）；原＝競品 HIGH_5 1.033
   idleLineTime:     2.025,  // 中獎後 idle 輪播：每條線 121.5 幀換下一條（競品 C+121～122）
   idleLoopGap:      1.00,   // 中獎後 idle 輪播：最後一條播完再等 1s 從第一條重來（只有一條線時＝擦完＋1s＋2 幀＝週期 186 幀）
   // 中央跑分（轉盤彩金 ≥10 倍才出）與大獎跑分：競品引擎值，一般／TURBO 相同（使用者 2026-10-29 要求照競品；2026-10-30 大獎門檻維持 25／51／101／200）
@@ -656,64 +656,68 @@ const DEFAULT_TIMING = {
   countTo100:       3.60,   // 跑分：50→100 倍
   countTo250:       7.00,   // 跑分：100→250 倍
   countToMax:       14.00,  // 跑分：250→16666 倍（最終值在這段就按比例）
-  scoreStay:        1.00,   // 到值後停留，之後數字收掉
-  scoreOut:         0.90,   // 中央數字收掉：back.in（先放大到 1.1 再縮到 0）；到值後第 115 幀結束
+  scoreStay:        1.53,   // V14 試版：停留 1.53 秒（H53）；原＝競品 1.00
+  scoreOut:         0.40,   // V14 試版：縮小消失 0.40 秒（H53）；原＝競品 0.90
   bigTierIn:        0.833,  // 大獎字樣登場（換階事件後 1 幀開始）
   bigEpicIn:        0.867,  // EPIC 字樣登場
-  bigTierOut:       0.267,  // 大獎字樣收尾（換階時上一階先收尾 16 幀，再接下一階登場）
+  bigTierOut:       0.50,   // V14 試版：大獎銜接演繹約 0.5 秒（H97）；原＝競品 0.267
   bigDim:           0.50,   // 大獎場景壓暗（BIG 起 30 幀 1→0.3）／到值時恢復（30 幀）
   bigEndAt:         1.683,  // 大獎到值→字樣收尾（第 101 幀）
   bigDone:          1.883,  // 大獎到值→大獎結束（第 113 幀）
-  bigLinkMove:      0.40,   // 有轉盤的大獎【銜接演繹】（V10 美術需求 H54，我們加的）：BIG 跳出前最後這段，中央數字邊跑分邊上移到大獎分數位置、放大成大獎分數字級，BIG 跳出那一幀交棒
+  bigLinkMove:      0.30,   // V14 試版：銜接演繹 0.3 秒（H54）；原 0.40。有轉盤的大獎【銜接演繹】（V10 美術需求 H54，我們加的）：BIG 跳出前最後這段，中央數字邊跑分邊上移到大獎分數位置、放大成大獎分數字級，BIG 跳出那一幀交棒
   // FG 整段（第二部分 2b，使用者 2026-10-29 要求照競品；result_phase2.md §5）：觸發轉盤停下 W→W+30（TURBO W+15）進 FG_INTRO＝先天使 fgWinAngel，再進入介面
-  fgIntroAnim:      0.20,   // 進入介面 ③：光環落定後祝福資訊與選項淡入（②＋③＝競品合約淡入 0.5s）
+  fgIntroAnim:      0.40,   // V14 試版：進入介面登場約 2 秒（H81）＝①1.0＋②0.6＋③0.4（原＝競品 0.5／0.3／0.2）
   // 副本B（使用者 2026-10-29，美術需求 V8 第 79～98 列）；2b 壓進競品時間窗
-  fgIntroScene:     0.50,   // 進入介面 ①：畫面壓暗震動、場景淡出淡入到 FG 場景、雲從下方湧上＝競品變黑 0.5s（30 幀線性）
-  fgIntroHalo:      0.30,   // 進入介面 ②：天使光環從上方降下（變黑結束下一幀起；②＋③＝競品合約淡入 0.5s）
-  fgIntroOut:       0.30,   // 進入介面退場淡出：按「10次免費遊戲」第 2 幀起轉場就開始，淡出疊在轉場下面（2b 起不另外佔時間）
-  dealIntro:        1.15,   // 按「挑戰」→挑戰轉盤長到全尺寸、開始轉（競品 +45 幀出現＋APPEAR 24 幀＝69 幀；取代 dealIntro 0.7＋dealDelay 1.37）
-  dealOut:          0.40,   // 挑戰轉盤局數演繹：整個轉盤淡出，疊在轉場下面（2b 起不另外佔時間）
-  totalDoorOpen:    0.50,   // 結算登場 ②：天國之門打開、分數與資訊浮出＝競品結算畫面淡入 0.5s（變黑結束下一幀起）
-  totalOut:         0.45,   // 結算退場光芒：點擊後門後光芒變強，疊在轉場下面（2b 起不另外佔時間）
+  fgIntroScene:     1.00,   // V14 試版（見 fgIntroAnim）
+  fgIntroHalo:      0.60,   // V14 試版（見 fgIntroAnim）
+  fgIntroOut:       0.50,   // V14 試版：進入介面退場約 0.5 秒（H83）；原 0.30（疊在轉場下面）
+  dealIntro:        1.00,   // V14 試版：挑戰演繹／挑戰輪盤登場約 1 秒（H84／H85）；原＝競品 1.15
+  dealOut:          0.50,   // V14 試版：局數演繹約 0.5 秒（H87）；原 0.40（疊在轉場下面）
+  totalDoorOpen:    0.65,   // V14 試版：結算登場 1.3 秒（H90）＝門升起 0.65＋開門 0.65；原＝競品 0.5＋0.5
+  totalOut:         1.00,   // V14 試版：結算退場約 1 秒（H92）；原 0.45（疊在轉場下面）
   bigTouch:         1.00,   // EPIC《創世紀》：金髮天使飛近到指尖相碰（迸出閃光、噴金幣鈔票）
-  dealSpin:         7.00,   // 挑戰轉盤轉動（競品 420 幀，兩種模式相同；quadOut(quadOut)、4 圈＋停格）
+  dealSpin:         2.50,   // V14 試版：挑戰輪盤旋轉約 2～3 秒取 2.5（H86）；原＝競品 7.00
   dealWinAnim:      0.833,  // 挑戰轉盤停下 WIN 動畫（競品 1 倍速、兩種模式相同：其他格壓暗、結果格＋中央八芒星 1→0.77→1.34→1）
   dealResult:       0.25,   // 意思改了（2b）：停下→進轉場（不升級；競品 W+15～16）。原本＝結果停留 2.63s
   dealPromoteAt:    0.617,  // 停在升級格：停下→升級演繹開始（競品 W+37）
-  promoteHold:      1.417,  // 升級演繹（強光蓋滿→換山）＝競品變黑 0.5s＋停 55 幀；之後下一階光環＋資訊（＝新合約淡入 0.5s）
-  transCover:       0.80,   // 羽毛轉場 ① 蓋上（x² 加速；競品鑰匙孔收 48 幀）
-  transFull:        0.50,   // 羽毛轉場 ② 蓋滿停留（競品黑 30 幀；中間那一幀換場景）
-  transOpen:        0.80,   // 羽毛轉場 ③ 散開：進 FG／挑戰後（quadOut；競品開 48 幀）。轉場開始後第 127 幀 FG 第 1 局開始掉
-  transOpenNG:      1.00,   // 羽毛轉場 ③ 散開：結算回主遊戲（quadOut；競品開 60 幀）；散開那一幀就能按 SPIN
+  promoteHold:      3.50,   // V14 試版：升級演繹約 3.5 秒（H88）；原＝競品 1.417
+  transCover:       0.55,   // V14 試版：羽毛轉場約 1.5 秒（H94）＝蓋上 0.55＋蓋滿 0.40＋散開 0.55（原 0.8／0.5／0.8，回主遊戲散開 1.0）
+  transFull:        0.40,   // V14 試版（見 transCover）
+  transOpen:        0.55,   // V14 試版（見 transCover）
+  transOpenNG:      0.55,   // V14 試版（見 transCover）
   fgEndDelay:       0.75,   // 意思改了（2b）：FG 最後一局結算 R→開始收場（競品沒中獎 R+45；有中獎從演完起算）。原本＝末局→結算 1.7s
   fgTotalHold:      3.00,   // 結算畫面：競品不會自己關、要點擊；demo 只有 AUTO 中才在這個秒數後自動關（競品自動玩沒量到）
   totalCountDelay:  0.083,  // 結算全亮→TOTAL 開始跑分（競品 4～6 幀）
   totalCount:       1.00,   // TOTAL 跑分（競品 60 幀線性，不論金額）
   autoSpinDelay:    0.13,   // NG 自動玩、沒中獎：可再按→開下一局（競品可再按後第 9 幀開始掉＝8 幀＋1）
-  autoWinDelay:     0.13,   // NG 自動玩、中獎局：同上（競品一般速度沒有分開量，同沒中獎）
+  autoWinDelay:     0.20,   // NG 自動玩、中獎局：可再按→開下一局。使用者 2026-10-30 改 0.2（原 0.13＝同沒中獎；競品一般速度沒有分開量）
+  wheelNoRunGap:    0.20,   // 沒跑分的輪盤局（有輪盤倍數、<10 倍不出中央跑分）局間額外停頓：加在中獎局間停頓／FG局間停頓之後。使用者 2026-10-30 定 0.2
   fgSpinDelay:      0.25,   // 意思改了（2b）：FG 這一局結束（沒中獎＝結算下一幀）→下一局開始掉的幀數；競品 R→下一局 16 幀（TURBO 1 幀）。第 1 局在轉場結束下一幀開始
-  heartTime:        2.80,   // 單盤總贏分 ≥500 倍時，轉盤轉動前兩位天使「雙人愛心合體」：離場＋上下壓黑→從兩側飛回→相撞爆愛心→停約 1 秒→退場復位（美術需求 54H／62H）
-  fgWinAngel:       1.20,   // FG 中獎演繹（美術需求 V8 第 65／76 列）：確定進 FG 後、進入介面登場前，左天使先驚訝噴汗珠再掏喇叭吹奏、右天使掏喇叭吹奏（音符往上飄）；演完介面才登場（fgIntroPullFrames 含這段）
+  heartTime:        3.00,   // V14 試版：500 倍演繹約 3 秒（H62／H73）；原 2.80。單盤總贏分 ≥500 倍時，轉盤轉動前兩位天使「雙人愛心合體」：離場＋上下壓黑→從兩側飛回→相撞爆愛心→停約 1 秒→退場復位（美術需求 54H／62H）
+  fgWinAngel:       4.67,   // V14 試版：FG 中獎演繹約 4.67 秒（H67／H78）；原 1.20。FG 中獎演繹（美術需求 V8 第 65／76 列）：確定進 FG 後、進入介面登場前，左天使先驚訝噴汗珠再掏喇叭吹奏、右天使掏喇叭吹奏（音符往上飄）；演完介面才登場（fgIntroPullFrames 含這段）
   idleGapMin:      25.00,   // 天使待機動態（V8 第 56／57／67／68 列）：盤面無得分時約 30 秒隨機播一次 → 間隔在 idleGapMin～idleGapMax 秒之間隨機；順序 左1→右1→左2→右2
   idleGapMax:      35.00,
-  idleActTime:      3.00,   // 每個待機動態的長度（左1 哼歌／右1 打瞌睡→驚醒／左2 伸懶腰／右2 打哈欠）
-  totalDrop:        0.50,   // 結算登場 ①：畫面壓黑＋天國之門從雲上升起＝競品主場景變黑 0.5s（30 幀線性；FG 最後一局 R+45 起）
+  idleActTime:      1.50,   // V14 試版：左天使待機動態 1.5 秒（H58／H59：左1 哼歌／左2 伸懶腰）；原四個都 3.00
+  idleActTimeR:     2.30,   // V14 試版：右天使待機動態 2.3 秒（H69／H70：右1 打瞌睡→驚醒／右2 打哈欠）
+  totalDrop:        0.65,   // V14 試版（見 totalDoorOpen）；原 0.50。結算登場 ①：畫面壓黑＋天國之門從雲上升起＝競品主場景變黑 0.5s（30 幀線性；FG 最後一局 R+45 起）
   // MAX WIN 演繹（美術需求 V3 第 19～21、64～65、75～76 列；使用者 2026-10-29）：文件沒寫秒數，登場 6 段合計 2.7 秒（demo 預設，待節奏組實測）
-  mwDim:            0.30,   // 登場 ①：畫面壓暗，轉盤上的星星與兩位天使身體周圍亮起
-  mwRise:           0.50,   // 登場 ②：星星發光放大飛到畫面中央（轉盤上的星星被壓暗），天使臉頰星發光
-  mwAbsorbL:        0.50,   // 登場 ③：左天使臉頰星剝落飛向中央星星，吸收後中央星放大約 10%、發光一次
-  mwAbsorbR:        0.50,   // 登場 ④：右天使臉頰星同樣飛入，中央星再放大約 10%
-  mwBurst:          0.40,   // 登場 ⑤：中央星縮放一次（放大約 15%），中間爆出 1000X
-  mwPark:           0.50,   // 登場 ⑥⑦：星星帶數字縮小、撞到倍數欄位旁停住＋畫面震動；同時壓黑淡去、天使回原位
-  mwSettle:         1.00,   // 結算（V8 第 20 列）：全部轉盤轉完、算總贏分前，星星發光放大→飛入倍數欄位（震動、欄位＋1000）→噴發粒子消失（V8 刪除退場演繹）
-  mwCheekBack:      0.35,   // 天使恢復演繹（第 65／76 列）：下次 SPIN 時臉頰紅星重新出現、小小閃光一下
+  // V14 試版：MAX WIN 登場約 4 秒（H19／H65／H76），6 段照原比例放大成 0.45＋0.75＋0.75＋0.75＋0.55＋0.75＝4.0（原合計 2.7）
+  mwDim:            0.45,   // 登場 ①：畫面壓暗，轉盤上的星星與兩位天使身體周圍亮起
+  mwRise:           0.75,   // 登場 ②：星星發光放大飛到畫面中央（轉盤上的星星被壓暗），天使臉頰星發光
+  mwAbsorbL:        0.75,   // 登場 ③：左天使臉頰星剝落飛向中央星星，吸收後中央星放大約 10%、發光一次
+  mwAbsorbR:        0.75,   // 登場 ④：右天使臉頰星同樣飛入，中央星再放大約 10%
+  mwBurst:          0.55,   // 登場 ⑤：中央星縮放一次（放大約 15%），中間爆出 1000X
+  mwPark:           0.75,   // 登場 ⑥⑦：星星帶數字縮小、撞到倍數欄位旁停住＋畫面震動；同時壓黑淡去、天使回原位
+  mwSettle:         1.50,   // V14 試版：結算演繹約 1.5 秒（H20）；原 1.00
+  mwCheekBack:      0.33,   // V14 試版：恢復演繹約 0.33 秒（H66／H77）；原 0.35
 };
 const TIMING_META = [
   { group: '天使與場景（副本A）', items: [   // 美術需求 V8 第 55～77、92 列（使用者 2026-10-29）
-    ['fgWinAngel', 'FG中獎天使演繹', 0, 4, 0.05, { hint: '確定進 FG 後、進入介面登場前：左天使先驚訝噴汗珠、再從身後掏出喇叭吹奏；右天使掏喇叭吹奏，喇叭飛出音符往上飄（V8 第 65／76 列）；演完進入介面才登場' }],
+    ['fgWinAngel', 'FG中獎天使演繹', 0, 6, 0.05, { hint: '確定進 FG 後、進入介面登場前：左天使先驚訝噴汗珠、再從身後掏出喇叭吹奏；右天使掏喇叭吹奏，喇叭飛出音符往上飄（V8 第 65／76 列）；演完進入介面才登場' }],
     ['idleGapMin', '待機動態間隔下限', 5, 120, 1, { hint: '盤面無得分（NG 待機、沒開 AUTO）時，天使待機動態約 30 秒隨機播一次：間隔在下限～上限之間隨機；順序 左1 哼歌→右1 打瞌睡驚醒→左2 伸懶腰→右2 打哈欠（V8 第 56／57／67／68 列）' }],
     ['idleGapMax', '待機動態間隔上限', 5, 120, 1, { hint: '同上（上限；小於下限時以下限為準）' }],
-    ['idleActTime', '待機動態長度', 1, 8, 0.1, { hint: '每個待機動態播放的秒數' }] ] },
+    ['idleActTime', '左天使待機動態長度', 1, 8, 0.1, { hint: '左天使待機動態（哼歌／伸懶腰）播放的秒數（V14 H58／H59：1.5 秒）' }],
+    ['idleActTimeR', '右天使待機動態長度', 1, 8, 0.1, { hint: '右天使待機動態（打瞌睡驚醒／打哈欠）播放的秒數（V14 H69／H70：2.3 秒）' }] ] },
   { group: '滾輪／掉落（停輪）', items: [
     ['reelStartDelay', '每輪啟動錯開', { hint: '舊圖示各輪開始掉出的間隔（競品引擎每幀檢查一次：第 2 輪起每輪多 1 幀，0.10s＝第 0／6／13／20／27 幀）；0＝同時。預設＝競品 0.10s（TURBO 0.05s）' }],
     ['reelFirstStop', '第1輪落定', { hint: '按下 SPIN→第 1 輪新圖示落地；新圖示從「本值－新圖示掉入」開始掉，最上列晚 1 幀。預設＝競品 0.683s（41 幀；TURBO 0.60s）' }],
@@ -740,7 +744,7 @@ const TIMING_META = [
     ['wheelGone', '轉盤收起', 0.02, 2, 0.001, { hint: '下一局按下：舊轉盤先放大到 1.087 再縮掉、中央圈後縮、中央圓章亮一下往下淡出（照競品逐幀表）；愛心跟著那一輪掉出。預設＝競品 0.367s（TURBO 0.147s；照轉盤建立時的模式）' }],
     ['buyWheelSpin', '購買局轉盤轉動', 0.05, 3, 0.01, { hint: '購買觸發局：轉盤轉動（競品引擎設定任何模式都是 0.2s；曲線一樣三選一）。脈動、登場、停下動畫跟一般轉盤相同；最後一個停下後跟一般觸發一樣 W+30（TURBO W+15）進 FG' }],
     ['wheelSlow3', '第3盤減速延長', { hint: '一局同時 3 個轉盤時，第 3 個快停前的減速段延長幾秒（讓玩家集中期待轉到乘號）；0＝不延長' }],
-    ['redBurst', '紅輪聖火炸開', { hint: '紅輪彈出時，聖火在轉盤周圍炸開的時間（藍輪只有一般彈出）' }],
+    ['redBurst', '紅輪聖光閃耀', { hint: '紅輪彈出時，金色聖光環繞轉盤閃耀一次的時間（藍輪只有一般彈出）。用詞照企劃書 V10；demo 畫面目前仍是 10-19 的火焰炸開' }],
     ['zoomIn', '鏡頭拉近', { hint: '拉近段倍數（加法 250／500、×15／×20）：停下前鏡頭朝轉盤拉近的時間；拉近倍率在特效分頁' }],
     ['zoomHold', '拉近停留', { hint: '拉近段：停下後維持拉近、格子燃火的時間' }],
     ['zoomOut', '鏡頭退回', { hint: '拉近段：畫面退回一般大小的時間' }],
@@ -804,6 +808,7 @@ const TIMING_META = [
     ['autoSpinDelay', '局間停頓', 0, 5, 0.01, { hint: 'NG 自動玩、沒中獎：可再按 SPIN 之後再等這麼久才開下一局（下一局第 1 幀再晚 1 幀）。預設＝競品：可再按後第 9 幀開始掉＝0.13s（TURBO 第 8 幀＝0.12s）' }],
     ['autoWinDelay', '中獎局間停頓', 0, 5, 0.01, { hint: 'NG 自動玩、這局有中獎：可再按 SPIN 之後再等這麼久才開下一局。預設＝競品 TURBO 中獎後第 10 幀＝0.15s；一般速度競品沒分開量，同沒中獎 0.13s' }],
     ['fgSpinDelay', 'FG局間停頓', 0, 5, 0.001, { hint: '意思改了（2b）：免費遊戲這一局結束（沒中獎＝結算下一幀）→下一局開始掉的時間；0＝結束那一幀就開始掉。第 1 局不用這個（轉場散完下一幀就開始）。預設＝競品：結算→下一局 16 幀＝0.25s（TURBO 1 幀＝0）' }],
+    ['wheelNoRunGap', '沒跑分輪盤局間停頓', 0, 5, 0.01, { hint: '這局有輪盤倍數、但輪盤彩金 <10 倍不出中央跑分（也不是大獎）時，下一局多等這麼久：主遊戲自動玩加在「中獎局間停頓」之後、FG 加在「FG局間停頓」之後；手動按 SPIN 不擋。0＝跟原本一樣（使用者 2026-10-30）' }],
     ['heartTime', '500倍合體', { hint: '單盤總贏分 ≥500 倍時，轉盤轉動前兩位天使「雙人愛心合體」：離場＋上下壓黑→從兩側飛回→相撞爆愛心→停約 1 秒→退場復位（美術需求 54H／62H）' }],
     ['totalDrop', '結算門升起', { hint: '結算登場 ①：畫面壓黑＋天國之門從雲上升起（美術需求 V8 第 88 列）＝競品主場景變黑 30 幀；結束下一幀接開門（totalDoorOpen）。預設＝競品 0.50s' }] ] },
   { group: 'FG 介面與大獎（副本B）', items: [   // 美術需求 V8 第 79～98 列（使用者 2026-10-29）；第二部分 2b 起 FG 的幾段壓進競品時間窗
@@ -832,8 +837,8 @@ const DEFAULT_TIMING_START = {
   fgIntroAnim: 2.517, dealSpin: 1.15, dealWinAnim: 8.167, dealResult: 8.167, dealPromoteAt: 8.167, promoteHold: 8.783,
   fgIntroScene: 1.7, fgIntroHalo: 2.217, fgIntroOut: 0, dealIntro: 0, dealOut: 8.417, totalDoorOpen: 1.267, totalOut: 0, bigTouch: 0,   // 副本B
   transCover: 0, transFull: 0.8, transOpen: 1.3, transOpenNG: 1.3,
-  fgEndDelay: 0, fgTotalHold: 0.75, totalCountDelay: 1.767, totalCount: 1.85, autoSpinDelay: 0, autoWinDelay: 0, fgSpinDelay: 0, heartTime: 1.4, totalDrop: 0.75,
-  fgWinAngel: 0, idleGapMin: 0, idleGapMax: 0, idleActTime: 0,   // 副本A（天使與場景）
+  fgEndDelay: 0, fgTotalHold: 0.75, totalCountDelay: 1.767, totalCount: 1.85, autoSpinDelay: 0, autoWinDelay: 0, fgSpinDelay: 0, wheelNoRunGap: 0, heartTime: 1.4, totalDrop: 0.75,
+  fgWinAngel: 0, idleGapMin: 0, idleGapMax: 0, idleActTime: 0, idleActTimeR: 0,   // 副本A（天使與場景）
   mwDim: 5.13, mwRise: 5.43, mwAbsorbL: 5.93, mwAbsorbR: 6.43, mwBurst: 6.93, mwPark: 7.33, mwSettle: 7.95, mwCheekBack: 0,
 };
 // --- TURBO 節奏（秒）：企劃 §節奏表 V/AD 欄（整體滾輪 0.5、局間 0.3、停輪後中獎停頓 0.3、
@@ -851,7 +856,7 @@ const DEFAULT_TIMING_TURBO = {
   cellStagger:      0.02,
   spinClear:        0.20,   // 競品 TURBO startDuration 0.2
   spinDropIn:       0.10,   // 競品 TURBO stopDuration 0.1
-  landBounce:       0.15,   // 同一般速度（競品 TURBO 落地後多半停 1 幀才回彈，見 DROP_DIP_HOLD）
+  landBounce:       0.18,   // 同一般速度（使用者 2026-10-30 改 0.18；競品 TURBO 落地後多半停 1 幀才回彈，見 DROP_DIP_HOLD）
   sixPopTime:       0.125,  // 競品「6」落地閃光（TURBO 實測）
   // 轉盤：競品 TURBO 引擎值（使用者 2026-10-29「TURBO 也照競品」，第二部分 2a）
   wheelWait:        0.25,   // R+15 脈動；最後一個轉盤 W+14 進跑分或結束
@@ -923,11 +928,13 @@ const DEFAULT_TIMING_TURBO = {
   autoSpinDelay:    0.12,   // 競品 TURBO 自動玩：可再按後第 8 幀開始掉
   autoWinDelay:     0.15,   // 競品 TURBO 自動玩、中獎局：可再按後第 10 幀開始掉
   fgSpinDelay:      0.00,   // 競品 TURBO FG 沒中獎：結算後下一幀就開始掉下一局（1 幀）
+  wheelNoRunGap:    0.00,   // 沒跑分的輪盤局局間額外停頓（TURBO 先維持 0；一般速度 2026-10-30 定 0.2）
   heartTime:        2.80,
   fgWinAngel:       0.60,   // FG 中獎演繹：TURBO 不略過、縮短（主對話合併時定，比照其他 TURBO 節奏）
   idleGapMin:      25.00,
   idleGapMax:      35.00,
-  idleActTime:      3.00,
+  idleActTime:      1.50,   // V14 試版：同一般速度
+  idleActTimeR:     2.30,
   totalDrop:        0.50,   // 結算登場：競品兩種模式相同
   mwDim:            0.20,   // MAX WIN 演繹 TURBO：只濃縮不略過（登場合計 1.9 秒）
   mwRise:           0.35,
@@ -945,7 +952,8 @@ const RHYTHM_MAP = [
   ['fgWinAngel', 'FG中獎天使演繹', '確定進 FG 後、進入介面登場前：左天使驚訝噴汗珠→掏喇叭吹奏、右天使掏喇叭吹奏，音符往上飄（V8 第 65／76 列）', null],
   ['idleGapMin', '天使待機動態間隔(下限)', '盤面無得分時天使待機動態約 30 秒隨機播一次的間隔下限（左1→右1→左2→右2 輪流）', null],
   ['idleGapMax', '天使待機動態間隔(上限)', '同上，間隔上限', null],
-  ['idleActTime', '天使待機動態長度', '每個待機動態（哼歌／打瞌睡驚醒／伸懶腰／打哈欠）的持續時間', null],
+  ['idleActTime', '左天使待機動態長度', '左天使待機動態（哼歌／伸懶腰）的持續時間（V14 H58／H59）', null],
+  ['idleActTimeR', '右天使待機動態長度', '右天使待機動態（打瞌睡驚醒／打哈欠）的持續時間（V14 H69／H70）', null],
   ['reelStartDelay',   '滾輪啟動錯開',    '每個滾輪啟動（舊圖示開始掉出）之間的間格；設 0 為同時啟動（競品引擎每幀檢查一次，第 2 輪起每輪多 1 幀）', null],
   ['reelFirstStop',    '滾輪啟動',         '滾輪滾動到第一輪停輪（新圖示落地）所需的持續時間',       '滾輪轉動時間'],
   ['reelStopInterval', '逐輪停止',         '每個滾輪停輪（新圖示掉入／落地）之間的間格；設 0 為同時停輪', '每輪停止時間'],
@@ -970,7 +978,7 @@ const RHYTHM_MAP = [
   ['wheelGone',        '轉盤收起',         '下一局按下：舊轉盤先放大再縮掉、中央圓章亮一下往下淡出的持續時間（照轉盤建立時的模式）', null],
   ['buyWheelSpin', '購買局轉盤轉動', '購買觸發局：轉盤轉動到停（競品引擎設定任何模式 0.2s）；最後一個停下後跟一般觸發一樣 W+30（TURBO W+15）進 FG', null],
   ['wheelSlow3',       '第3轉盤減速延長',  '一局 3 個轉盤時，第 3 個轉盤快停前減速段延長的時間', null],
-  ['redBurst',         '紅輪聖火炸開',     '紅輪彈出時聖火在轉盤周圍炸開的持續時間（藍輪無）',     null],
+  ['redBurst',         '紅輪聖光閃耀',     '紅輪彈出時金色聖光環繞轉盤閃耀一次的持續時間（藍輪無）',     null],
   ['zoomIn',           '鏡頭拉近',         '高倍數（加法 250／500、×15／×20）停下前鏡頭朝轉盤拉近的時間', null],
   ['zoomHold',         '拉近停留(燃火)',   '停下後維持拉近、該格周圍燃起火焰的時間',                 null],
   ['zoomOut',          '鏡頭退回',         '畫面退回一般大小的時間',                                 null],
@@ -1028,6 +1036,7 @@ const RHYTHM_MAP = [
   ['fgTotalHold',      'FG/BG結算框',      '競品要點擊才關；demo 只有 AUTO 中才在這個秒數後自動關', 'FG/BG結算框'],
   ['autoSpinDelay',    '局間停頓',         '自動玩、沒中獎：可再按 SPIN 後到下一局轉輪啟動的停頓時間', '停頓時間(局間)'],
   ['autoWinDelay',     '中獎局間停頓',     '自動玩、這局有中獎：可再按 SPIN 後到下一局轉輪啟動的停頓時間', null],
+  ['wheelNoRunGap',    '沒跑分輪盤局間停頓', '有輪盤倍數但不出中央跑分（<10 倍）的局：自動玩／FG 下一局多等的時間（加在中獎局間停頓／FG局間停頓之後）', null],
   ['fgSpinDelay',      'FG局間停頓',       '免費遊戲這一局結束（沒中獎＝結算下一幀）→下一局開始掉的時間（意思改了；第 1 局在轉場散完下一幀開始）', null],
   ['heartTime', '500倍合體', '單盤總贏分 ≥500 倍時，轉盤轉動前兩位天使「雙人愛心合體」：離場＋上下壓黑→從兩側飛回→相撞爆愛心→停約 1 秒→退場復位（美術需求 54H／62H）', null],
   ['totalDrop', '結算門升起', 'FG 結算登場：畫面壓黑＋天國之門從雲上升起的時間（美術需求 V8 第 88 列；＝競品主場景變黑 0.5s）', null],
@@ -1157,7 +1166,7 @@ const DEFAULT_FX = {
   rubyFlash:  1.0,    // 十字架中央紅寶石閃光一次的強度（V3 第 4 列；0＝關）
   winPartAmt: 1.0,    // 局部動作幅度（冠羽抖動張開、甩鬃毛、琴弦震動、拍翅；1＝預設、0＝關）。秒數改在節奏分頁 winHiAnim／winHi5Anim（第二部分 2b，取代 winPartTime 0.6s）
   heartBreath: 0.45,  // 藍／紅聖心待機呼吸光強度（V3 第 16／18 列「微微發光，像呼吸一樣明暗變化」；0＝關）
-  heartBreathSec: 1.6, // 呼吸一次（暗→亮→暗）的秒數
+  heartBreathSec: 1.0, // V14 試版：愛心待機 1 秒循環（H16／H18）；原 1.6
   bounceAmp:  13.125, // 落定回彈深度（px）：競品往下沉 0.125 格（105×0.125；使用者 2026-10-29 要求照競品，原本 35＝圖示 1/3）
   landPop:    0.50,   // 聖心落地那一幀放大 ×1.5，sixPopTime 內退回（競品「6」落地；原本 0.30）
   winLine:    0,      // 中獎連線（競品白線，4 段依序畫出）濃度。預設 0：使用者 2026-10-30「不要畫白線」（原本 1.0＝競品白線）；面板可手動調回 1
@@ -1205,10 +1214,10 @@ const DEFAULT_FX = {
   bgFx:       0.6,    // 介面背景演繹（放射光）強度
   reelJitter: 0.5,
   upgP:       0.01,   // 升級輪盤機率：每個輪盤出現時各自判定（藍輪、紅輪都會；使用者 2026-10-28 占設 1%）
-  upgTime:    1.8,    // 升級輪盤演出秒數（2026-10-29 V8 第 73 列：右天使原地掏魔法棒揮棒 → 倍數格依序翻牌升一階 → 收棒挑眉比讚）
+  upgTime:    3.2,    // V14 試版：右天使升級轉盤約 1.7（H75）＋轉盤倍數升級約 1.5（H26／H33）；原 1.8。升級輪盤演出秒數（2026-10-29 V8 第 73 列：右天使原地掏魔法棒揮棒 → 倍數格依序翻牌升一階 → 收棒挑眉比讚）
   nudgeP:     0.01,   // 轉動輪盤機率：NG 藍輪停在聖火格前一格／FG 推一格輪盤累計就到 nudgeX 時判定（使用者 2026-10-28 占設 1%）
   nudgeX:     51,     // FG 轉動輪盤門檻：本局輪盤累計倍數（不含連線）推一格後 ≥ 此值（使用者 2026-10-28「改成51倍以上」）
-  nudgeTime:  1.6,    // 轉動輪盤演出秒數（2026-10-29 V8 第 62 列：左天使原地掏魔法棒揮棒 → 多轉一格 → 收棒舉手跳一下）
+  nudgeTime:  3.0,    // V14 試版：左天使額外旋轉約 1.7（H64）＋轉盤額外轉動約 1.3（H27／H34）；原 1.6。轉動輪盤演出秒數（2026-10-29 V8 第 62 列：左天使原地掏魔法棒揮棒 → 多轉一格 → 收棒舉手跳一下）
   bgLoop:     1.0,    // 背景待機演繹強度（V8 第 41～44 列：雲飄、樹葉晃、山頂微光、瀑布、陽光、聖光、紅寶石、旗幟；0＝關）
   featherN:   36,     // 進退場轉場：飄落羽毛片數（V8 第 92 列；蓋滿那一刻由整張羽毛圖 feather_A 蓋住）
   wandSize:   0.42,   // 天使魔法棒／喇叭道具大小（天使身高的倍數）
@@ -1872,6 +1881,7 @@ let forceSpinType = null, forceDeal = null, showForceMenu = false;
 let showBuyMenu = false, buyConfirm = null;
 let stats = { spins: 0, hits: 0, totalBet: 0, fg: [0, 0, 0, 0], buys: 0, wheels: 0 };
 let hasHitThisSpin = false;
+let noRunWheelRound = false;                       // 這局有輪盤彩金、但 <10 倍不出中央跑分（也不是大獎）→ 局間多等 wheelNoRunGap（使用者 2026-10-30，V14 試版）
 let particles = [], floatTexts = [];
 let showScorePopup = true, showGridFrame = true;
 let statToggleRects = [];
@@ -2269,7 +2279,7 @@ function startSpin() {
   cheekGone.forEach((g, i) => { if (g) { cheekGone[i] = false; cheekBackT[i] = 0; } });
   mwHit = false; mwWheel = null; mwParked = false; mwBonus = 0;
   wheels = []; wheelIdx = 0; wheelAcc = 0; nxBumpT = -1; startCount = 0;
-  lineWin = 0; wheelWin = 0; spinWin = 0; segTotal = 0; bigTier = 0; bigDirect = false; hasHitThisSpin = false;
+  lineWin = 0; wheelWin = 0; spinWin = 0; segTotal = 0; bigTier = 0; bigDirect = false; hasHitThisSpin = false; noRunWheelRound = false;
   particles = []; floatTexts = [];
   targetBoard = makeTargetBoard(forceSpinType);
   colOffsets = []; colBounce = []; colStopped = [];
@@ -2894,12 +2904,26 @@ function wheelFireK(w) {                    // 該格燃燒強度 0～1：停下
 function easeInOut(k) { return k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; }
 // 鏡頭：拉近段轉盤停下前朝它拉近，停下後維持再退回。輪盤以匕首為中心不往內挪（2026-10-24），所以靠邊時改成「拉近＋平移」：
 // 倍率只受畫面大小限制，畫面同時平移（px,py）把放大後的輪盤帶回畫面內；輪盤與盤面、匕首一起動，相對位置不變
+// 停下後 WIN 動畫裡「轉中縮放彈跳」開始的幀（其他格淡完才開始彈，一般第 21 幀、TURBO 照比例）
+function wheelPopStartF(mode, T) {
+  const tab = SSS_WIN[mode === 'turbo' ? 'turbo' : 'auto'], F = TF((T || wheelModeT(mode)).wheelWinAnim);
+  for (let k = 1; k <= F; k++) if (Math.abs(sssAt(tab.sel, k, F, 1) - 1) > 1e-3) return k - 1;
+  return 0;
+}
+// 預報拉近停下後的退回程度（1＝還在最近）：跟轉中縮放彈跳同時開始退（使用者 2026-10-30「先確定轉中、再跟退回同時」；
+// 原本停下下一幀就退、0.4s 退完，彈跳開始前鏡頭已經退回）
+function anticOutK(w) {
+  const s = wheelPopStartF(w.mode || SPEED_MODE), o = Math.max(1, TF(TIMING.zoomOut));
+  return w.winT < s ? 1 : Math.max(0, 1 - (w.winT - s) / o);
+}
 function cameraNow() {
   const none = { z: 1, cx: W / 2, cy: H / 2, px: W / 2, py: H / 2, k: 0, wheel: null };
-  if (currentState !== STATE.WHEEL || wheelPhase === 'intro' || wheelPhase === 'pulse' || wheelPhase === 'upgrade') return none;
-  const w = wheels[wheelIdx];
+  let w = wheels[wheelIdx];
+  // 預報拉近轉到紅心格直接進 FG 時，WHEEL 狀態已結束但鏡頭還在退：照 winT 退完，不跳回
+  const anticTail = currentState !== STATE.WHEEL && w && w.antic > 0 && segTier(w.segs[w.idx]) !== 2 && w.winT >= 0 && anticOutK(w) > 0;
+  if (!anticTail && (currentState !== STATE.WHEEL || wheelPhase === 'intro' || wheelPhase === 'pulse' || wheelPhase === 'upgrade')) return none;
   if (!w) return none;
-  const anticCam = segTier(w.segs[w.idx]) !== 2 && w.antic > 0;   // 預報 1／2：轉動中緩慢拉近，停下後退回
+  const anticCam = segTier(w.segs[w.idx]) !== 2 && w.antic > 0;   // 預報 1／2：轉動中緩慢拉近，停下後跟轉中彈跳同時退回
   if (segTier(w.segs[w.idx]) !== 2 && !anticCam) return none;
   const g0 = wheelGeom(w), bottom = LAYOUT.bottomUI.y, sc = gridToScreen(g0.cx1, g0.cy1), gs = gridScaleNow();
   const g = { cx1: sc[0], cy1: sc[1], R1: g0.R1 * gs };   // 畫面座標（含盤面縮放）
@@ -2909,9 +2933,10 @@ function cameraNow() {
   const cam = (k, e, extra) => Object.assign({ z: 1 + (zMax - 1) * e, cx: g.cx1, cy: g.cy1, px: g.cx1 + (tx - g.cx1) * e, py: g.cy1 + (ty - g.cy1) * e, k: k, wheel: w, zMax: zMax }, extra || {});
   let k = 0;
   if (anticCam) {
-    if (wheelPhase === 'spin') k = Math.min(1, stateTimer / Math.max(1, wheelSpinFrames(w)));
+    if (anticTail) k = anticOutK(w);
+    else if (wheelPhase === 'spin') k = Math.min(1, stateTimer / Math.max(1, wheelSpinFrames(w)));
     else if (wheelPhase === 'nudge') k = 1;        // 轉動輪盤：推的那段維持拉近
-    else if (wheelPhase === 'result') k = Math.max(0, 1 - stateTimer / Math.max(1, TF(TIMING.zoomOut)));
+    else if (w.winT >= 0) k = anticOutK(w);         // 停下後（result／after）：維持到轉中彈跳開始，再跟彈跳同時退回
     const e0 = easeInOut(k);
     return cam(k, e0, { antic: w.antic });
   }
@@ -3063,6 +3088,7 @@ function afterLines() {
     // 出現那一幀＝最後一個轉盤停下後第 S−1 幀（競品 W+29／W+14）；第 14 幀從 2 倍起跑、照競品分段等速（countPlan；使用者 2026-10-30 要求照競品，原本從 0）
     scorePanel = centerShows(wheelWin) ? { final: wheelWin, run: centerRunEnabled(wheelWin), lvl: scoreLevel(total),
       plan: countPlan(TIMING, wheelWin / Math.max(1, ODDS.bet)) } : null;
+    noRunWheelRound = !scorePanel && wheels.length > 0 && wheelWin > 0;   // 有輪盤倍數但不出跑分 → 局間多等 wheelNoRunGap
     if (scorePanel) { currentState = STATE.SCORE; stateTimer = 0; }
     // 有輪盤但輪盤彩金 <10 倍：競品不出中央數字、停下後第 S−1 幀就結束；整局總贏分 10～25 倍時天使要播高倍（我們加的，看總贏分，使用者 2026-10-28），
     // 留一段跟中央數字「到值停留＋收掉」一樣長的得分停留給天使演（沒有天使高倍就照競品直接結束）
@@ -3381,6 +3407,7 @@ function skipCurrent() {
 let shakeX = 0, shakeY = 0, idleActT = 0, idleAct = null, idleActIdx = -1, idleActGap = 0;   // winFxT 拿掉（第二部分 2b：圖示動作改看 winPlan 各組時點）
 // 天使待機動態（美術需求 V8 第 56／57／67／68 列）：左1 哼歌冒音符 → 右1 打瞌睡冒泡泡、最後驚醒 → 左2 雙手舉高伸懶腰 → 右2 瞇眼打哈欠，輪流（一次一位）
 const IDLE_ACT_SEQ = [{ who: 0, kind: 1 }, { who: 1, kind: 1 }, { who: 0, kind: 2 }, { who: 1, kind: 2 }];
+function idleActSec(who) { return who ? TIMING.idleActTimeR : TIMING.idleActTime; }   // V14 試版：左 1.5 秒、右 2.3 秒分開
 function idleGapFrames() {                        // 約 30 秒隨機：idleGapMin～idleGapMax 秒
   const a = Math.max(0.5, TIMING.idleGapMin), b = Math.max(a, TIMING.idleGapMax);
   return Math.max(1, TF(a + Math.random() * (b - a)));
@@ -3416,7 +3443,7 @@ function update() {
       idleAct = Object.assign({ t: 0 }, IDLE_ACT_SEQ[idleActIdx]);
     }
   } else { idleActT = 0; idleAct = null; }
-  if (idleAct) { idleAct.t++; if (idleAct.t > TF(TIMING.idleActTime)) idleAct = null; }
+  if (idleAct) { idleAct.t++; if (idleAct.t > TF(idleActSec(idleAct.who))) idleAct = null; }
   particles = particles.filter(p => {
     p.life++;
     if (!p.ring) { p.x += p.vx; p.y += p.vy; p.vy += p.g; }
@@ -3492,10 +3519,10 @@ function update() {
     case STATE.IDLE:                                // 可再按 SPIN；自動玩／FG 等這麼久開下一局（下一局第 1 幀再晚 1 幀，競品：可再按後第 9／8 幀開始掉）
       if (inFG && fgLeft > 0) {                     // FG：這一局結束 → fgSpinDelay 那一幀下一局開始掉（第 1 局：轉場散完的下一幀）
         stateTimer++;
-        if (stateTimer >= (fgPlayed === 0 ? 1 : FR(TIMING.fgSpinDelay))) startSpinNow();
+        if (stateTimer >= (fgPlayed === 0 ? 1 : FR(TIMING.fgSpinDelay) + (noRunWheelRound ? FR(TIMING.wheelNoRunGap) : 0))) startSpinNow();
       } else if (isAutoSpinning) {
         stateTimer++;
-        if (stateTimer >= TF(hasHitThisSpin ? TIMING.autoWinDelay : TIMING.autoSpinDelay)) startSpin();
+        if (stateTimer >= TF((hasHitThisSpin ? TIMING.autoWinDelay : TIMING.autoSpinDelay) + (noRunWheelRound ? TIMING.wheelNoRunGap : 0))) startSpin();
       }
       break;
   }
@@ -3945,7 +3972,7 @@ function angelMood() {
   }
   if (currentState === STATE.WHEEL && startCount > 0 && triggerAllowed() && wheels.some(w => !w.res)) return { m: 'antic' };   // FG 預報
   if (currentState === STATE.FG_INTRO && stateTimer < fgWinAngelFrames()) return { m: 'fgWin', k: Math.max(0, stateTimer) / Math.max(1, fgWinAngelFrames()) };   // FG 中獎（驚訝→掏喇叭吹奏；進 FG 那一幀 stateTimer＝−1）
-  if (idleAct) return { m: 'idle', who: idleAct.who, kind: idleAct.kind, t: idleAct.t, k: idleAct.t / Math.max(1, TF(TIMING.idleActTime)) };
+  if (idleAct) return { m: 'idle', who: idleAct.who, kind: idleAct.kind, t: idleAct.t, k: idleAct.t / Math.max(1, TF(idleActSec(idleAct.who))) };
   return { m: 'float' };
 }
 // 天使身上的錨點（相對 ART_GEO 的 bbox 比例；2026-10-29 量 character_01／character_02 原圖）：
@@ -3968,7 +3995,7 @@ function wandState(kind, k) {
 const FGWIN_TRUMPET = [0.38, 0.18];                // FG 中獎：喇叭開始掏出的時點（左先驚訝 0～0.36 再掏；右 0.18 起掏）
 const IDLE_WAKE = 0.72;                            // 右1 打瞌睡：段內這個時點驚醒（泡泡破掉）
 function angelPose(i, mood, t) {                  // i：0＝左、1＝右；回傳位移／旋轉／縮放（sx／sy＝以腳底為支點的伸展，伸懶腰／打哈欠／蹲跳用）
-  const p = { dx: 0, dy: Math.sin(t * 2 + i * 1.3) * 7, rot: 0, sc: 1, sx: 1, sy: 1 }, side = i ? -1 : 1;   // side：面向盤面的方向
+  const p = { dx: 0, dy: Math.sin(t * 2 * Math.PI / (i ? 2.30 : 3.33) + i * 1.3) * 7, rot: 0, sc: 1, sx: 1, sy: 1 }, side = i ? -1 : 1;   // side：面向盤面的方向。V14 試版：漂浮一圈左 3.33 秒、右 2.30 秒（H57／H68；原兩位都約 3.14 秒）
   const hp = wheelHelperNow();
   if (hp && hp.who === i) { helperPose(hp, side, p); return p; }
   if (mood.m === 'hi1') {
@@ -5156,38 +5183,38 @@ function drawWheels() {
  *   twinkle：pts 各點的星芒閃爍（紅寶石、陽光亮點；r＝圖寬比例）
  *   flags：box 範圍的旗幟（上緣固定）往下傳的波浪擺動（amp＝最下緣擺幅占圖寬比例）
  * 預設版面下，盤面（x 0.23～0.77）與兩位天使會擋住部分演繹（例：SFG 兩道瀑布大多在天使身後），露出的部分照常動 */
-const BG_LOOP = {
+const BG_LOOP = {   // V14 試版：所有 sec 改 3.0（背景待機 3 秒循環，H41～H44）
   bg: {      // NG 聖地郊區
     clouds: [{ band: [0.22, 0.0, 0.72, 0.10], n: 4, speed: 0.012, size: [0.05, 0.09], a: 0.6, tint: '255,255,255' }],
     sway: [
-      { box: [0.0, 0.58, 0.14, 0.86], pivot: [0.06, 0.86], amp: 1.6, sec: 3.2, ph: 0 },      // 左下前景月桂葉
-      { box: [0.85, 0.58, 1.0, 0.86], pivot: [0.94, 0.86], amp: 1.6, sec: 3.4, ph: 1.1 },    // 右下前景月桂葉
-      { box: [0.06, 0.27, 0.24, 0.50], pivot: [0.15, 0.52], amp: 0.7, sec: 4.2, ph: 0.4 },   // 左橄欖樹冠
-      { box: [0.77, 0.30, 0.96, 0.52], pivot: [0.86, 0.54], amp: 0.7, sec: 4.6, ph: 2.0 },   // 右橄欖樹冠
+      { box: [0.0, 0.58, 0.14, 0.86], pivot: [0.06, 0.86], amp: 1.6, sec: 3.0, ph: 0 },      // 左下前景月桂葉
+      { box: [0.85, 0.58, 1.0, 0.86], pivot: [0.94, 0.86], amp: 1.6, sec: 3.0, ph: 1.1 },    // 右下前景月桂葉
+      { box: [0.06, 0.27, 0.24, 0.50], pivot: [0.15, 0.52], amp: 0.7, sec: 3.0, ph: 0.4 },   // 左橄欖樹冠
+      { box: [0.77, 0.30, 0.96, 0.52], pivot: [0.86, 0.54], amp: 0.7, sec: 3.0, ph: 2.0 },   // 右橄欖樹冠
     ],
   },
   bgFG: {    // FG 奧林匹斯山山腳
     clouds: [{ band: [0.0, 0.03, 0.36, 0.26], n: 4, speed: 0.010, size: [0.08, 0.13], a: 0.5, tint: '236,244,255' },
              { band: [0.70, 0.05, 1.0, 0.28], n: 3, speed: 0.010, size: [0.08, 0.12], a: 0.5, tint: '236,244,255' }],
     sway: [
-      { box: [0.07, 0.73, 0.16, 0.95], pivot: [0.11, 0.95], amp: 1.0, sec: 3.6, ph: 0.2 },   // 左下柏樹
-      { box: [0.92, 0.73, 1.0, 0.95], pivot: [0.96, 0.95], amp: 1.0, sec: 3.8, ph: 1.4 },    // 右下柏樹
+      { box: [0.07, 0.73, 0.16, 0.95], pivot: [0.11, 0.95], amp: 1.0, sec: 3.0, ph: 0.2 },   // 左下柏樹
+      { box: [0.92, 0.73, 1.0, 0.95], pivot: [0.96, 0.95], amp: 1.0, sec: 3.0, ph: 1.4 },    // 右下柏樹
     ],
     glow: [{ at: [0.585, 0.07], r: 0.08, rgb: '255,226,140', a: 0.3, sec: 3.0, rays: 8 }],    // 山頂神殿的黃色神光（柔和、不刺眼）
   },
   bgSFG: {   // SFG 山腰（雲海之上）
-    rays: [{ from: [0.50, -0.06], n: 7, spread: 1.1, len: 0.8, wd: 0.06, rgb: '255,250,215', a: 0.3, sec: 2.6 }],
+    rays: [{ from: [0.50, -0.06], n: 7, spread: 1.1, len: 0.8, wd: 0.06, rgb: '255,250,215', a: 0.3, sec: 3.0 }],
     falls: [{ quad: [[0.050, 0.472], [0.099, 0.476], [0.108, 0.66], [0.058, 0.66]] },        // 左瀑布
             { quad: [[0.886, 0.49], [0.957, 0.488], [0.938, 0.675], [0.885, 0.675]] }],     // 右瀑布
     clouds: [{ band: [0.0, 0.64, 1.0, 1.0], n: 7, speed: 0.006, size: [0.12, 0.2], a: 0.45, tint: '255,248,220' }],
-    twinkle: [{ pts: [[0.40, 0.08], [0.62, 0.05], [0.30, 0.18], [0.70, 0.16]], r: 0.012, sec: 2.2 }],
+    twinkle: [{ pts: [[0.40, 0.08], [0.62, 0.05], [0.30, 0.18], [0.70, 0.16]], r: 0.012, sec: 3.0 }],
   },
   bgUFG: {   // UFG 山頂眾神宮殿
     rays: [{ from: [0.52, -0.08], n: 8, spread: 1.2, len: 0.85, wd: 0.055, rgb: '255,246,200', a: 0.32, sec: 3.0 }],
-    twinkle: [{ pts: [[0.044, 0.012], [0.131, 0.068], [0.135, 0.129], [0.958, 0.012], [0.840, 0.081], [0.79, 0.20], [0.887, 0.48]], r: 0.014, sec: 2.4 }],   // 柱頂／山牆／雕像底座的紅寶石
-    flags: [{ box: [0.008, 0.10, 0.066, 0.45], amp: 0.0035, sec: 2.4 },     // 左大旗
-            { box: [0.110, 0.15, 0.149, 0.39], amp: 0.0025, sec: 2.1 },     // 左小旗
-            { box: [0.934, 0.10, 0.993, 0.45], amp: 0.0035, sec: 2.5 }],    // 右大旗
+    twinkle: [{ pts: [[0.044, 0.012], [0.131, 0.068], [0.135, 0.129], [0.958, 0.012], [0.840, 0.081], [0.79, 0.20], [0.887, 0.48]], r: 0.014, sec: 3.0 }],   // 柱頂／山牆／雕像底座的紅寶石
+    flags: [{ box: [0.008, 0.10, 0.066, 0.45], amp: 0.0035, sec: 3.0 },     // 左大旗
+            { box: [0.110, 0.15, 0.149, 0.39], amp: 0.0025, sec: 3.0 },     // 左小旗
+            { box: [0.934, 0.10, 0.993, 0.45], amp: 0.0035, sec: 3.0 }],    // 右大旗
     clouds: [{ band: [0.10, 0.48, 0.90, 0.96], n: 6, speed: 0.006, size: [0.12, 0.2], a: 0.4, tint: '255,251,232' }],
   },
 };
@@ -6613,7 +6640,10 @@ const BIG_SCENES = [null,
       [110, 360, 230, 130, 0], [1170, 350, 230, 130, 0], [130, 190, 210, 110, 0], [1150, 180, 210, 110, 0]],
     piles: [[230, 566], [1080, 560], [620, 650]], coins: 40, bills: 14 },
 ];
-const BIG_ANGEL_MOVE = 0.7;                        // 天使換到下一幅名畫位置的秒數（BIG：從兩側飛到中央的雲上）
+// V14 試版：天使換到名畫位置的秒數照美術需求角色秒數 BIG 2.00／SUPER 1.67／MEGA 3.33／EPIC 3.33（H98～H101；EPIC＝飛 2.33＋指尖相碰 bigTouch 1.0）；原四階都 0.7
+const BIG_ANGEL_MOVE_TIER = [0, 2.00, 1.67, 3.33, 2.33];
+function bigAngelMove(tier) { return BIG_ANGEL_MOVE_TIER[tier] || 0.7; }
+const BIG_ANGEL_MOVE = BIG_ANGEL_MOVE_TIER[1];      // 舊名（tools/verify_inject.js 還在用）＝BIG 那一階
 let bigDrawTrace = null;                           // 驗證用：drawBigWin 這一幀畫了哪些名畫物件
 function bigTableauOn() { return currentState === STATE.BIGWIN && bigShownTier() >= 1; }   // 名畫期間兩側原本的天使不畫（天使在名畫裡）
 function bigScene(tier) {
@@ -6634,10 +6664,10 @@ function bigAngelTarget(tier, who) {
 }
 function bigAngelNow(tier, who) {                  // 從上一幅（BIG＝兩側原位）飛到這一幅的位置，路徑往上拱
   const to = bigAngelTarget(tier, who), from = tier > 1 ? bigAngelTarget(tier - 1, who) : bigAngelSide(who);
-  const k = cl01((stateTimer - bigTierStartFrame(tier)) / TF(BIG_ANGEL_MOVE)), e = easeInOut(k);
+  const k = cl01((stateTimer - bigTierStartFrame(tier)) / TF(bigAngelMove(tier))), e = easeInOut(k);
   return { x: lerp(from.x, to.x, e), y: lerp(from.y, to.y, e) - Math.sin(Math.PI * e) * 70, h: lerp(from.h, to.h, e), rot: lerp(from.rot, to.rot, e), k: k, peek: to.peek };
 }
-function epicTouchFrame() { return bigTierStartFrame(4) + TF(BIG_ANGEL_MOVE) + TF(TIMING.bigTouch); }   // 創世紀指尖相碰那一幀
+function epicTouchFrame() { return bigTierStartFrame(4) + TF(bigAngelMove(4)) + TF(TIMING.bigTouch); }   // 創世紀指尖相碰那一幀
 function drawBigHolyLight(tier, a) {               // 四階聖光：同一個光源，只用強度分級
   const P = BIG_HOLY[tier];
   if (!P || a <= 0 || FX.bgFx <= 0) return;
@@ -6940,7 +6970,7 @@ function drawBigTableau(tier, k, fa) {             // 名畫：雲（後）→ �
     if (bigDrawTrace) bigDrawTrace.push('angel:' + who + ':' + Math.round(r.x) + ',' + Math.round(r.y));
     if (tier === 4 && who === 1 && r.k >= 1) {     // 創世紀：金髮天使就定位後伸手指向黑髮天使（手臂起點在身體後面）
       const A = sc.angels[1], s = r.h / A.h, bx = A.x + sc.reach.dx, by = A.y + sc.reach.dy;
-      const ext = 0.35 + 0.65 * easeOut3(cl01((stateTimer - bigTierStartFrame(4) - TF(BIG_ANGEL_MOVE)) / TF(0.3)));
+      const ext = 0.35 + 0.65 * easeOut3(cl01((stateTimer - bigTierStartFrame(4) - TF(bigAngelMove(4))) / TF(0.3)));
       drawPointingArm(r.x + sc.reach.dx * s, r.y + sc.reach.dy * s, r.x + sc.reach.dx * s + (sc.touch.x + 30 - bx) * ext, r.y + sc.reach.dy * s + (sc.touch.y - by) * ext, s);
     }
     drawAngelImg(img, who ? ART_GEO.cupidR : ART_GEO.cupidL, r.x, r.y, r.h, r.rot, false, fa < 1 ? fa : undefined);   // 天使姿勢待美術（只用現有兩張天使圖排位置）
@@ -7336,7 +7366,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 33;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
+const TUNE_VERSION = 34;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（34：演繹秒數改成企劃書 V14 美術需求說明、新增節奏鍵 idleActTimeR／wheelNoRunGap、中獎局間停頓 0.2、落定回彈 0.18，2026-10-30；33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
@@ -8465,7 +8495,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       marks.push({ t: F(P), text: tag + '轉盤開始演出（愛心脈動' + (i ? '；前一個保持顯示' : '') + '）' });
       segs.push({ t0: F(P), dur: F(sixPulseEndK(T)), text: '愛心脈動：亮度×3、縮放×1.5(' + R1(F(sixPulseEndK(T))) + 's)', fill: 'symbol' });
       segs.push({ t0: F(A), dur: F(TF(T.wheelIntro)), text: tag + (zoomSc ? '紅輪' : '轉盤') + '登場(' + R1(T.wheelIntro) + 's)', fill: 'line' });
-      if (zoomSc) segs.push({ t0: F(A), dur: T.redBurst, text: '紅輪聖火炸開(' + R1(T.redBurst) + 's)', fill: 'big' });
+      if (zoomSc) segs.push({ t0: F(A), dur: T.redBurst, text: '紅輪聖光閃耀(' + R1(T.redBurst) + 's)', fill: 'big' });
       segs.push({ t0: F(S0), dur: F(spinF), text: tag + '轉盤轉動(' + R1(F(spinF)) + 's)', fill: 'reel' });
       if (slow) notes.push('一局 3 個轉盤：第 3 個減速段延長 ' + R1(T.wheelSlow3) + 's（使用者加的演出，競品沒有）。');
       if (zoomSc) segs.push({ t0: F(Wf) - T.zoomIn, dur: T.zoomIn, text: '鏡頭拉近(' + R1(T.zoomIn) + 's)', fill: 'gap' });
@@ -8475,7 +8505,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       segs.push({ t0: F(Wf), dur: F(TF(T.wheelWinAnim)), text: (mulHere ? '停下動畫＋乘號光效(' : '停下動畫(') + R1(T.wheelWinAnim) + 's)', fill: mulHere ? 'big' : 'symbol' });
       if (kind === 'antic' && i === 1) {
         segs.push({ t0: F(S0), dur: F(spinF), text: '預報1：光暈＋金色光點＋紅心格變亮＋緩慢拉近', fill: 'gap' });
-        segs.push({ t0: F(Wf), dur: T.zoomOut, text: '畫面退回(' + R1(T.zoomOut) + 's)', fill: 'pause' });
+        segs.push({ t0: F(Wf + wheelPopStartF(SPEED_MODE, T)), dur: T.zoomOut, text: '畫面退回（跟轉中彈跳同時）(' + R1(T.zoomOut) + 's)', fill: 'pause' });
         notes.push('預報演繹（企劃書美術需求說明 G22／G23）：已有 1 個轉盤停在紅心格 → 下一個轉盤播預報 1；已有 2 個 → 預報 2（停在紅心格時盤面震動一次）；第 1 個轉盤不播。');
       }
       if (!(kind === 'antic' && i === 0)) {          // antic 的第 1 個停紅心格：倍數不變、不出 NX
@@ -8621,7 +8651,7 @@ function sheetGantt() {
     scenarios.push({ T: m[1], kind: 'wheel', tier: RHYTHM_TIERS[3],   // V10（使用者 2026-10-29）：有轉盤的大獎＝中央跑分→銜接演繹→BIG 版（2026-10-30 起點照競品：第 14 幀從 2 倍起跑）
       title: m[0] + ' 一般：1 個藍輪 25～51 倍（無連線；有轉盤的大獎：中央倍數得分從 2 倍跑→銜接上移→BIG 版）' });
     scenarios.push({ T: m[1], kind: 'wheel2', tier: RHYTHM_TIERS[0],
-      title: m[0] + ' 一般：2 個藍輪（第 1 個停轉維持放大→開第 2 個→一起收合）' });
+      title: m[0] + ' 一般：2 個藍輪（第 1 個停轉維持放大→開第 2 個→下一局按下時一起收起）' });
     scenarios.push({ T: m[1], kind: 'wheel3', tier: RHYTHM_TIERS[0],
       title: m[0] + ' 一般：3 個藍輪（第 3 個減速延長、停乘號強回饋）' });
     scenarios.push({ T: m[1], kind: 'antic', tier: RHYTHM_TIERS[0],
@@ -8629,9 +8659,9 @@ function sheetGantt() {
     scenarios.push({ T: m[1], kind: 'heart', tier: RHYTHM_TIERS[6],
       title: m[0] + ' 一般：≥500 倍（天使雙人愛心合體→大獎）' });
     scenarios.push({ T: m[1], kind: 'wheelBuy', tier: null,
-      title: m[0] + ' 購買 SFG 觸發局：2 個藍輪轉一下就停聖火（不出 NX）→收黑進 FG' });
+      title: m[0] + ' 購買 SFG 觸發局：2 個藍輪轉一下就停紅心格（不出 NX）→收黑進 FG' });
     scenarios.push({ T: m[1], kind: 'wheelZoom', tier: RHYTHM_TIERS[0],
-      title: m[0] + ' FG：1 個紅輪停 250 倍（聖火炸開→鏡頭拉近→燃火→退回）' });
+      title: m[0] + ' FG：1 個紅輪停 250 倍（聖光閃耀→鏡頭拉近→燃火→退回）' });
   });
 
   scenarios.forEach(sc => {
@@ -9063,7 +9093,7 @@ function spinPlanted(lines, segs, pred) {         // 截圖用：種好連線（
 }
 function idleShot(n, frac) {                      // 截圖用：NG 待機下一個就播 IDLE_ACT_SEQ[n]，停在該動態的 frac 處
   idleActIdx = n - 1; idleActGap = 1; idleActT = 0;
-  return runUntil(() => !!idleAct && idleAct.t >= Math.round(TF(TIMING.idleActTime) * frac));
+  return runUntil(() => !!idleAct && idleAct.t >= Math.round(TF(idleActSec(idleAct.who)) * frac));
 }
 function wheelAtCell(c, r, pred) {               // 截圖用：把第 1 個轉盤（連同聖心格）搬到指定格，看邊緣列的輪盤是否以匕首為中心
   spinWith('ng1add', pred || (() => currentState === STATE.WHEEL && wheelPhase === 'spin' && stateTimer >= 40));
@@ -9295,7 +9325,7 @@ const SHOT_PRESETS = {
   totalOpen:     () => { toFG(1, 'small'); fgLeft = 1; runUntil(() => currentState === STATE.FG_TOTAL && fgTotalStage().open >= 0.62); },  // 結算：門由中間打開、光透出、分數浮出
   totalIdle:     () => { toFG(1, 'small'); fgLeft = 1; runUntil(() => currentState === STATE.FG_TOTAL && fgTotalStage().ready && stateTimer >= TF(TIMING.totalDrop) + TF(TIMING.totalDoorOpen) + 40); },   // 結算待機
   totalGlow:     () => { toFG(1, 'small'); fgLeft = 1; runUntil(() => currentState === STATE.FG_TOTAL && fgTotalStage().ready); closeFGTotal(); runUntil(() => currentState === STATE.FG_TRANS && transFrom === 'total' && (stateTimer + SSS_TOTAL_CLICK_F) / TF(TIMING.totalOut) >= 0.55); },   // 結算退場：門後光芒變強（疊在轉場下面）
-  bigFlyIn:      () => spinWith('big1', () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(1) + Math.round(TF(BIG_ANGEL_MOVE) * 0.5)),   // BIG：兩側天使飛到中央
+  bigFlyIn:      () => spinWith('big1', () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(1) + Math.round(TF(bigAngelMove(1)) * 0.5)),   // BIG：兩側天使飛到中央
   bigSistine:    () => spinWith('big1', () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(1) + 90),   // BIG《西斯汀聖母》下緣兩個小天使
   superPandora:  () => spinWith('big2', () => currentState === STATE.BIGWIN && bigShownTier() === 2 && stateTimer >= bigTierStartFrame(2) + 90),   // SUPER《潘朵拉的盒子》
   superPandoraV8: () => { FX.bigPandora = 1; spinWith('big2', () => currentState === STATE.BIGWIN && bigShownTier() === 2 && stateTimer >= bigTierStartFrame(2) + 90); },   // SUPER：V8 寫法（黑髮天使掀盒）
