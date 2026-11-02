@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-129';   // 驗證用識別值：測到的是不是最新版，看這個（holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
+const APP_BUILD = 'olympia-holy-130';   // 驗證用識別值：測到的是不是最新版，看這個（holy-130：天使 FG 中獎演繹後補羽毛轉場再進進入介面；TURBO 數字收掉／NX 翻出／第 3 輪盤減速跟一般相同；節奏表匯出修 500 倍合體先播、FG 250 倍有大獎；holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -873,13 +873,13 @@ const DEFAULT_TIMING_TURBO = {
   wheelSpin:        1.00,   // 60 幀（R+49～R+109）
   wheelWinAnim:     0.333,  // WIN 動畫 ×2.5＝20 幀（照轉盤建立時的模式）
   nxDelay:          0.15,   // W+9 翻出 NX
-  nxFlip:           0.40,
+  nxFlip:           0.33,   // holy-130（使用者 2026-10-30）：跟一般速度相同（原＝競品 0.40）；NX 收掉也因此變第 36～56 幀
   nxBump:           0.20,
   nxBack:           0.60,
   wheelNextGap:     0.47,   // W+28（實測）
   wheelGone:        0.147,  // DISAPPEAR ×2.5：8 幀、第 9 幀移除
   buyWheelSpin:     0.20,
-  wheelSlow3:       1.20,
+  wheelSlow3:       0.50,   // holy-130（使用者 2026-11-02）：跟一般速度相同（原 1.20，比一般還慢）
   redBurst:         0.50,
   zoomIn:           0.70,
   zoomHold:         0.40,
@@ -903,7 +903,7 @@ const DEFAULT_TIMING_TURBO = {
   countTo250:       7.00,
   countToMax:       14.00,
   scoreStay:        1.00,
-  scoreOut:         0.90,
+  scoreOut:         0.40,   // holy-130（使用者 2026-10-30）：跟一般速度相同（原＝競品 0.90）
   scoreRun:         2.53,   // 中央跑分時長（同一般速度）
   bigTierIn:        0.833,
   bigEpicIn:        0.867,
@@ -1622,6 +1622,7 @@ const ART = {
 const FRAME_PAD = 24;
 function isFGScene() {
   if (inFG) return true;
+  if (currentState === STATE.FG_TRANS && transFrom === 'win') return false;   // holy-130：FG 中獎後的轉場不換場景（場景由進入介面 ① 淡入）
   if (currentState === STATE.FG_TRANS) { const F = transFrames(transExit); return transExit ? stateTimer < F.swap : stateTimer >= F.swap; }   // 蓋滿那段的中間換場景
   return false;
 }
@@ -3242,6 +3243,7 @@ function startSpinNow() {
  *   結束：最後一局結算 R+45（TURBO R+31）收場：①壓黑＋門升起＝變黑 0.5s → 下一幀起 ②開門＋資訊＝結算畫面淡入 0.5s → 全亮（第 61 幀）
  *         → 5 幀後 TOTAL 線性 1.0s → 等點擊（AUTO 中 fgTotalHold 秒自動關）→ 點擊後第 5 幀羽毛轉場（散 1.0s），開始散開那一幀就回主遊戲、可按 SPIN */
 let fgIntroOutT = -1, totalOutT = -1;              // 進入介面退場（按下後到轉場開始的那 2 幀）／結算點擊後到轉場開始的那 5 幀（-1＝沒在退場）
+let fgWinTransDone = false;                        // 天使 FG 中獎演繹後的羽毛轉場（transFrom 'win'）播過了沒
 function enterFGIntro(level) {
   pendingLevel = level; pendingSpins = ODDS.fgSpins;
   dealUsed = { 1: false, 2: false };
@@ -3250,6 +3252,7 @@ function enterFGIntro(level) {
   if (forceSpinType === 'fg' || forceSpinType === 'sfg' || forceSpinType === 'ufg') forceSpinType = null;
   if (isAutoSpinning) { autoResume = true; isAutoSpinning = false; }   // AUTO 暫停，等玩家選
   fgIntroNoPull = false; fgIntroOutT = -1;         // 先播天使【FG中獎演繹】（fgWinAngel，副本A），演完那一刻才播進入介面 ①壓暗震動（震動在 update 的 FG_INTRO，副本B）
+  fgWinTransDone = false;                          // holy-130：天使 FG 中獎演繹 → 羽毛轉場 → 進入介面（企劃書 V16 美術需求說明 G81／G94）
   idleLoop = null;
   currentState = STATE.FG_INTRO; stateTimer = -1;  // 競品：這局結束（W+29／TURBO W+14）的下一幀才進 FeatureEnter → 下一幀 stateTimer＝0（W+30／W+15）
 }
@@ -3513,6 +3516,8 @@ function update() {
       break;
     case STATE.FG_INTRO:
       stateTimer++;
+      // holy-130：天使 FG 中獎演繹演完那一刻先播羽毛轉場（transFrom 'win'，散完回到這裡接 ①）；直接跳到演完之後的（測試／跳過）不補播
+      if (!fgIntroNoPull && !fgWinTransDone && fgWinAngelFrames() > 0 && stateTimer === fgWinAngelFrames()) { fgWinTransDone = true; startTrans('win', false); break; }
       if (!fgIntroNoPull && stateTimer === fgIntroPullFrames()) startShake('fgIn');   // 登場 ①（第 79 列）：天使 FG 中獎演繹結束那一刻畫面壓暗震動
       if (fgIntroOutT >= 0 && ++fgIntroOutT >= SSS_FS_PRESS_F) { fgIntroOutT = -1; startTrans('intro', false); }   // 按下後第 2 幀開始轉場（競品）；介面淡出疊在轉場下面
       break;
@@ -3530,7 +3535,10 @@ function update() {
         transExit = false; transFrom = null; transTail = skip ? null : { t: 0, F: F.O };
         currentState = STATE.IDLE; stateTimer = 0;
         if (autoResume) { autoResume = false; isAutoSpinning = true; }
-      } else if (!transExit && stateTimer >= F.total) { transFrom = null; enterFG(); }   // 散完：進 FG，下一幀第 1 局開始掉（轉場開始後第 127 幀）
+      } else if (!transExit && stateTimer >= F.total) {
+        if (transFrom === 'win') { transFrom = null; currentState = STATE.FG_INTRO; stateTimer = fgIntroPullFrames(); startShake('fgIn'); }   // holy-130：散完那一幀回進入介面＝①壓暗震動
+        else { transFrom = null; enterFG(); }       // 散完：進 FG，下一幀第 1 局開始掉（轉場開始後第 127 幀）
+      }
       break;
     }
     case STATE.FG_END:                              // 最後一局結算 R → 收場：競品 R+45（TURBO R+31）；沒中獎時這裡從 R+1 起算
@@ -6310,7 +6318,7 @@ function drawFGIntroScreen(st, ready) {            // st＝fgIntroStage 格式�
 // 過半（跟 isFGScene 同一個切點）才露出遊戲畫面。畫在 drawFGTrans 之前，不擋轉場本身。
 // 第二部分 2b：介面淡出（fgIntroOut）／挑戰轉盤淡出（dealOut）／結算光芒（totalOut）都疊在轉場下面 → 換場景之前底下畫那個畫面的退場
 function drawFGTransUnderlay() {
-  if (stateTimer >= transFrames(transExit).swap) return;
+  if (transFrom === 'win' || stateTimer >= transFrames(transExit).swap) return;   // 'win'：底下就是主遊戲畫面（還沒有介面）
   if (transFrom === 'total') drawFGTotalScreen({ rise: 1, open: 1, info: 1, ready: true, count: 1, out: cl01((stateTimer + SSS_TOTAL_CLICK_F) / TF(TIMING.totalOut)) });
   else if (transFrom === 'deal') drawDealScreen();
   else if (transFrom === 'intro') drawFGIntroScreen({ t: 1e6, scene: 1, halo: 1, info: 1, out: fgIntroOutK() }, true);
@@ -7417,7 +7425,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 38;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（38：V14 9 項（第 3 盤減速 0.5、新增 scoreRun／angelHi1／angelHi2／upgAngel／nudgeAngel、循環週期），2026-10-30；37：挑戰轉盤停頓 dealHold 0.5 → 0.6，2026-10-30；36：新增節奏鍵 dealHold 挑戰轉盤停頓，2026-10-30；35：局間停頓 autoSpinDelay 0.13 → 0.15，2026-10-30；34：演繹秒數改成企劃書 V14 美術需求說明、新增節奏鍵 idleActTimeR／wheelNoRunGap、中獎局間停頓 0.2、落定回彈 0.18，2026-10-30；33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
+const TUNE_VERSION = 39;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（39：TURBO nxFlip 0.33／wheelSlow3 0.5／scoreOut 0.4 跟一般速度相同，2026-11-02；38：V14 9 項（第 3 盤減速 0.5、新增 scoreRun／angelHi1／angelHi2／upgAngel／nudgeAngel、循環週期），2026-10-30；37：挑戰轉盤停頓 dealHold 0.5 → 0.6，2026-10-30；36：新增節奏鍵 dealHold 挑戰轉盤停頓，2026-10-30；35：局間停頓 autoSpinDelay 0.13 → 0.15，2026-10-30；34：演繹秒數改成企劃書 V14 美術需求說明、新增節奏鍵 idleActTimeR／wheelNoRunGap、中獎局間停頓 0.2、落定回彈 0.18，2026-10-30；33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
@@ -8490,8 +8498,13 @@ function rhythmTimeline(T, kind, tier) {
 function rhythmFGIntro(T, W, segs, marks) {
   const F = f => f / 60, e = W + TF(T.wheelWait);
   marks.push({ t: F(e), text: '進 FG（停下後第 ' + TF(T.wheelWait) + ' 幀）', red: true });
-  const a = e + FR(T.fgWinAngel), S = TF(T.fgIntroScene), h = a + S + (S > 0 ? SSS_CHAIN_F : 0), HH = TF(T.fgIntroHalo), A = TF(T.fgIntroAnim);
-  if (a > e) segs.push({ t0: F(e), dur: F(a - e), text: '天使FG中獎演繹(' + R1(T.fgWinAngel) + 's；驚訝→吹喇叭)', fill: 'symbol' });   // V8 第 65／76 列
+  const a0 = e + FR(T.fgWinAngel), tr = a0 > e ? transFrames(false, T).total : 0, a = a0 + tr;   // holy-130：天使 → 羽毛轉場 → 進入介面
+  const S = TF(T.fgIntroScene), h = a + S + (S > 0 ? SSS_CHAIN_F : 0), HH = TF(T.fgIntroHalo), A = TF(T.fgIntroAnim);
+  if (a0 > e) segs.push({ t0: F(e), dur: F(a0 - e), text: '天使FG中獎演繹(' + R1(T.fgWinAngel) + 's；驚訝→吹喇叭)', fill: 'symbol' });   // V8 第 65／76 列
+  if (tr > 0) {
+    segs.push({ t0: F(a0), dur: F(tr), text: '轉場演繹：白色羽毛蓋滿→散去(' + R1(F(tr)) + 's)', fill: 'big' });   // 企劃書 V16 美術需求說明 G81／G94
+    marks.push({ t: F(a0), text: '轉場演繹開始（天使 FG 中獎演繹結束）' });
+  }
   segs.push({ t0: F(a), dur: F(S), text: '①壓暗震動＋場景淡入＋雲湧上(' + R1(T.fgIntroScene) + 's＝競品變黑)', fill: 'gap' });   // 進入介面（V8 第 79 列，副本B）
   segs.push({ t0: F(h), dur: F(HH), text: '②光環降下(' + R1(T.fgIntroHalo) + 's)', fill: 'line' });
   segs.push({ t0: F(h + HH), dur: F(A), text: '③資訊淡入(' + R1(T.fgIntroAnim) + 's)', fill: 'line' });
@@ -8501,6 +8514,7 @@ function rhythmFGIntro(T, W, segs, marks) {
 // 連線型的時間軸：停輪 →（轉盤）→ 中獎停頓 → 圖示中獎演繹（不畫得分線）→ 中央輪盤彩金（≥10 倍才出、跑分）→ 停留 →（大獎）→ 局間
 // （只有連線得分：逐組演完直接到局間；輪盤 <10 倍：只有停留，使用者 2026-10-29）
 function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
+  const afterHeart = kind === 'heart';             // holy-130：合體演完才接連線中獎演出（原本被下面的 t＝ready 蓋掉、兩段畫在同一時間）
   if (kind === 'heart') {                           // ≥500 倍：停輪後先播天使雙人愛心合體，再進大獎（美術需求 54／62）
     segs.push({ t0: t, dur: T.heartTime, text: '500倍天使合體(' + R1(T.heartTime) + 's)', fill: 'big' });
     marks.push({ t: t, text: '確定 ≥500 倍：上下壓黑、天使離場→飛回相撞爆愛心' });
@@ -8525,7 +8539,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
     }
     const tl = rhythmFGIntro(T, Wl, segs, marks);   // 第二部分 2b：最後一個停下 W → W+30（TURBO W+15）進 FG → 天使 → 進入介面
     notes.push('購買觸發局（競品引擎設定）：轉盤只轉 ' + R1(T.buyWheelSpin) + 's 就停在紅心格，不出 NX 不跑分；脈動、登場、停下動畫、連開間隔跟一般轉盤相同；最後一個停下後第 ' + (TF(T.wheelWait)) + ' 幀進 FG（跟一般觸發相同，競品）。');
-    notes.push('FG 進入介面（競品）：觸發轉盤停下 W+' + TF(T.wheelWait) + ' 進 FG → 天使 FG 中獎演繹 ' + R1(T.fgWinAngel) + 's（我們加的）→ ①場景＝競品變黑 ' + R1(T.fgIntroScene) + 's → 下一幀起 ②光環＋③資訊＝競品合約淡入 ' + R1(T.fgIntroHalo + T.fgIntroAnim) + 's → 等玩家選。');
+    notes.push('FG 進入介面（競品）：觸發轉盤停下 W+' + TF(T.wheelWait) + ' 進 FG → 天使 FG 中獎演繹 ' + R1(T.fgWinAngel) + 's（我們加的）→ 轉場演繹（白色羽毛）' + R1(transFrames(false, T).total / 60) + 's → ①場景＝競品變黑 ' + R1(T.fgIntroScene) + 's → 下一幀起 ②光環＋③資訊＝競品合約淡入 ' + R1(T.fgIntroHalo + T.fgIntroAnim) + 's → 等玩家選。');
     return { segs: segs, marks: marks, skips: skips, notes: notes, total: tl };
   }
   const nW = kind === 'wheel3' ? 3 : (kind === 'wheel2' || kind === 'antic') ? 2 : (kind === 'wheel' || kind === 'wheelZoom') ? 1 : 0;   // antic：第 1 個停紅心格、第 2 個藍輪預報 1   // wheel3：第 3 個停乘號；wheelZoom：紅輪停 250
@@ -8557,7 +8571,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       if (kind === 'antic' && i === 1) {
         segs.push({ t0: F(S0), dur: F(spinF), text: '預報1：光暈＋金色光點＋紅心格變亮＋緩慢拉近', fill: 'gap' });
         segs.push({ t0: F(Wf + wheelPopStartF(SPEED_MODE, T)), dur: T.zoomOut, text: '畫面退回（跟轉中彈跳同時）(' + R1(T.zoomOut) + 's)', fill: 'pause' });
-        notes.push('預報演繹（企劃書美術需求說明 G22／G23）：已有 1 個轉盤停在紅心格 → 下一個轉盤播預報 1；已有 2 個 → 預報 2（停在紅心格時盤面震動一次）；第 1 個轉盤不播。');
+        notes.push('預報演繹（企劃書美術需求說明 G24／G25）：已有 1 個轉盤停在紅心格 → 下一個轉盤播預報 1；已有 2 個 → 預報 2（停在紅心格時盤面震動一次）；第 1 個轉盤不播。');
       }
       if (!(kind === 'antic' && i === 0)) {          // antic 的第 1 個停紅心格：倍數不變、不出 NX
         marks.push({ t: F(NX + 1), text: tag + (nxSeen ? 'NX 增加彈跳（倍數累加）' : 'LOGO 縮掉→NX 翻出') + (mulHere ? '＋乘號強回饋' : '') });
@@ -8570,7 +8584,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       if (zoomSc) {
         segs.push({ t0: F(NX), dur: T.zoomHold, text: '維持拉近＋格邊燃燒(' + R1(T.zoomHold) + 's)', fill: 'big' });
         segs.push({ t0: F(NX) + T.zoomHold, dur: T.zoomOut, text: '鏡頭退回(' + R1(T.zoomOut) + 's)', fill: 'gap' });
-        segs.push({ t0: F(NX), dur: T.plantGrow, text: '倍數>200：彈出130%＋震動＋金植栽紅果(' + R1(T.plantGrow) + 's)', fill: 'score' });
+        segs.push({ t0: F(NX), dur: T.plantGrow, text: '倍數≥200：彈出130%＋震動＋金植栽紅果(' + R1(T.plantGrow) + 's)', fill: 'score' });
         notes.push('拉近段（使用者加的演出）：NX 之後再維持拉近 ' + R1(T.zoomHold) + 's、退回 ' + R1(T.zoomOut) + 's 才出分數（競品沒有）。');
         next = Math.max(next, NX + TF(T.zoomHold) + TF(T.zoomOut));
       }
@@ -8584,8 +8598,8 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
     marks.push({ t: t, text: '全部轉完：轉盤保持顯示到下一局按下（原地收起 ' + R1(T.wheelGone) + 's、NX 第 ' + (TF(T.nxBack)) + ' 幀起換回 LOGO）' });
     notes.push('轉盤不收合：轉完的轉盤保持轉盤狀態與大小，' + (nW > 1 ? '再開下一個；' : '') + '全部轉完直接分數計算，轉盤顯示到下一局按下才原地收起（競品 DISAPPEAR）。');
   } else {
-    // 競品：結算（第 5 輪開始回彈的下一幀）後下一幀就壓暗開始演，不等最後一輪回彈完（使用者 2026-10-29 要求照競品）
-    t = rhythmDropTimes(T).ready;
+    // 競品：結算（第 5 輪開始回彈的下一幀）後下一幀就壓暗開始演，不等最後一輪回彈完（使用者 2026-10-29 要求照競品）；≥500 倍先播完合體
+    if (!afterHeart) t = rhythmDropTimes(T).ready;
     if (T.winPause > 0) segs.push({ t0: t, dur: T.winPause, text: '停頓時間(' + R1(T.winPause) + 's)', fill: 'pause' });
     t += T.winPause;
     marks.push({ t: t, text: '盤面壓暗（全部 ×' + R1(FX.dimAlpha) + '，中獎圖示 0.1s 回亮）' });
@@ -8707,11 +8721,11 @@ function sheetGantt() {
       title: m[0] + ' 一般：3 個藍輪（第 3 個減速延長、停乘號強回饋）' });
     scenarios.push({ T: m[1], kind: 'antic', tier: RHYTHM_TIERS[0],
       title: m[0] + ' 一般：2 個藍輪（第 1 個停紅心格、第 2 個預報 1）' });
-    scenarios.push({ T: m[1], kind: 'heart', tier: RHYTHM_TIERS[6],
+    scenarios.push({ T: m[1], kind: 'heart', tier: [500, 600, '500倍≦贏分', 14.0],   // holy-130：代表倍數 550（原 RHYTHM_TIERS[6] 算出 300 倍，未達合體門檻）
       title: m[0] + ' 一般：≥500 倍（天使雙人愛心合體→大獎）' });
     scenarios.push({ T: m[1], kind: 'wheelBuy', tier: null,
       title: m[0] + ' 購買 SFG 觸發局：2 個藍輪轉一下就停紅心格（不出 NX）→收黑進 FG' });
-    scenarios.push({ T: m[1], kind: 'wheelZoom', tier: RHYTHM_TIERS[0],
+    scenarios.push({ T: m[1], kind: 'wheelZoom', tier: [250, 250, '250倍', 14.0],   // holy-130：250 倍＝大獎（原 RHYTHM_TIERS[0] 被當成 <10 倍、沒有大獎）
       title: m[0] + ' FG：1 個紅輪停 250 倍（聖光閃耀→鏡頭拉近→燃火→退回）' });
   });
 
