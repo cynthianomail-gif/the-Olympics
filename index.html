@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-136';   // 驗證用識別值：測到的是不是最新版，看這個（holy-136：挑戰演繹改成光環下移＋變形，變形到一半時爆出閃光遮住光環 → 閃光中挑戰輪盤出現，不再由光環完整變形成輪盤（使用者 11-06：避免要用 3D 才能自然轉換）；holy-135：調校面板「背景待機演繹」說明改成新背景的演繹（企劃書 V18）；holy-134：天使升級／額外旋轉演繹改成掏棒 → 揮棒 → 握著魔法棒等輪盤演完 → 收棒，拿掉比讚／原地跳（企劃書 V18 11-06）；holy-133：FG／SFG 換成共用的新山腰背景（FG 藍天、SFG 金黃天空）、UFG 換成雲端（金色＋紅色天空光），待機特效座標照新圖（企劃書 V18 11-06）；holy-132：FG 局數欄移到盤面左側、左天使降低、右天使提高（2026-11-06 美術意見：AW 公版右側有押注按鈕）；holy-131：最高分預設圖示改聖杯（金杯＋中央紅寶石＋橫帶桂冠葉），中獎播晃動＋紅寶石閃光；holy-130：天使 FG 中獎演繹後補羽毛轉場再進進入介面；TURBO 數字收掉／NX 翻出／第 3 輪盤減速跟一般相同；節奏表匯出修 500 倍合體先播、FG 250 倍有大獎；holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
+const APP_BUILD = 'olympia-holy-143';   // 驗證用識別值：測到的是不是最新版，看這個（holy-143：換階轉場改成「一片」巨大的玫瑰花瓣由左往右飛過畫面最前方，擋住大獎畫面時切換下一階（使用者 11-06 晚：只有一片花瓣）；holy-142：大獎換階花瓣改成一大片玫瑰花瓣由左往右橫掃過畫面最前方做轉場，擋住畫面的那幾幀切換下一階（企劃書 V19 I97，使用者 11-06 晚）；holy-141：中央跑分＝大獎分數下移到畫面約 3/4 高（照競品），大獎照競品比例重排；跑分改從 1 倍起跑（企劃書 V19）；EPIC 一定演完指尖相碰才收尾（使用者 11-06 晚）；holy-140：大獎版面修正——標題下移不再被切到、天使縮小排在標題與數字之間、大雲下移（數字在雲上半部、可超出雲；使用者 11-06）；holy-139：FG／SFG／UFG 換成企劃書 V19 新背景（FG 山腰夜景、SFG 同一張夜景＋神聖光、UFG 金色為主＋淡紅氛圍），待機演繹配合新圖；holy-138：四階大獎常駐花瓣減少成 3／5／8／12 片（企劃書 V19：不用過多，逐階少量增加即可）；holy-137：6 項演繹照企劃書 V19——高分圖示中獎加整體縮放一次、低分放大改 10%；SUPER 預設黑髮天使掀盒；有輪盤彩金就出中央數字；大獎分數放在中央跑分數字的位置、交棒 BIG 時彈跳縮放一次（不上移放大）；四階大獎同一個雲朵構圖、換階改玫瑰花瓣遮住瞬間切換、花瓣逐階變多；升級背景在強光退掉後才換，FG→SFG 天空藍轉金黃 crossfade；holy-136：挑戰演繹改成光環下移＋變形，變形到一半時爆出閃光遮住光環 → 閃光中挑戰輪盤出現，不再由光環完整變形成輪盤（使用者 11-06：避免要用 3D 才能自然轉換）；holy-135：調校面板「背景待機演繹」說明改成新背景的演繹（企劃書 V18）；holy-134：天使升級／額外旋轉演繹改成掏棒 → 揮棒 → 握著魔法棒等輪盤演完 → 收棒，拿掉比讚／原地跳（企劃書 V18 11-06）；holy-133：FG／SFG 換成共用的新山腰背景（FG 藍天、SFG 金黃天空）、UFG 換成雲端（金色＋紅色天空光），待機特效座標照新圖（企劃書 V18 11-06）；holy-132：FG 局數欄移到盤面左側、左天使降低、右天使提高（2026-11-06 美術意見：AW 公版右側有押注按鈕）；holy-131：最高分預設圖示改聖杯（金杯＋中央紅寶石＋橫帶桂冠葉），中獎播晃動＋紅寶石閃光；holy-130：天使 FG 中獎演繹後補羽毛轉場再進進入介面；TURBO 數字收掉／NX 翻出／第 3 輪盤減速跟一般相同；節奏表匯出修 500 倍合體先播、FG 250 倍有大獎；holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -301,7 +301,7 @@ const HEART_LAND_FX_SEC = 0.6;                     // demo 自己加的愛心落
 //   s＝0 全部圖示亮度 ×FX.dimAlpha（0.5，1 幀到位；愛心不壓暗）→ 全部組的中獎圖示一起 0.1s（6 幀）linear 回到 ×1（競品「兩組的中獎圖示一起回亮」）
 //   各組依序演（L＝這組連線開始那一幀；第 1 組 L＝s 6＝結算後第 7 幀，之後每組＝前一組金額字開始退場那一幀）：
 //     L＋0 連線：5 輪之間 4 段，每段 0.08s power2.out，依序 +0／+4／+9／+14 幀開始（3 連也畫滿整條）
-//     L＋3＋2c（TURBO L＋1、各輪同時）圖示動作：低分＝縮放與亮度同一條 1＋0.2·Bezier(0,6,−3,0)(t/0.3s) 18 幀；高分＝局部動作（不脈動，winHiAnim／winHi5Anim）
+//     L＋3＋2c（TURBO L＋1、各輪同時）圖示動作：低分＝縮放與亮度同一條 1→1.1→1（sin，0.27s 16 幀；holy-137 企劃書 V19 I9）；高分＝局部動作＋整體縮放一次（winHiAnim／winHi5Anim；holy-137 企劃書 V19 I4～I8）
 //     L＋winTextDelay（一般 0.3s、TURBO 0）建立金額字，建立後第 2 幀起 0.01→1（0.3s back.out），數字直接到位（不跑分）
 //     金額字退場（0.2s back.in）＝可再按前 2 幀（一般）／3 幀（TURBO）＝下一組開始；可再按＝max（彈出＋winTextStay＋4 幀，最後一欄圖示動作結束＋2／3 幀）
 //     連線退場：單線＝可再按前 1 幀（低分）／2 幀（高分）、同圖示多線＝畫完就退（L＋25／TURBO L＋19）、多組＝下一組開始；翻向 0.1s 後每段 1→0（0.08s），由左往右每段間隔 0.08s
@@ -392,7 +392,7 @@ const SSS_MAX_X = 16666;
 //   引擎 countup_tiers 的 0→1.01→2 倍兩段是 0 ms，所以一起跑就是 2 倍），之後照段落等速（2→10 倍 countTo10 1.5s…）。
 //   第 0～13 幀（還沒起跑）顯示 0：競品量測 transcript 的跑分元件逐幀值——數字出現後第 2～12 幀那個元件值 0、沒在跑，第 15 幀第一次讀到 2.089 倍
 //   （json 沒有第 0～13 幀的值；第 0、1 幀數字還沒長出來，demo 不畫）。
-const SSS_COUNT_FROM = 2;     // 起跑倍數
+const SSS_COUNT_FROM = 1;     // 起跑倍數（以上 2 倍的說明是 holy-140 以前的競品依據，holy-141 起照企劃書 V19 改 1 倍；段落與停頓不變）。holy-141（使用者 11-06 選照企劃書 V19 B96「贏分從1開始跑分」）：2→1；第 14 幀起跑不變
 const SSS_COUNT_PRE = 0;      // 起跑前（第 0～13 幀）顯示的值（倍數）
 const SSS_BIG_DIM = 0.7;      // 大獎場景壓暗：ambient 1→0.3（demo＝黑色遮罩 alpha 0→0.7）
 
@@ -643,11 +643,11 @@ const DEFAULT_TIMING = {
   // 連線中獎演出（第二部分 2b，取代 winDisplay：競品每組長度＝max（金額字 delay＋0.5s，圖示動作含欄間隔））
   winTextDelay:     0.30,   // 金額字：這組連線開始→建立（競品 delay 0.3s；建立後第 2 幀彈出，數字直接到位）
   winTextStay:      0.44,   // V14 試版：圖示得分數字彈出到退場完約 0.67 秒（H55）；原＝競品 0.50
-  winHiAnim:        1.667,  // 高分前 4 名：局部動作（競品 spine win 1.667s；高分不脈動）
+  winHiAnim:        1.667,  // 高分前 4 名：局部動作＋整體縮放一次（企劃書 V19 H4～H8 1.67s、I4～I8；holy-137 起不再「照競品不脈動」）
   winHi5Anim:       1.667,  // V14 試版：豎琴（高分第 5 名）也 1.67 秒（H8）；原＝競品 HIGH_5 1.033
   idleLineTime:     2.025,  // 中獎後 idle 輪播：每條線 121.5 幀換下一條（競品 C+121～122）
   idleLoopGap:      1.00,   // 中獎後 idle 輪播：最後一條播完再等 1s 從第一條重來（只有一條線時＝擦完＋1s＋2 幀＝週期 186 幀）
-  // 中央跑分（轉盤彩金 ≥10 倍才出）與大獎跑分：競品引擎值，一般／TURBO 相同（使用者 2026-10-29 要求照競品；2026-10-30 大獎門檻維持 25／51／101／200）
+  // 中央跑分（有轉盤彩金就出、≥10 倍才跑分；holy-137 照企劃書 V19 G53）與大獎跑分：競品引擎值，一般／TURBO 相同（使用者 2026-10-29 要求照競品；2026-10-30 大獎門檻維持 25／51／101／200）
   scoreIn:          0.40,   // 中央數字出現：縮放 0→1.3（quadOut）
   scoreSettle:      0.30,   // 再 1.3→1（quadInOut）
   scoreCountDelay:  0.233,  // 出現→開始跑分（第 14 幀；之前顯示 0）
@@ -666,7 +666,7 @@ const DEFAULT_TIMING = {
   bigDim:           0.50,   // 大獎場景壓暗（BIG 起 30 幀 1→0.3）／到值時恢復（30 幀）
   bigEndAt:         1.683,  // 大獎到值→字樣收尾（第 101 幀）
   bigDone:          1.883,  // 大獎到值→大獎結束（第 113 幀）
-  bigLinkMove:      0.30,   // V14 試版：銜接演繹 0.3 秒（H54）；原 0.40。有轉盤的大獎【銜接演繹】（V10 美術需求 H54，我們加的）：BIG 跳出前最後這段，中央數字邊跑分邊上移到大獎分數位置、放大成大獎分數字級，BIG 跳出那一幀交棒
+  bigLinkMove:      0.30,   // 銜接演繹 0.3 秒（H54）。holy-137 起照企劃書 V19 I54：有轉盤的大獎，數字不位移（大獎分數＝跑分數字的位置），BIG 跳出那一幀交棒、本秒數內整體彈跳縮放一次；BIG 前本秒數只淡掉中央光暈（原：邊跑分邊上移、放大）
   // FG 整段（第二部分 2b，使用者 2026-10-29 要求照競品；result_phase2.md §5）：觸發轉盤停下 W→W+30（TURBO W+15）進 FG_INTRO＝先天使 fgWinAngel，再進入介面
   fgIntroAnim:      0.40,   // V14 試版：進入介面登場約 2 秒（H81）＝①1.0＋②0.6＋③0.4（原＝競品 0.5／0.3／0.2）
   // 副本B（使用者 2026-10-29，美術需求 V8 第 79～98 列）；2b 壓進競品時間窗
@@ -772,21 +772,21 @@ const TIMING_META = [
     // 每組長度＝max（金額字 delay＋0.5s，圖示動作含欄間隔），前一組金額字開始退場那一幀下一組開始（競品）
     ['winTextDelay', '金額字延遲', 0, 2, 0.01, { hint: '這組連線開始→建立金額字（建立後第 2 幀起 0.01→1 彈出 0.3s，數字直接到位、不跑分）。預設＝競品 0.30s（TURBO 0）' }],
     ['winTextStay', '金額字停留', 0, 3, 0.01, { hint: '金額字彈出→（再 4 幀）可再按；金額字在可再按前 2 幀（TURBO 3 幀）開始退場 0.2s。低分組的長度由它決定（競品 R→可再按 61 幀／TURBO 43 幀）。預設＝競品 0.50s' }],
-    ['winHiAnim', '高分局部動作', 0.05, 4, 0.001, { hint: '高分前 4 名（照賠率排名）中獎：不脈動，改播局部動作（聖杯／十字架寶石閃光、天堂鳥冠羽、獨角獸鬃毛、豎琴琴弦、翅膀拍翅），一般每欄晚 2 幀；高分組的長度由它決定（競品 R→可再按 116～117 幀／TURBO 111 幀）。預設＝競品 1.667s' }],
+    ['winHiAnim', '高分局部動作', 0.05, 4, 0.001, { hint: '高分前 4 名（照賠率排名）中獎：整體縮放一次（企劃書 V19 I4～I8，幅度 FX.winScaleHi）＋局部動作（聖杯／十字架寶石閃光、天堂鳥冠羽、獨角獸鬃毛、豎琴琴弦、翅膀拍翅），一般每欄晚 2 幀；高分組的長度由它決定（競品 R→可再按 116～117 幀／TURBO 111 幀）。預設＝競品 1.667s' }],
     ['winHi5Anim', '高分第5名局部動作', 0.05, 4, 0.001, { hint: '高分第 5 名（照賠率排名）的局部動作秒數。預設＝競品 HIGH_5 1.033s（R→可再按 78 幀）' }],
     ['idleLineTime', '中獎後輪播每條', 0.5, 6, 0.005, { hint: '中獎後待機（可再按之後）一條一條輪播中獎線：可再按後第 2 幀建立第一條，1s 後出金額字（預設不畫白線；特效「中獎連線」開時同時畫線，每段 0.1s），0.5s 後退場；每條隔本值換下一條（同圖示的線也分開、各顯示自己的金額；自動玩不出金額字；圖示不脈動）。預設＝競品 2.025s（121.5 幀）' }],
     ['idleLoopGap', '中獎後輪播間隔', 0, 5, 0.01, { hint: '最後一條播完再等本值從第一條重來（只有一條線時＝擦完＋本值＋2 幀，競品週期 186 幀）。預設＝競品 1.00s' }],
     // 中央跑分（使用者 2026-10-29 要求照競品，第二部分 2a）：競品分段等速，一般／TURBO 相同；中央數字只在轉盤彩金 ≥10 倍時出現（V10）
-    ['scoreIn', '數字出現', 0.02, 2, 0.01, { hint: '中央數字（轉盤彩金 ≥10 倍才出）出現：縮放 0→1.3（quadOut）。最後一個轉盤停下後第 29 幀（TURBO 14）出現。預設＝競品 0.40s' }],
+    ['scoreIn', '數字出現', 0.02, 2, 0.01, { hint: '中央數字（有轉盤彩金就出；holy-137 照企劃書 V19）出現：縮放 0→1.3（quadOut）。最後一個轉盤停下後第 29 幀（TURBO 14）出現。預設＝競品 0.40s' }],
     ['scoreSettle', '數字回穩', 0.02, 2, 0.01, { hint: '接著 1.3→1（quadInOut）。預設＝競品 0.30s' }],
-    ['scoreCountDelay', '出現→開始跑分', 0, 2, 0.001, { hint: '數字出現後第「本值×60」幀從 2 倍起跑，之前顯示 0（中央跑分、大獎都一樣；使用者 2026-10-30 要求照競品）。預設＝競品 0.233s（第 14 幀）' }],
-    ['countTo10', '跑分：2→10倍', 0.05, 10, 0.05, { hint: '分段等速：2→10 倍的秒數（從 2 倍起跑，競品）。碰到 10 倍停 2 幀才接下一段（競品偏差規則）。預設＝競品 1.5s' }],
+    ['scoreCountDelay', '出現→開始跑分', 0, 2, 0.001, { hint: '數字出現後第「本值×60」幀從 1 倍起跑（holy-141 照企劃書 V19），之前顯示 0（中央跑分、大獎都一樣；使用者 2026-10-30 要求照競品）。預設＝競品 0.233s（第 14 幀）' }],
+    ['countTo10', '跑分：1→10倍', 0.05, 10, 0.05, { hint: '分段等速：1→10 倍的秒數（holy-141 起從 1 倍起跑，企劃書 V19）。碰到 10 倍停 2 幀才接下一段（競品偏差規則）。預設＝競品 1.5s' }],
     ['countTo20', '跑分：10→20倍', 0.05, 10, 0.05, { hint: '10→20 倍的秒數。碰到 20 倍停「2×最終值碰得到的競品大獎級數（20／50／100／250 倍）」幀。預設＝競品 1.8s' }],
     ['countTo50', '跑分：20→50倍', 0.05, 15, 0.05, { hint: '20→50 倍的秒數（之後每個分界停 1 幀）。預設＝競品 3.6s' }],
     ['countTo100', '跑分：50→100倍', 0.05, 15, 0.05, { hint: '50→100 倍的秒數。預設＝競品 3.6s' }],
     ['countTo250', '跑分：100→250倍', 0.05, 30, 0.05, { hint: '100→250 倍的秒數。預設＝競品 7.0s' }],
     ['countToMax', '跑分：250→最大', 0.05, 60, 0.05, { hint: '250→16666 倍（競品最大獎）的秒數，最終值在這段就按比例。預設＝競品 14.0s' }],
-    ['scoreRun', '中央跑分時長', 0.05, 10, 0.01, { hint: '中央倍數得分數字從 2 倍等速跑到最終值的秒數，不分倍數（V14 美術需求 H53：跑分約 2.53 秒）；大獎跑分另用「跑分：2→10倍」等分段' }],
+    ['scoreRun', '中央跑分時長', 0.05, 10, 0.01, { hint: '中央倍數得分數字從 1 倍等速跑到最終值的秒數，不分倍數（V14 美術需求 H53：跑分約 2.53 秒）；大獎跑分另用「跑分：2→10倍」等分段' }],
     ['scoreStay', '到值停留', 0, 5, 0.01, { hint: '跑到最終值後停留，之後數字收掉（大獎不收，見大獎組）。預設＝競品 1.0s' }],
     ['scoreOut', '數字收掉', 0.02, 3, 0.01, { hint: '中央數字 back.in 收掉：先放大到 1.1 再縮到 0；收完下一幀這局結束（到值後第 115 幀）。預設＝競品 0.9s' }] ] },
   { group: '大獎', items: [   // 競品引擎值（兩種模式相同）；換階＝跑分越過我們的門檻 25／51／101／200 倍那一幀（使用者 2026-10-30：門檻不變、跑分速度照競品）
@@ -796,14 +796,14 @@ const TIMING_META = [
     ['bigDim', '場景壓暗', 0, 2, 0.01, { hint: 'BIG 起場景亮度 1→0.3（線性），到最終值時同樣秒數回 1。預設＝競品 0.5s' }],
     ['bigEndAt', '到值→字樣收尾', 0, 5, 0.001, { hint: '大獎跑到最終值後第「本值×60」幀，字樣、名畫、分數一起收尾。預設＝競品 1.683s（第 101 幀）' }],
     ['bigDone', '到值→大獎結束', 0, 5, 0.001, { hint: '大獎跑到最終值後第「本值×60」幀結束、這局繼續（字樣收尾最後幾幀疊在下一段）。預設＝競品 1.883s（第 113 幀）' }],
-    ['bigLinkMove', '銜接上移', 0, 2, 0.05, { hint: '有轉盤的大獎【銜接演繹】（V10 美術需求 H54，我們加的）：BIG 字樣登場前的最後這段，中央倍數得分數字邊跑分邊往上移到大獎分數的位置、字級放大成大獎分數，BIG 登場那一幀直接交棒（不淡出）；不改跑分。只有連線的大獎沒有這段' }] ] },
+    ['bigLinkMove', '銜接彈跳', 0, 2, 0.05, { hint: '有轉盤的大獎【銜接演繹】（企劃書 V19 I54，holy-137）：數字不另外位移，四階大獎的分數就在跑分數字的位置；BIG 登場那一幀直接交棒（不淡出），本秒數內數字整體彈跳縮放一次（1→1.3→1）；不改跑分。只有連線的大獎沒有這段' }] ] },
   { group: '免費遊戲／挑戰轉盤', items: [   // 第二部分 2b（使用者 2026-10-29 要求照競品；result_phase2.md §5）
     ['fgIntroAnim', '進入介面資訊淡入', 0, 2, 0.01, { hint: '進入介面 ③：光環落定後祝福資訊與選項淡入（淡入完按鈕才能按）。②光環＋③資訊＝競品合約淡入 0.5s；觸發轉盤停下後第 30 幀（TURBO 15）進 FG，先播天使 FG 中獎演繹、再進入介面。預設＝0.20s' }],
     ['dealSpin', '挑戰轉盤轉動', 0, 12, 0.05, { hint: '挑戰轉盤順時針轉 4 圈＋停格（±0.35 格），quadOut(quadOut) 減速；轉完下一幀停下。預設＝競品 7.00s（兩種模式相同）' }],
     ['dealWinAnim', '挑戰停下動畫', 0.05, 3, 0.001, { hint: '停下那一幀起：其他格照競品淡到 26.7%（跟藍紅輪一樣）、結果格與中央八芒星 1→0.77→1.34→1（照競品逐幀表，1 倍速）。預設＝競品 0.833s（兩種模式相同）' }],
     ['dealResult', '停下→進轉場', 0, 3, 0.01, { hint: '意思改了（2b）：挑戰轉盤停在局數格→開始羽毛轉場（轉盤淡出疊在轉場下面）。預設＝競品 0.25s（W+15）' }],
     ['dealPromoteAt', '停下→升級', 0, 3, 0.001, { hint: '挑戰轉盤停在升級格→升級演繹開始。預設＝競品 0.617s（W+37）' }],
-    ['promoteHold', '升級演繹', 0.05, 5, 0.001, { hint: '轉盤強光蓋滿畫面＋震動 → 背景往上換到下一段山（我們的演繹壓進競品時間窗）→ 回進入介面由下一階光環降下＋資訊淡入（＝競品新合約淡入 0.5s）。預設＝競品變黑 0.5s＋停 55 幀＝1.417s' }],
+    ['promoteHold', '升級演繹', 0.05, 5, 0.001, { hint: '轉盤強光蓋滿畫面＋震動 → 強光退掉後背景換場（FG→SFG 天空藍轉金黃 crossfade、SFG→UFG 往上到雲端；企劃書 V19 I88，holy-137）（我們的演繹壓進競品時間窗）→ 回進入介面由下一階光環降下＋資訊淡入（＝競品新合約淡入 0.5s）。預設＝競品變黑 0.5s＋停 55 幀＝1.417s' }],
     ['transCover', '轉場①羽毛蓋上', 0.05, 3, 0.01, { hint: '羽毛轉場（四個時機：10次免費遊戲、UFG 點擊、挑戰轉到局數、結算回主遊戲）：羽毛幕由上往下蓋（x² 加速）。按「10次免費遊戲」後第 2 幀、點擊結算後第 5 幀開始。預設＝競品 0.80s' }],
     ['transFull', '轉場②蓋滿', 0, 3, 0.01, { hint: '羽毛蓋滿畫面停留，中間那一幀換場景。預設＝競品 0.50s' }],
     ['transOpen', '轉場③散開（進FG）', 0.05, 3, 0.01, { hint: '進 FG：羽毛散去露出 FG（quadOut）；散完下一幀 FG 第 1 局開始掉（轉場開始後第 127 幀）。預設＝競品 0.80s' }],
@@ -912,7 +912,7 @@ const DEFAULT_TIMING_TURBO = {
   bigDim:           0.50,
   bigEndAt:         1.683,
   bigDone:          1.883,
-  bigLinkMove:      0.25,   // 有轉盤的大獎銜接演繹（V10，我們加的）：TURBO 縮短
+  bigLinkMove:      0.25,   // 有轉盤的大獎銜接演繹（企劃書 V19 I54：交棒 BIG 時彈跳縮放一次）：TURBO 縮短
   fgIntroAnim:      0.20,   // FG 進入介面：競品合約兩種模式相同（觸發轉盤停下 W+15 進 FG）
   fgIntroScene:     0.50,
   fgIntroHalo:      0.30,
@@ -1003,21 +1003,21 @@ const RHYTHM_MAP = [
   // 連線中獎演出（第二部分 2b，取代 winDisplay；競品每組長度＝max（金額字 delay＋0.5s，圖示動作含欄間隔））
   ['winTextDelay',     '金額字延遲',       '這組連線開始→建立金額字（建立後第 2 幀起 0.3s 彈出，數字直接到位）', null],
   ['winTextStay',      '金額字停留',       '金額字彈出→（再 4 幀）可再按；可再按前 2 幀（TURBO 3 幀）金額字退場、下一組開始。低分組長度由它決定', null],
-  ['winHiAnim',        '高分圖示演繹',     '高分前 4 名中獎：不脈動，播局部動作的持續時間（一般每欄晚 2 幀）；高分組長度由它決定', '圖示演繹'],
+  ['winHiAnim',        '高分圖示演繹',     '高分前 4 名中獎：整體縮放一次＋局部動作的持續時間（一般每欄晚 2 幀）；高分組長度由它決定（企劃書 V19 I4～I8）', '圖示演繹'],
   ['winHi5Anim',       '高分第5名圖示演繹', '高分第 5 名（照賠率排名）局部動作的持續時間', null],
   ['idleLineTime',     '中獎後輪播每條',   '中獎後待機一條一條輪播中獎線：每條隔這麼久換下一條（1s 後出金額字、0.5s 後退場；預設不畫白線，面板可開）', null],
   ['idleLoopGap',      '中獎後輪播間隔',   '最後一條播完再等這麼久從第一條重來', null],
   // 中央跑分／大獎（第二部分 2a，競品引擎值，一般／TURBO 相同）
-  ['scoreIn',          '得分數字出現',     '盤面中央輪盤彩金（≥10 倍才出）出現：縮放 0→1.3', '得分演繹'],
+  ['scoreIn',          '得分數字出現',     '盤面中央輪盤彩金（有彩金就出）出現：縮放 0→1.3', '得分演繹'],
   ['scoreSettle',      '得分數字回穩',     '出現後 1.3→1 的時間', null],
-  ['scoreCountDelay',  '出現→開始跑分',    '數字出現後到開始跑分的時間（之前顯示 0，之後從 2 倍起跑；中央跑分、大獎都一樣，競品）', null],
-  ['countTo10',        '跑分(2→10倍)',     '分段等速跑分：2→10 倍（碰到 10 倍停 2 幀）', null],
+  ['scoreCountDelay',  '出現→開始跑分',    '數字出現後到開始跑分的時間（之前顯示 0，之後從 1 倍起跑；中央跑分、大獎都一樣，企劃書 V19）', null],
+  ['countTo10',        '跑分(1→10倍)',     '分段等速跑分：1→10 倍（碰到 10 倍停 2 幀）', null],
   ['countTo20',        '跑分(10→20倍)',    '10→20 倍（碰到 20 倍停 2×競品大獎級數 幀）', null],
   ['countTo50',        '跑分(20→50倍)',    '20→50 倍（之後每個分界停 1 幀）', null],
   ['countTo100',       '跑分(50→100倍)',   '50→100 倍', null],
   ['countTo250',       '跑分(100→250倍)',  '100→250 倍', null],
   ['countToMax',       '跑分(250倍→最大)', '250→16666 倍，最終值在這段就按比例', null],
-  ['scoreRun',         '中央跑分時長',     '中央倍數得分數字從 2 倍等速跑到最終值的時間（V14 H53）', null],
+  ['scoreRun',         '中央跑分時長',     '中央倍數得分數字從 1 倍等速跑到最終值的時間（V14 H53）', null],
   ['scoreStay',        '得分到值停留',     '中央數字跑到最終值後的停留時間', null],
   ['scoreOut',         '得分數字收掉',     '中央數字 back.in 收掉（先放大到 1.1 再縮到 0），收完這局結束、公版 WIN 切換', null],
   ['bigTierIn',        '大獎字樣登場',     'BIG／SUPER／MEGA 字樣登場（跑分越過門檻後 1 幀開始；換階時上一階先收尾）', null],
@@ -1026,7 +1026,7 @@ const RHYTHM_MAP = [
   ['bigDim',           '大獎場景壓暗',     'BIG 起場景亮度 1→0.3、到值時回 1 的時間', null],
   ['bigEndAt',         '大獎到值→收尾',    '大獎跑到最終值後到字樣收尾的時間', null],
   ['bigDone',          '大獎到值→結束',    '大獎跑到最終值後到大獎結束（這局繼續）的時間', null],
-  ['bigLinkMove',      '大獎銜接演繹',     '有轉盤的大獎：BIG 字樣登場前最後這段，中央得分數字邊跑分邊上移到大獎分數位置、放大成大獎分數字級，BIG 登場那一幀交棒（我們加的）', null],
+  ['bigLinkMove',      '大獎銜接演繹',     '有轉盤的大獎：數字不位移（大獎分數＝跑分數字的位置），BIG 登場那一幀交棒、數字整體彈跳縮放一次的秒數（企劃書 V19 I54）', null],
   // FG 整段（第二部分 2b，競品引擎值；觸發轉盤停下後第 30 幀（TURBO 15）進 FG：天使 FG 中獎演繹→進入介面）
   ['fgIntroAnim',      'FG進入介面資訊淡入', '進入介面光環落定後，祝福資訊與選項淡入的持續時間（光環＋資訊＝競品合約淡入 0.5s）', null],
   ['fgIntroScene', 'FG進入介面登場①', '天使 FG 中獎演繹結束後：畫面壓暗震動、場景淡出淡入到 FG 場景、雲從下方湧上（美術需求 V8 第 79 列；＝競品變黑 0.5s）', 'FG/BG宣告框'],   // 副本B
@@ -1042,7 +1042,7 @@ const RHYTHM_MAP = [
   ['dealWinAnim',      '挑戰停下動畫',     '停下那一幀起：其他格壓暗、結果格與中央八芒星 1→0.77→1.34→1 的持續時間（1 倍速）', null],
   ['dealResult',       '挑戰停下→轉場',    '挑戰轉盤停在局數格→開始羽毛轉場的時間（意思改了：原本是結果停留）', null],
   ['dealPromoteAt',    '挑戰停下→升級',    '挑戰轉盤停在升級格→升級演繹開始的時間', null],
-  ['promoteHold',      '升級演繹',         '停在升級格時：強光蓋滿畫面＋震動 → 背景往上換到下一段山的持續時間（＝競品變黑＋停留），之後下一階光環降下', null],
+  ['promoteHold',      '升級演繹',         '停在升級格時：強光蓋滿畫面＋震動 → 強光退掉後背景換場（FG→SFG 天空轉金黃、SFG→UFG 往上到雲端）的持續時間（＝競品變黑＋停留），之後下一階光環降下', null],
   ['transCover',       '轉場羽毛蓋上',     '羽毛轉場：羽毛幕由上往下蓋（x² 加速）的時間', null],
   ['transFull',        '轉場蓋滿',         '羽毛蓋滿畫面停留的時間（中間換場景）', null],
   ['transOpen',        '轉場散開(進FG)',   '進 FG：羽毛散去的時間（quadOut）；散完下一幀 FG 第 1 局開始', null],
@@ -1209,8 +1209,9 @@ const DEFAULT_FX = {
   nxShakeAmp: 10,     // 倍數 >200 畫面震動幅度（px）
   anticZoom:  1.35,   // 預報演繹 1／2：轉盤轉動時畫面朝轉盤緩慢拉近的倍率上限（實際取轉盤不出畫面的最大值）
   anticDots:  1.0,   // 預報演繹的金色光點粒子量（預報 2 為 3 倍）
-  // winZoomHi 拿掉（第二部分 2b）：競品高分圖示不脈動（縮放、亮度都不動），改播局部動作
-  winZoomLo:  1.2,   // 圖示中獎脈動（低分）：1→1.2 Bezier(0,6,−3,0)，縮放與亮度同一條（競品 winLines Scale＋Color 1.2；峰值 1.42、谷底 0.875；原本 1.1）
+  // holy-137（企劃書 V19 I4～I8「圖示整體縮放」，取代 10/29 的「照競品不脈動」）：高分圖示在局部動作之外，整張圖示在 winHiAnim 內放大一次再回原大
+  winScaleHi: 1.12,  // 高分圖示中獎整體縮放峰值（1→本值→1，sin 半週期、跨整段局部動作 1.67 秒；1＝關）
+  winZoomLo:  1.1,   // holy-137（企劃書 V19 I9「圖示整體放大10%」）：低分中獎 0.27 秒內 1→1.1→1（sin 半週期，縮放與亮度同一條）；原 1.2＋Bezier(0,6,−3,0) 峰值 1.42（10/29 照競品）
   heartX:     500,   // 單盤總贏分 ≥ 此倍數 → 轉盤轉動前播天使雙人愛心合體（美術需求 54G）
   bigCoins:   1.0,   // 大獎時天使身後噴出金幣／鈔票的量（BIG 少量、MEGA 大量、EPIC 加鈔票）
   shkHi2Amp:  12,   // 高倍演繹 2（紅輪 250／500、X15／X20）停下後畫面震動幅度（px）
@@ -1243,11 +1244,11 @@ const DEFAULT_FX = {
   upgStars:   36,     // 倍數升級演繹：金黃色星星漩渦的星星數（美術需求 V3 第 27／34 列；0＝關）
   upgGlow:    1.0,    // 倍數升級演繹：轉盤發光強度（同上；0＝關）
   nudgeStars: 40,     // 額外轉動演繹：包圍轉盤外圍的金色星星數（V3 第 28／35 列；0＝關）
-  bigPandora: 0,      // 副本B：SUPER《潘朵拉的盒子》誰掀盒——0＝金髮天使掀盒、黑髮天使躲旁邊偷看嚇到（使用者 2026-10-29 定）；1＝黑髮天使掀盒、金髮天使探頭（V8 第 96 列寫法）
+  bigPandora: 1,      // 副本B：SUPER《潘朵拉的盒子》誰掀盒——1＝黑髮天使掀盒、金髮天使探頭（企劃書 V19 E99／I99，holy-137 起預設）；0＝金髮天使掀盒、黑髮天使躲旁邊偷看（使用者 2026-10-29 舊版）
 };
 const FX_META = [
   { group: '天使與場景（副本A）', items: [   // 美術需求 V8 第 41～44、55～76、92 列（使用者 2026-10-29）
-    ['bgLoop', '背景待機演繹', 0, 2, 0.05, { hint: '四張背景的常駐演繹強度（NG 雲飄樹葉晃／FG 山腰雲飄樹葉晃／SFG 同 FG＋天空金色光束／UFG 雲海＋紅色天空光與金色光束閃爍；企劃書 V18 美術需求說明 I41～I44；座標表 BG_LOOP）；0＝關' }],
+    ['bgLoop', '背景待機演繹', 0, 2, 0.05, { hint: '四張背景的常駐演繹強度（NG 雲飄樹葉晃／FG 山腰夜景雲飄樹葉晃星星閃／SFG 同 FG＋天上神聖光束／UFG 雲海＋金黃天空光閃爍；企劃書 V19 美術需求說明 I41～I44；座標表 BG_LOOP）；0＝關' }],
     ['featherN', '轉場羽毛片數', 0, 80, 1, { hint: '進退場轉場：白羽毛從上方飄落的片數（蓋滿畫面那段由整張羽毛圖蓋住，之後散去）' }],
     ['wandSize', '道具大小', 0.2, 0.8, 0.01, { hint: '天使的星星魔法棒（升級＝右天使、額外轉動＝左天使）與 FG 中獎喇叭的大小（天使身高的倍數）' }] ] },
   { group: '中獎演繹', items: [
@@ -1287,7 +1288,8 @@ const FX_META = [
     ['nxShakeAmp', '倍數震幅', 0, 40, 1, { hint: '累計 >200 時畫面震動幅度（px）' }],
     ['anticZoom', '預報拉近', 1, 2, 0.05, { hint: '預報演繹 1／2：轉盤轉動時畫面朝轉盤緩慢拉近的倍率上限（實際取轉盤不出畫面的最大值）' }],
     ['anticDots', '預報光點量', 0, 3, 0.1, { hint: '預報演繹的金色光點粒子量（預報 2 為 3 倍）' }],
-    ['winZoomLo', '低分中獎放大', 1, 1.6, 0.01, { hint: '中獎圖示脈動（低分）：縮放與亮度同一條 1＋(值−1)·Bezier(0,6,−3,0)，0.3s；預設＝競品 1.2（峰值 1.42、谷底 0.875）。高分圖示競品不脈動、改播局部動作' }],
+    ['winZoomLo', '低分中獎放大', 1, 1.6, 0.01, { hint: '低分圖示中獎：0.27 秒內整體放大到本值再回原大（縮放與亮度同一條）；預設 1.1＝企劃書 V19 I9「整體放大10%」（holy-137；原 1.2＝競品曲線峰值 1.42）' }],
+    ['winScaleHi', '高分中獎縮放', 1, 1.5, 0.01, { hint: '高分圖示中獎：局部動作之外，整張圖示在高分局部動作秒數（1.67 秒）內放大到本值再回原大一次；預設 1.12（企劃書 V19 I4～I8「圖示整體縮放」，holy-137）；1＝關' }],
     ['heartX', '合體倍數≥', 50, 5000, 10, { hint: '單盤總贏分 ≥ 此倍數 → 轉盤轉動前播天使雙人愛心合體（美術需求 54G）' }],
     ['bigCoins', '大獎金幣量', 0, 3, 0.1, { hint: '大獎名畫的金幣／鈔票量倍率（每階基本數 BIG 6／SUPER 12／MEGA 24／EPIC 40＋鈔票 14，逐級增加；美術需求 V8 第 95 列）' }],
     ['shkHi2Amp', '高倍震幅', 0, 40, 1, { hint: '高倍演繹 2（紅輪 250／500、X15／X20）停下後畫面震動幅度（px）' }],
@@ -1320,7 +1322,7 @@ const FX_META = [
     ['upgGlow', '升級轉盤發光', 0, 2, 0.05, { hint: '倍數升級演繹：星星蓋住轉盤時轉盤發光的強度（倍數照舊逐格翻牌換成更高倍數）；0＝關' }],
     ['nudgeStars', '額外轉動星環', 0, 80, 1, { hint: '額外轉動演繹：金色星星包圍轉盤外圍、帶著轉盤順時鐘多轉一格、停下後散開（V3 第 28／35 列）；0＝關' }] ] },
   { group: 'FG 介面與大獎（副本B）', items: [
-    ['bigPandora', 'SUPER 誰掀盒', 0, 1, 1, { hint: 'SUPER《潘朵拉的盒子》：0＝金髮天使掀開寶盒、黑髮天使躲旁邊偷看嚇到（使用者 2026-10-29 定，預設）；1＝黑髮天使掀盒、金髮天使探頭偷看（V8 第 96 列的寫法）' }] ] },
+    ['bigPandora', 'SUPER 誰掀盒', 0, 1, 1, { hint: 'SUPER《潘朵拉的盒子》：1＝黑髮天使掀開寶盒、金髮天使探頭偷看（企劃書 V19 E99／I99，預設）；0＝金髮天使掀盒、黑髮天使躲旁邊偷看（使用者 2026-10-29 舊版）' }] ] },
 ];
 
 // --- 數值（機率／賠率／規則）---
@@ -1591,12 +1593,12 @@ const ART = {
   // 背景換 V8 新圖（美術需求 V8 第 41～44 列；使用者 2026-10-29，圖尚未最後確認）：images\bg_v8_20261029\ 1672×941（16:9）。
   // 舊圖 assets/bg.png、bg_fg.png、ai/scene_03、scene_04 保留未刪。待機演繹的座標在 BG_LOOP（每張一組，換圖只要改表）
   bg:  'assets/bg_v8/bg_ng.png',              // NG：聖地郊區（綠＋米黃遺跡）
-  bgFG: 'assets/bg_v18/bg_fg.png',            // FG：奧林匹斯山山腰（藍天）。holy-133（企劃書 V18 11-06 美術意見）：FG／SFG 共用山腰、只換天空；舊山腳圖 bg_v8/bg_fg.png 保留
+  bgFG: 'assets/bg_v19/bg_fg.png',            // holy-139（企劃書 V19 11-06 傍晚）：FG＝山腰夜景（深藍夜空、星星、月光）；V18 藍天版 bg_v18/ 保留。            // FG：奧林匹斯山山腰（藍天）。holy-133（企劃書 V18 11-06 美術意見）：FG／SFG 共用山腰、只換天空；舊山腳圖 bg_v8/bg_fg.png 保留
   frame: 'assets/frame.png',
   publicUI: 'assets/public_ui.png',
   // AI 素材（assets/assets_map.md）：其餘場景、轉盤、介面、轉場、大獎、角色
-  bgSFG: 'assets/bg_v18/bg_sfg.png',          // SFG：同一張山腰、天空換金黃（holy-133；舊 bg_v8/bg_sfg.png 保留）
-  bgUFG: 'assets/bg_v18/bg_ufg.png',          // UFG：雲端，金色氛圍＋紅色天空光（holy-133；舊山頂 bg_v8/bg_ufg.png 保留）
+  bgSFG: 'assets/bg_v19/bg_sfg.png',          // SFG：同一張山腰夜景＋天上神聖光（holy-139；V18 金黃天空版 bg_v18/ 保留）
+  bgUFG: 'assets/bg_v19/bg_ufg.png',          // UFG：雲端，金色為主、金黃天空光、約 20% 淡紅氛圍（holy-139，使用者選 B；V18 紅天空版 bg_v18/ 保留）
   wheelBlue: 'assets/ai/icon_13.png?v=holy-46',         // 藍聖心的輪（程式裡叫 blue）原圖（拆層來源；拆不到時整張當底圖）；2026-10-22 天使版輪盤，2026-10-24 拆層改藍輪（格色／外框由 split_wheel_art.py 重畫）
   wheelRed: 'assets/ai/icon_14.png?v=holy-46',          // 紅聖心的輪（程式裡叫 red）原圖；2026-10-22 天使版輪盤，2026-10-24 拆層改紅輪
   wheelBlueBase: 'assets/ai/icon_13_base.png?v=holy-93', wheelBlueTorch: 'assets/ai/icon_13_torch.png?v=holy-46',   // tools/split_wheel_art.py 產（2026-10-26 中心圓縮小）
@@ -1854,7 +1856,7 @@ function roundRect(x, y, w, h, r, fill, stroke, lw) {
 /* ============================================================
  * 區塊 4：玩法
  * 一局：SPINNING（掉落）→ POSTSTOP（聖心落地演繹）→ WHEEL×N（由左到右：登場→轉動→結果→收合）
- *      → WIN_SHOW（連線）→ SCORE（中央輪盤彩金 ≥10 倍；只有連線得分不進）或 BIGWIN（大獎）→ 聖火格數量判斷 → FG_INTRO …
+ *      → WIN_SHOW（連線）→ SCORE（有中央輪盤彩金就進；只有連線得分不進）或 BIGWIN（大獎）→ 聖火格數量判斷 → FG_INTRO …
  * [企劃 §一般遊戲 E53 流程簡述；spec.yaml flow]
  * ========================================================== */
 const STATE = { HEART: 13, IDLE: 0, SPINNING: 1, POSTSTOP: 2, WHEEL: 3, WIN_SHOW: 4, SCORE: 5, BIGWIN: 6,
@@ -1903,7 +1905,7 @@ let forceSpinType = null, forceDeal = null, showForceMenu = false;
 let showBuyMenu = false, buyConfirm = null;
 let stats = { spins: 0, hits: 0, totalBet: 0, fg: [0, 0, 0, 0], buys: 0, wheels: 0 };
 let hasHitThisSpin = false;
-let noRunWheelRound = false;                       // 這局有輪盤彩金、但 <10 倍不出中央跑分（也不是大獎）→ 局間多等 wheelNoRunGap（使用者 2026-10-30，V14 試版）
+let noRunWheelRound = false;                       // 這局有輪盤彩金、但 <10 倍沒有中央跑分（holy-137 起中央數字直接顯示最終值；也不是大獎）→ 局間多等 wheelNoRunGap（使用者 2026-10-30，V14 試版）
 let particles = [], floatTexts = [];
 let showScorePopup = true, showGridFrame = true;
 let statToggleRects = [];
@@ -1911,10 +1913,11 @@ let freezeForShot = false;           // 截圖預設用：畫面停在指定狀�
 
 /* --- 分數欄（house-conventions）：下方公版 WIN 不跑分、一回合演完直接切換；
  * 盤面中央只顯示輪盤彩金（使用者 2026-10-29「如果只有連線得分 不用顯示中央的得分數字 只有輪盤會顯示在中間 然後是會跑分的」）：
- * 輪盤彩金 ≥10 倍才出現（只有連線得分、或輪盤彩金 <10 倍都不出）；跑不跑分依平台：星城＝10 倍以上或大獎才跑分、H5＝只有大獎跑分。 */
+ * holy-137 起照企劃書 V19 G53「盤面獲得倍數欄位的得分時」：只要有輪盤彩金就出中央數字（取消 10/29 的「≥10 倍才出」；只有連線得分仍不出）；
+ * 跑不跑分依平台照舊：星城＝10 倍以上或大獎才跑分（<10 倍直接彈出最終值）、H5＝只有大獎跑分。 */
 const CENTER_RUN_XC_RATIO = 10;
-function centerShows(wheelValue) {                // 中央數字出現門檻：兩種平台都是輪盤彩金 ≥10 倍
-  return wheelValue / Math.max(1, ODDS.bet) >= CENTER_RUN_XC_RATIO;
+function centerShows(wheelValue) {                // 中央數字出現條件：有輪盤（倍數欄位）彩金就出（企劃書 V19 G53，holy-137）
+  return wheelValue > 0;
 }
 const CENTER_RUN_MODES = [
   ['xc', '星城（10倍以上／大獎跑分）', r => r >= CENTER_RUN_XC_RATIO || r >= ODDS.bigWinRatio,
@@ -2601,12 +2604,12 @@ function winGroupFrame() {                        // 正在演的那組第幾幀
   const s = winShowS(), o = winPlan && winGroupIdx >= 0 ? winPlan.groups[winGroupIdx] : null;
   return o ? s - (o.L - WIN_FX.lineAt) : s;
 }
-function winPulseAt(c, s, id) {                   // 低分中獎圖示脈動倍數（縮放＝亮度）：第 c 輪、這組第 s 幀（連線開始前 6 幀起算）；高分不脈動（競品，改播局部動作）
+function winPulseAt(c, s, id) {                   // 低分中獎圖示放大倍數（縮放＝亮度）：第 c 輪、這組第 s 幀（連線開始前 6 幀起算）；高分的整體縮放在 winSymbolFx（跟局部動作同一段）
   if (id <= 4) return 1;
   const m = winPlan ? winPlan.mode : winModeKey();
   const k = s - (WIN_FX.pulseAt[m] + Math.floor(c * WIN_FX.colDelay[m] * 60 + 1e-9));
   if (k <= 0 || k >= WIN_FX.pulseF) return 1;
-  return 1 + (FX.winZoomLo - 1) * winPulseCurve(k / WIN_FX.pulseF);
+  return 1 + (FX.winZoomLo - 1) * Math.sin(Math.PI * k / WIN_FX.pulseF);   // holy-137：企劃書 V19 I9「整體放大10%」＝1→1.1→1（原 Bezier(0,6,−3,0) 峰值 1.42、會縮到 0.875）
 }
 function winCellGroupS(c, r) {                    // 這一格所屬那組的第幾幀（連線開始前 6 幀起算）；不是中獎格＝null
   const gi = winPlan ? winPlan.cellGroup[c + ',' + r] : undefined;
@@ -3112,13 +3115,13 @@ function afterLines() {
     hasHitThisSpin = true;
     segTotal = total;
     bigTier = 0;
-    // 中央只顯示輪盤彩金、≥10 倍才出（使用者 2026-10-29）；得分層級（公版特效）照舊看整局總贏分（使用者 2026-10-28）。
+    // 中央只顯示輪盤彩金、有輪盤彩金就出（企劃書 V19 G53，holy-137；原 ≥10 倍才出，使用者 2026-10-29）；得分層級（公版特效）照舊看整局總贏分（使用者 2026-10-28）。
     // 出現那一幀＝最後一個轉盤停下後第 S−1 幀（競品 W+29／W+14）；第 14 幀從 2 倍起跑、照競品分段等速（countPlan；使用者 2026-10-30 要求照競品，原本從 0）
     scorePanel = centerShows(wheelWin) ? { final: wheelWin, run: centerRunEnabled(wheelWin), lvl: scoreLevel(total),
       plan: scoreRunPlan(TIMING, wheelWin / Math.max(1, ODDS.bet)) } : null;
-    noRunWheelRound = !scorePanel && wheels.length > 0 && wheelWin > 0;   // 有輪盤倍數但不出跑分 → 局間多等 wheelNoRunGap
+    noRunWheelRound = (!scorePanel || !scorePanel.run) && wheels.length > 0 && wheelWin > 0;   // 有輪盤倍數但沒跑分（holy-137 起 <10 倍＝中央數字直接顯示、不跑分）→ 局間多等 wheelNoRunGap
     if (scorePanel) { currentState = STATE.SCORE; stateTimer = 0; }
-    // 有輪盤但輪盤彩金 <10 倍：競品不出中央數字、停下後第 S−1 幀就結束；整局總贏分 10～25 倍時天使要播高倍（我們加的，看總贏分，使用者 2026-10-28），
+    // 有輪盤但輪盤沒有彩金（例：只停紅心格；holy-137 起有彩金就出中央數字）：不出中央數字、停下後第 S−1 幀就結束；整局總贏分 10～25 倍時天使要播高倍（我們加的，看總贏分，使用者 2026-10-28），
     // 留一段跟中央數字「到值停留＋收掉」一樣長的得分停留給天使演（沒有天使高倍就照競品直接結束）
     else if (wheels.length && angelHiOf(total) > 0) { currentState = STATE.SCORE; stateTimer = 0; }
     else { commitWin(); scoreDone(); }           // 只有連線得分（天使高倍已在逐組演出時播）：逐組演完直接結束，WIN 欄直接切換
@@ -3127,7 +3130,7 @@ function afterLines() {
 // 大獎逐級跑分（使用者 2026-10-19：從 1 起跑；2026-10-29 要求照競品：跑分速度＝競品分段等速 countPlan；2026-10-30：門檻維持 25／51／101／200；
 //   2026-10-30 起點也照競品：第 0～13 幀顯示 0、第 14 幀從 2 倍起跑，推翻「從 1 起跑」）
 // V10 流程（使用者 2026-10-29）：只有連線（輪盤彩金 0，bigDirect）＝BIG 版第 0 幀直接跳出、分數在大獎畫面裡跑分（流程不變，只改數字起點）；
-//   有轉盤＝盤面中央的倍數得分數字跑分，BIG 字樣登場前最後 bigLinkMove 秒邊跑分邊上移到大獎分數位置（銜接演繹），BIG 登場那一幀交棒
+//   有轉盤＝盤面中央的倍數得分數字跑分，BIG 登場那一幀原地交棒成大獎分數（不位移）、bigLinkMove 秒內彈跳縮放一次（銜接演繹，企劃書 V19 I54）
 // 換階事件 E[k]＝跑分越過我們門檻（25／51／101／200 倍）的那一幀；字樣：BIG 在事件後 1 幀登場（bigTierIn 0.833s，EPIC bigEpicIn 0.867s）；
 //   換階時上一階先收尾 bigTierOut（16 幀）、事件後第 17 幀下一階登場（競品 tier spine）。到值 F 後第 bigEndAt（101）幀收尾、第 bigDone（113）幀結束；
 //   場景：BIG 事件起 bigDim（30 幀）壓暗到 0.3、到值時 30 幀恢復（到值太早時至少壓暗滿 30 幀才恢復）
@@ -3144,8 +3147,14 @@ function bigTimelineFor(T, toMoney, tier, direct) {   // 純函式（節奏表�
     E[k] = f;
     S[k] = Math.max(k > 1 ? S[k - 1] + 1 : 0, f + 1 + (k > 1 ? TF(T.bigTierOut) : 0));
   }
-  return { plan: plan, E: E, S: S, F: plan.done, endAt: plan.done + TF(T.bigEndAt), doneAt: Math.max(plan.done + 1, plan.done + TF(T.bigDone)) };
+  let endAt = plan.done + TF(T.bigEndAt), doneAt = Math.max(plan.done + 1, plan.done + TF(T.bigDone));
+  if (tier >= 4) {                                 // holy-141（使用者 11-06）：EPIC 一定演完《創世紀》指尖相碰（相碰後再留 EPIC_TOUCH_HOLD 幀給閃光與金幣鈔票）才收尾
+    const minEnd = S[4] + TF(BIG_ANGEL_MOVE_TIER[4]) + TF(T.bigTouch) + EPIC_TOUCH_HOLD;
+    if (endAt < minEnd) { doneAt += minEnd - endAt; endAt = minEnd; }
+  }
+  return { plan: plan, E: E, S: S, F: plan.done, endAt: endAt, doneAt: doneAt };
 }
+const EPIC_TOUCH_HOLD = 50;                        // EPIC 指尖相碰後至少再留幾幀才收尾（≈0.83 秒）
 function bigTimeline(T) {
   T = T || TIMING;
   const key = [bigTo, bigTier, bigDirect ? 1 : 0, ODDS.bet, ODDS.bigWinRatio, ODDS.superRatio, ODDS.megaRatio, ODDS.epicRatio, T.scoreCountDelay,
@@ -3179,9 +3188,9 @@ function bigDimA() {                               // 大獎場景壓暗（黑�
   const din = Math.max(0, Math.min(1, (stateTimer - e1) / D)), dout = Math.max(0, Math.min(1, (stateTimer - rs) / D));
   return SSS_BIG_DIM * din * (1 - dout);
 }
-// 銜接演繹（V10 美術需求 H54「得分數字邊跑分邊向上移動到四階大獎分數的位置」；使用者 2026-10-29；我們加的）：有轉盤的大獎，BIG 字樣登場前最後 bigLinkMove 秒，
-// 中央數字從盤面中央移到大獎分數的位置、字級從一般跑分放大到大獎分數，BIG 登場那一幀剛好到位、直接交棒成大獎分數（不淡出）；跑分照競品曲線不受影響
-// 回傳 -1＝不在銜接（還沒開始／只有連線）；0～1＝銜接進度；BIG 登場之後＝1
+// 銜接演繹（企劃書 V19 I54；holy-137）：有轉盤的大獎，BIG 字樣登場前最後 bigLinkMove 秒，中央數字原地跑分、光暈淡掉（不位移、不放大），
+// BIG 登場那一幀直接交棒成大獎分數（同一位置、不淡出），接著彈跳縮放一次（bigLinkBounce）；跑分照競品曲線不受影響
+// 回傳 -1＝不在銜接（還沒開始／只有連線）；0～1＝BIG 登場前的銜接進度；BIG 登場之後＝1
 function bigLinkK() {
   if (currentState !== STATE.BIGWIN || bigDirect || bigTier < 1) return -1;
   const f1 = bigTierStartFrame(1), L = Math.min(f1, FR(TIMING.bigLinkMove));
@@ -3189,11 +3198,21 @@ function bigLinkK() {
   if (L <= 0 || stateTimer < f1 - L) return -1;
   return (stateTimer - (f1 - L)) / L;
 }
-const BIG_PRE_PX = 60, BIG_PRE_DY = 2, BIG_SCORE_PX = 66;   // 中央一般跑分的字級（字比盤面中心低 2px）／大獎分數的字級
-function bigLinkPose() {                           // 中央數字這一幀「字的中心」位置與縮放：銜接前＝盤面中央、原大；銜接結束＝大獎分數的位置與字級；glow＝光暈跟著淡掉
-  const k = bigLinkK(), e = k > 0 ? easeInOut(Math.min(1, k)) : 0;
-  const x0 = GRID_X + GRID_W / 2, y0 = GRID_Y + GRID_H / 2 + BIG_PRE_DY;
-  return { k: k, x: lerp(x0, 640, e), y: lerp(y0, BIG_SCORE_Y, e), s: lerp(1, BIG_SCORE_PX / BIG_PRE_PX, e), glow: 1 - e };
+// holy-137（企劃書 V19 I54「得分數字不另外位移：四階大獎的分數數字就放在跑分數字的位置（大獎畫面雲朵的下半部），跑分直接銜接大獎；
+//   銜接BIG WIN時數字整體會彈跳縮放一次」）：拿掉 10/29 的「邊跑分邊上移、放大」。大獎分數＝中央跑分同一個位置、同一個字級（bigScorePos），
+//   BIG 登場前 bigLinkMove 秒只把中央數字的光暈淡掉；BIG 登場那一幀起 bigLinkMove 秒內數字整體 1→1.3→1 彈跳縮放一次（bigLinkBounce）
+const SCORE_DY = 185;   // holy-141（使用者 11-06：數字要更下面，看競品）：中央跑分＝大獎分數的中心比盤面中心低 185px（預設佈局 y≈547＝畫面約 3/4 高，競品數字約 y 540～575）
+const BIG_PRE_PX = 60, BIG_PRE_DY = 2, BIG_SCORE_PX = BIG_PRE_PX;   // 中央一般跑分的字級（字比盤面中心低 2px）＝大獎分數的字級（holy-137：不放大）
+const BIG_LINK_POP = 0.3;                          // 銜接 BIG 那一下的彈跳幅度（1→1.3→1，跟中央數字出現的 SCORE_POP 同幅度；我們決定）
+function bigScorePos() { return { x: GRID_X + GRID_W / 2, y: GRID_Y + GRID_H / 2 + SCORE_DY + BIG_PRE_DY }; }   // 大獎分數「字的中心」＝中央跑分數字的位置
+function bigLinkPose() {                           // 中央數字這一幀「字的中心」位置與縮放：holy-137 起不位移、不放大；glow＝BIG 登場前光暈跟著淡掉
+  const k = bigLinkK(), e = k > 0 ? easeInOut(Math.min(1, k)) : 0, p = bigScorePos();
+  return { k: k, x: p.x, y: p.y, s: 1, glow: 1 - e };
+}
+function bigLinkBounce() {                         // BIG 登場那一幀起 bigLinkMove 秒：大獎分數整體彈跳縮放一次（只有轉盤銜接的大獎；只有連線＝1）
+  if (currentState !== STATE.BIGWIN || bigDirect || bigTier < 1) return 1;
+  const f1 = bigTierStartFrame(1), L = Math.max(1, FR(TIMING.bigLinkMove)), k = (stateTimer - f1) / L;
+  return k > 0 && k < 1 ? 1 + BIG_LINK_POP * Math.sin(Math.PI * k) : 1;
 }
 // 各級字樣的登場進度 0～1（事件後 1 幀＝0、bigTierIn（EPIC bigEpicIn）後＝1）；名畫、聖光的切換跟著它
 function bigSwapK(tier) {
@@ -4006,7 +4025,7 @@ function angelMood() {
   if (currentState === STATE.WHEEL && wheelPhase === 'maxwin') return { m: 'maxwin' };   // MAX WIN 登場演繹：天使畫在壓暗層之上（drawMaxWinShow）
   if (currentState === STATE.BIGWIN && bigShownTier() >= 1) return { m: 'big', tier: bigShownTier() };
   // 天使高倍看整局總贏分（V8 第 58／59／69／70 列）；有輪盤的局「先演線獎」那段還不知道總贏分 → 不判（比照大獎，使用者 2026-10-29）
-  // 有輪盤、但輪盤彩金 <10 倍不出中央數字的局，afterLines 照樣留一段「得分停留」，天使在這裡播（使用者 2026-10-29）
+  // 有輪盤、但輪盤彩金 <10 倍不跑分（中央數字直接顯示最終值）的局，afterLines 照樣留一段「得分停留」，天使在這裡播（使用者 2026-10-29）
   if ((currentState === STATE.WIN_SHOW || currentState === STATE.SCORE) && spinWin > 0 && !(lineFirst && !linesPaid)) {
     const h = angelHiOf(segTotal || spinWin);
     if (h && angelHiActive('hi' + h)) return { m: 'hi' + h };   // V14 H60／H61／H71／H72：播一次就回漂浮
@@ -4662,11 +4681,11 @@ function drawFGTransArt(k) {                       // k＝羽毛進度（transPo
   return true;
 }
 // 有轉盤的大獎、還沒到 BIG 門檻：盤面中央一般得分樣式跑分；跟一般得分一樣只有數字、不加黑底框（使用者 2026-10-29）。
-// pose（bigLinkPose）＝銜接演繹：字的中心移到 (pose.x, pose.y)、整體縮放 scaleMul，光暈與發光照 pose.glow 淡掉；數字本身不淡出（V10 美術需求 H54）。
+// pose（bigLinkPose）＝銜接演繹：holy-137 起字的中心固定在中央跑分位置（＝大獎分數位置，不位移、不放大），只有光暈與發光照 pose.glow 淡掉；數字本身不淡出（企劃書 V19 I54）。
 // 省略 pose＝盤面中央、原位置（跟改版前一樣）
 function drawBigPreRun(val, alpha, scaleMul, pose) {
   if (alpha <= 0) return;
-  const cx = pose ? pose.x : GRID_X + GRID_W / 2, cy = pose ? pose.y - BIG_PRE_DY * scaleMul : GRID_Y + GRID_H / 2;
+  const cx = pose ? pose.x : GRID_X + GRID_W / 2, cy = pose ? pose.y - BIG_PRE_DY * scaleMul : GRID_Y + GRID_H / 2 + SCORE_DY;
   const glow = pose ? Math.max(0, Math.min(1, pose.glow)) : 1;
   ctx.save();
   ctx.globalAlpha = Math.min(1, alpha);
@@ -5203,7 +5222,7 @@ function drawWheels() {
 
 /* --- 場景：奧林匹亞聖地（淡藍綠天空、米白石柱剪影，低對比）；FG 銅／銀／金牌賽換色 [decisions 奧林匹亞對照表] --- */
 /* --- 背景待機演繹（美術需求 V8 第 41～44 列；使用者 2026-10-29；holy-133 起 FG／SFG／UFG 照企劃書 V18 換新圖）---
- * 四張背景（NG：assets/bg_v8；FG／SFG／UFG：assets/bg_v18；16:9，畫滿畫面）的常駐 loop，全部程式繪製疊在背景圖上（不換圖、不做大面積破圖）：
+ * 四張背景（NG：assets/bg_v8；FG／SFG／UFG：assets/bg_v19（holy-139））；16:9，畫滿畫面）的常駐 loop，全部程式繪製疊在背景圖上（不換圖、不做大面積破圖）：
  *   NG：遠方雲朵飄動、前景樹葉晃動／FG（山腰藍天）：雲朵飄動、山腰下方雲朵流動、樹葉輕輕晃動／
  *   SFG（同一張山腰、金黃天空）：同 FG＋天空金色光束微微閃爍／UFG（雲端）：雲海流動、紅色天空光與金色光束微微閃爍。強度 FX.bgLoop（0＝關）。
  * 座標＝背景圖的比例（0～1；跟著背景的畫面矩形走，震動放大時一起放大）。這四張圖使用者還沒最後確認：換圖時只要改這張表。
@@ -5225,28 +5244,30 @@ const BG_LOOP = {   // V14 試版：所有 sec 改 3.0（背景待機 3 秒循�
       { box: [0.77, 0.30, 0.96, 0.52], pivot: [0.86, 0.54], amp: 0.7, sec: 3.0, ph: 2.0 },   // 右橄欖樹冠
     ],
   },
-  // holy-133（企劃書 V18 11-06）：FG／SFG 共用新山腰圖（只換天空），UFG 換雲端；座標照 assets/bg_v18/ 三張新圖
-  bgFG: {    // FG 山腰・藍天：遠方雲朵飄動、山腰下方雲朵緩緩流動、前景樹葉晃動
-    clouds: [{ band: [0.10, 0.02, 0.40, 0.20], n: 3, speed: 0.010, size: [0.08, 0.13], a: 0.5, tint: '240,247,255' },
-             { band: [0.62, 0.10, 0.95, 0.30], n: 3, speed: 0.010, size: [0.08, 0.12], a: 0.5, tint: '240,247,255' },
-             { band: [0.18, 0.68, 0.78, 0.95], n: 5, speed: 0.006, size: [0.10, 0.16], a: 0.45, tint: '250,252,255' }],
+  // holy-133（企劃書 V18 11-06）：FG／SFG 共用山腰圖，UFG 換雲端；holy-139（V19 11-06 傍晚）：三張換 assets/bg_v19/（構圖同 V18，座標沿用）
+  bgFG: {    // FG 山腰・夜景：遠方雲朵飄動、山腰下方雲朵緩緩流動、前景樹葉晃動（夜色雲）、兩側夜空星星閃爍
+    clouds: [{ band: [0.10, 0.02, 0.40, 0.20], n: 3, speed: 0.010, size: [0.08, 0.13], a: 0.35, tint: '150,170,225' },
+             { band: [0.62, 0.10, 0.95, 0.30], n: 3, speed: 0.010, size: [0.08, 0.12], a: 0.35, tint: '150,170,225' },
+             { band: [0.18, 0.68, 0.78, 0.95], n: 5, speed: 0.006, size: [0.10, 0.16], a: 0.35, tint: '170,185,235' }],
+    twinkle: [{ pts: [[0.13, 0.08], [0.20, 0.22], [0.27, 0.06], [0.74, 0.07], [0.80, 0.20], [0.88, 0.05]], r: 0.009, sec: 3.0 }],
     sway: [
       { box: [0.0, 0.78, 0.13, 1.0], pivot: [0.05, 1.0], amp: 1.4, sec: 3.0, ph: 0.2 },      // 左下前景葉
       { box: [0.89, 0.82, 1.0, 1.0], pivot: [0.95, 1.0], amp: 1.4, sec: 3.0, ph: 1.4 },      // 右下前景葉
     ],
   },
-  bgSFG: {   // SFG 同一張山腰・金黃天空：雲朵飄動、樹葉晃動、天空的金色光束微微閃爍
-    glow: [{ at: [0.50, 0.80], r: 0.22, rgb: '255,236,160', a: 0.25, sec: 3.0, rays: 10 }],  // 地平線的金色暖光
-    clouds: [{ band: [0.10, 0.02, 0.40, 0.20], n: 3, speed: 0.010, size: [0.08, 0.13], a: 0.4, tint: '255,236,190' },
-             { band: [0.62, 0.10, 0.95, 0.30], n: 3, speed: 0.010, size: [0.08, 0.12], a: 0.4, tint: '255,236,190' },
-             { band: [0.18, 0.68, 0.78, 0.95], n: 5, speed: 0.006, size: [0.10, 0.16], a: 0.4, tint: '255,244,215' }],
+  bgSFG: {   // SFG 同一張山腰夜景＋神聖光：雲朵飄動、樹葉晃動、天上的神聖光束微微閃爍、星星閃爍
+    rays: [{ from: [0.50, -0.04], n: 8, spread: 0.9, len: 0.62, wd: 0.05, rgb: '255,240,200', a: 0.22, sec: 3.0 }],   // 天頂灑下的神聖光束
+    clouds: [{ band: [0.10, 0.02, 0.40, 0.20], n: 3, speed: 0.010, size: [0.08, 0.13], a: 0.35, tint: '170,180,230' },
+             { band: [0.62, 0.10, 0.95, 0.30], n: 3, speed: 0.010, size: [0.08, 0.12], a: 0.35, tint: '170,180,230' },
+             { band: [0.18, 0.68, 0.78, 0.95], n: 5, speed: 0.006, size: [0.10, 0.16], a: 0.35, tint: '180,190,240' }],
+    twinkle: [{ pts: [[0.13, 0.12], [0.22, 0.26], [0.80, 0.24], [0.88, 0.10]], r: 0.009, sec: 3.0 }],
     sway: [
       { box: [0.0, 0.78, 0.13, 1.0], pivot: [0.05, 1.0], amp: 1.4, sec: 3.0, ph: 0.2 },
       { box: [0.89, 0.82, 1.0, 1.0], pivot: [0.95, 1.0], amp: 1.4, sec: 3.0, ph: 1.4 },
     ],
   },
-  bgUFG: {   // UFG 雲端・金色氛圍＋紅色天空光：雲海流動、紅色天空光與金色光束微微閃爍
-    rays: [{ from: [0.50, -0.06], n: 9, spread: 1.2, len: 0.85, wd: 0.055, rgb: '255,170,120', a: 0.3, sec: 3.0 }],   // 紅色天空光
+  bgUFG: {   // UFG 雲端・金色為主＋淡紅氛圍（holy-139）：雲海流動、金黃色天空光與光束微微閃爍
+    rays: [{ from: [0.50, -0.06], n: 9, spread: 1.2, len: 0.85, wd: 0.055, rgb: '255,225,140', a: 0.3, sec: 3.0 }],   // 金黃色天空光
     twinkle: [{ pts: [[0.07, 0.10], [0.14, 0.30], [0.93, 0.10], [0.86, 0.30], [0.10, 0.55], [0.90, 0.55]], r: 0.014, sec: 3.0 }],   // 兩側金色神殿與階梯的光點
     clouds: [{ band: [0.10, 0.55, 0.90, 0.98], n: 7, speed: 0.006, size: [0.12, 0.2], a: 0.4, tint: '255,240,205' }],
   },
@@ -5695,14 +5716,16 @@ function drawHeartBreathGlow(cx, cy, box, id, a) {  // 呼吸光：聖心背後�
 //   其他候選圖示（鑰匙、聖杯、白鴿…）V3 沒寫 → 只有整體縮放。V3 沒寫的「刷光」拿掉（使用者 2026-10-29）
 const WIN_PART_OF = { chaliceLaurel: 'ruby', crossGold: 'ruby', crossSilver: 'ruby', bird: 'crest', unicorn: 'mane', harp: 'strings', wings: 'flap' };
 function winPartOf(id) { return id >= 0 && id <= 4 ? (WIN_PART_OF[pickKeyOf(id)] || null) : null; }
-// 第二部分 2b（使用者 2026-10-29 要求照競品）：高分圖示不脈動，局部動作就是競品 spine win——從這一欄的動作起點播 D 幀（前 4 名 winHiAnim 1.667s、第 5 名 winHi5Anim 1.033s），
-//   播完停在最後一格（＝原狀）到下一局；低分照舊只有外框微微光暈（我們加的，V3）。idle（可再按之後）不播
+// 高分圖示：局部動作從這一欄的動作起點播 D 幀（winHiAnim／winHi5Anim，企劃書 V19 H4～H8 都是 1.67 秒），播完停在最後一格（＝原狀）到下一局；
+//   holy-137 起照企劃書 V19 I4～I8「圖示整體縮放」：同一段 D 幀內整張圖示 1→FX.winScaleHi→1 一次（取代 10/29 的「照競品不脈動」）。
+//   低分照舊外框微微光暈（V19 I9），整體放大 10% 在 winPulseAt。idle（可再按之後）不播
 function winSymbolFx(id, t, D) {                  // t＝動作開始後第幾幀；D＝動作幀數（高分）
   if (id >= SIX_ID) return null;
   const hi = id <= 4, part = winPartOf(id);
   const o = { s: 1, dx: 0, dy: 0, rot: 0, glow: 0, part: part, pk: -1, flash: 0 };
   if (!hi) { o.glow = 0.7 + 0.3 * Math.sin(t * 0.2); return o; }
   const q = t / Math.max(1, D || hiAnimFrames(id));
+  if (q > 0 && q < 1) o.s = 1 + (FX.winScaleHi - 1) * Math.sin(Math.PI * q);   // 整體縮放一次（企劃書 V19 I4～I8）
   if (part === 'ruby') {                          // 十字架：晃動（動作結束時收到 0）＋中央紅寶石閃光一次
     o.rot = q < 1 ? 0.05 * Math.sin(t * 0.32) * (1 - q) : 0;
     o.flash = q > 0.15 && q < 0.4 ? Math.sin(Math.PI * (q - 0.15) / 0.25) * FX.rubyFlash : 0;
@@ -6005,7 +6028,7 @@ function drawWinTag(anchor, v, s) {
   textOutline(fmtNum(v), 0, 0, '#fde047', '#3b1d0a', Math.max(4, FX.winTagSize * 0.22));
   ctx.restore();
 }
-// 盤面中央得分：只顯示輪盤彩金、≥10 倍才出（使用者 2026-10-29），星城跑分／H5 直接顯示；公版特效(1)(2) 看整局總贏分 [企劃 §得分層級演繹 C3:E5]
+// 盤面中央得分：只顯示輪盤彩金，有彩金就出、≥10 倍才跑分（holy-137 照企劃書 V19 G53；原 10-29 為 ≥10 倍才出），星城跑分／H5 直接顯示；公版特效(1)(2) 看整局總贏分 [企劃 §得分層級演繹 C3:E5]
 // 數字直接畫在盤面上、不加黑底框（使用者 2026-10-29「中央分數跑分的時候不用再有那個黑色的框框得分版了 純粹數字跑就好」）
 // 競品（使用者 2026-10-29 要求照競品，第二部分 2a）：出現 0→1.3→1、第 14 幀起分段等速跑分（countPlan）、到值停 1.0s、back.in 0.9s 收掉
 function scoreShownValue(t) {                      // 中央數字第 t 幀顯示的值（H5 不跑分＝直接最終值）
@@ -6017,7 +6040,7 @@ function drawScorePanel() {
   const v = scoreShownValue(stateTimer);
   const s = scoreNumScale(stateTimer, scoreDoneFrame());
   if (s <= 0.001) return;
-  const cx = GRID_X + GRID_W / 2, cy = GRID_Y + GRID_H / 2;
+  const cx = GRID_X + GRID_W / 2, cy = GRID_Y + GRID_H / 2 + SCORE_DY;
   ctx.save();
   ctx.translate(cx, cy); ctx.scale(s, s);
   {                                                 // 得分數字縮放彈出，數字下方簡單光效（美術需求 47H）
@@ -6463,19 +6486,29 @@ function drawDealScreen() {                        // 挑戰畫面；轉場（tr
   const win = dealWinPose();
   drawChallengeWheel(Wd.cx, Wd.cy, Wd.R, dealAngle, { alpha: 1 - out, scale: 1 - 0.06 * out, sel: win ? dealIdx : -1, win: win });
 }
-/* --- 升級演繹（第 86 列）：①挑戰轉盤發出強光（畫面震動，update 觸發），強光蓋滿整個畫面
- *     ②震動與強光消失後，背景往上轉換到下一段山 ③下一階光環從上方降下＝回到進入介面（fgIntroNoPull，從光環那段開始）
+/* --- 升級演繹（第 86 列；企劃書 V19 I88）：①挑戰轉盤發出強光（畫面震動，update 觸發），強光蓋滿整個畫面
+ *     ②震動與強光消失後，背景換到下一個場景（FG→SFG 天空藍轉金黃 crossfade、SFG→UFG 往上到雲端；holy-137）③下一階光環從上方降下＝回到進入介面（fgIntroNoPull，從光環那段開始）
  *     V8 沒寫的「晉級！」大字與火把已拿掉（使用者 2026-10-29）
  *     第二部分 2b（使用者 2026-10-29 要求照競品）：停下 W+37 開始、①② 壓進 promoteHold 1.417s（＝競品變黑 0.5s＋停 55 幀），③＝競品新合約淡入 0.5s --- */
+// holy-137（企劃書 V19 I88 ②「震動與強光消失後，背景換到下一個場景：FG→SFG（同一張山腰背景，天空由藍色轉為金黃色）、SFG→UFG（往上到雲端）」）：
+//   背景轉換改成強光完全退掉（p＝PROMOTE_LIGHT_END）之後才開始（原本 p≥0.5 就開始、強光 0.62 才退完）；
+//   FG→SFG＝兩張山腰背景原地 crossfade（藍天→金黃天空，不滑動）；SFG→UFG＝照舊整張往上滑到雲端
+const PROMOTE_LIGHT_END = 0.62, PROMOTE_BG_END = 0.92;
 function promoteStage() {
   const p = stateTimer / Math.max(1, TF(TIMING.promoteHold));
-  return { p: p, light: cl01(p / 0.3), fade: p < 0.45 ? 1 : cl01(1 - (p - 0.45) / 0.17), lift: p < 0.5 ? 0 : p < 0.88 ? easeInOut((p - 0.5) / 0.38) : 1 };
+  const lift = p < PROMOTE_LIGHT_END ? 0 : p < PROMOTE_BG_END ? easeInOut((p - PROMOTE_LIGHT_END) / (PROMOTE_BG_END - PROMOTE_LIGHT_END)) : 1;
+  return { p: p, light: cl01(p / 0.3), fade: p < 0.45 ? 1 : cl01(1 - (p - 0.45) / (PROMOTE_LIGHT_END - 0.45)), lift: lift, blend: promoteFrom === 1 && pendingLevel === 2 };
 }
 function drawPromote() {
   if (currentState !== STATE.PROMOTE) return;
   const st = promoteStage(), Wd = DEAL_WHEEL;
-  drawFGScene(promoteFrom, 1, H * st.lift);
-  if (st.lift > 0) drawFGScene(pendingLevel, 1, -H * (1 - st.lift));
+  if (st.blend) {                                  // FG→SFG：同一張山腰，天空藍→金黃（兩張背景 crossfade）
+    drawFGScene(promoteFrom, 1, 0);
+    if (st.lift > 0) drawFGScene(pendingLevel, st.lift, 0);
+  } else {                                         // SFG→UFG：往上到雲端（整張滑動）
+    drawFGScene(promoteFrom, 1, H * st.lift);
+    if (st.lift > 0) drawFGScene(pendingLevel, 1, -H * (1 - st.lift));
+  }
   drawFGVeil(1);
   drawCloudBank(FGUI.cloudTop, 1);
   if (st.p < 0.45) drawChallengeWheel(Wd.cx, Wd.cy, Wd.R, dealAngle, { sel: dealIdx, win: dealWinPose() || { k: 99, s: 1, dim: 1 }, glow: 0.6 + 1.4 * st.light });   // 停下 WIN 動畫接著播（W+37 起升級）
@@ -6658,7 +6691,19 @@ function drawFGTotalScreen(st) {                   // st＝fgTotalStage 格式�
  * 聖光從畫面上方中央同一點灑落、只用強度分級；兩位天使到畫面中央扮名畫，雲朵與金幣逐級增加。
  * 天使姿勢待美術：只有兩張天使圖（黑髮揮手 character_01＝左天使、金髮托腮 character_02＝右天使），名畫姿勢用位置／縮放／旋轉近似，道具程式畫。
  * ========================================================== */
-const BIG_TITLE_Y = 112, BIG_SCORE_Y = 206;
+/* holy-137（企劃書 V19 B96、E97～E101、I96～I101）：
+ *   構圖：四階完全相同、不做滿版（大獎畫面在下方公版面板之上）——上方標題字、中間兩位天使演名畫、下方贏分數字；天使與數字在同一朵大雲上，
+ *   數字在雲的下半部。贏分數字＝中央跑分數字的位置（bigScorePos，I54 不另外位移），大雲、天使、標題以它為準往上排。
+ *   下面的座標是「預設佈局（分數字中心 640,362）」的畫面座標；調校面板改了盤面位置時，整個大獎畫面跟著分數字平移（bigOffset）。
+ *   拿掉 BIG 的金色畫框＋綠色帷幕（drawPropSistine）、EPIC 的斜躺與散雲；名畫姿勢與道具保留（寶盒、扇貝、花瓣風、指尖相碰、金幣、鈔票、光束）。
+ *   換階（【大獎銜接演繹】）：不用轉化——holy-142 起一片巨大的玫瑰花瓣由左往右飛過畫面最前方，擋住整個大獎畫面的瞬間切換成下一階，花瓣散去後顯示下一階（drawBigPetalCover）；
+ *   拿掉舊的上一階淡出／下一階淡入、天使拱形飛到下一幅、標題縮小淡出再從天而降。常駐飄落花瓣 BIG 零星幾片、逐階變多、EPIC 最多（BIG_PETALS）。 */
+const BIG_BASE = { x: 640, y: 547 };               // 預設佈局的大獎分數位置（＝盤面中央＋2px）；BIG_SCENES／BIG_CLOUDS 以它為基準
+const BIG_TITLE_Y = 175;                           // 標題中心（預設佈局；在天使頭上，跟著 bigOffset 平移）。holy-140：62→100，出現時放大 1.3 倍也不超出畫面上緣
+function bigOffset() { const p = bigScorePos(); return { x: p.x - BIG_BASE.x, y: p.y - BIG_BASE.y }; }
+const BIG_CLOUDS = [[640, 440, 720, 130, 0], [640, 505, 860, 170, 1]];   // holy-141：照競品比例下移，數字 547 在前層雲中間偏下（雲約 400～590，面板 640 之上）；   // 四階共用的大雲：後層（天使後面）＋前層（天使趴在它上緣）。holy-140：雲下移到約 310～500，數字（362）在雲的上半部，不必完全在雲內（使用者 11-06）
+const BIG_PETALS = [0, 3, 5, 8, 12];                // 常駐飄落的玫瑰花瓣片數（企劃書 V19 E97／I97：BIG 零星幾片、每升一階少量增加即可、不用過多（使用者 11-06 傍晚，原 5／12／20／50）；MEGA 另有黑髮天使吹出的花瓣風 18 片）
+const BIG_PETAL_CLEAR = 0.30;                       // 換階花瓣散去秒數（湧上＝bigTierOut 0.5 秒；企劃書 H97「約0.5秒」只寫整段，散去長度我們決定）
 const BIG_HOLY_SRC = { x: 640, y: -40 };           // 四階聖光的光源：畫面上方中央同一點（第 95 列 E 欄）
 const BIG_HOLY = [null,                            // 只用強度分級 BIG＜SUPER＜MEGA＜EPIC；a 再乘 FX.bgFx
   { beams: 1, spread: 0, half: 0.11, a: 0.75, dots: 0, glow: 110 },     // BIG：一道小小的聚光燈
@@ -6666,30 +6711,26 @@ const BIG_HOLY = [null,                            // 只用強度分級 BIG＜S
   { beams: 5, spread: 0.5, half: 0.09, a: 1.15, dots: 22, glow: 190 },  // MEGA：光束更多更亮＋少量光點
   { beams: 9, spread: 0.85, half: 0.08, a: 1.35, dots: 80, glow: 250 }, // EPIC：最華麗的光束＋大量光點粒子
 ];
-// 名畫構圖（who 0＝黑髮左天使、1＝金髮右天使；x,y＝人物中心、h＝高、rot＝旋轉）；clouds [cx, cy, w, h, 前景?]；coins／bills＝金幣、鈔票數
+// 名畫構圖（who 0＝黑髮左天使、1＝金髮右天使；x,y＝人物中心、h＝高、rot＝旋轉）；clouds [cx, cy, w, h, 前景?]（四階都是同一朵大雲 BIG_CLOUDS）；coins／bills＝金幣、鈔票數
+// holy-137：四階同一個構圖（企劃書 V19 E99～E101「構圖同BIG WIN」），天使都在大雲上緣、道具縮小放在兩位天使之間（座標＝預設佈局，見 BIG_BASE）
 const BIG_SCENES = [null,
-  { name: '西斯汀聖母（下緣兩個小天使）', prop: 'ledge',             // 使用者 2026-10-29：兩位天使趴在畫框下緣、托腮往上看，頭上飄下少量金幣
-    angels: [{ who: 0, x: 528, y: 476, h: 330, rot: -0.06 }, { who: 1, x: 762, y: 474, h: 322, rot: 0.03 }],
-    clouds: [[640, 640, 980, 190, 1], [640, 596, 660, 120, 1]], coins: 6, bills: 0 },
-  { name: '潘朵拉的盒子', prop: 'box',                               // 使用者 2026-10-29（沃特豪斯跪姿）：金髮天使掀開華麗寶盒、金幣與光從盒裡噴出；黑髮天使躲旁邊偷看嚇到
-    box: { x: 598, y: 556 }, mouth: { x: 598, y: 474 },
-    angels: [{ who: 0, x: 342, y: 462, h: 284, rot: 0.1, peek: 1 }, { who: 1, x: 772, y: 446, h: 304, rot: -0.1 }],
-    clouds: [[610, 624, 480, 150, 1], [836, 632, 400, 140, 1], [318, 566, 340, 200, 1], [1100, 600, 300, 150, 0]], coins: 12, bills: 0,
-    alt: {                                         // FX.bigPandora＝1：V8 第 96 列寫法（黑髮天使掀盒、金髮天使探頭偷看挑眉）
-      box: { x: 660, y: 556 }, mouth: { x: 660, y: 474 },
-      angels: [{ who: 0, x: 488, y: 448, h: 304, rot: 0.12 }, { who: 1, x: 900, y: 444, h: 290, rot: -0.06, peek: 1 }],
-      clouds: [[670, 624, 480, 150, 1], [450, 632, 400, 140, 1], [912, 584, 320, 160, 1], [180, 600, 300, 150, 0]] } },
+  { name: '西斯汀聖母（下方兩個小天使）', prop: 'sistine',          // 企劃書 V19 E98：兩隻天使並排趴在雲的上緣，托著下巴往上看；雲上散落幾顆金幣、零星幾片花瓣
+    angels: [{ who: 0, x: 518, y: 350, h: 254, rot: -0.05 }, { who: 1, x: 762, y: 354, h: 248, rot: 0.04 }],
+    clouds: BIG_CLOUDS, coins: 6, bills: 0 },
+  { name: '潘朵拉的盒子', prop: 'box',                               // FX.bigPandora＝0（使用者 2026-10-29 舊版）：金髮天使掀開寶盒、黑髮天使躲旁邊偷看
+    box: { x: 640, y: 410, s: 0.74 }, mouth: { x: 640, y: 322 },
+    angels: [{ who: 0, x: 496, y: 356, h: 242, rot: 0.08, peek: 1 }, { who: 1, x: 786, y: 348, h: 252, rot: -0.12 }],
+    clouds: BIG_CLOUDS, coins: 12, bills: 0,
+    alt: {                                         // FX.bigPandora＝1（預設，企劃書 V19 E99／I99）：黑髮天使跪在雲上掀開金色寶盒，金髮天使在旁探頭偷看
+      angels: [{ who: 0, x: 494, y: 348, h: 252, rot: 0.12 }, { who: 1, x: 788, y: 356, h: 242, rot: -0.06, peek: 1 }] } },
   { name: '維納斯的誕生', prop: 'shell',                             // 金髮天使站在粉紅扇貝上擺維納斯姿勢，黑髮天使鼓臉吹出帶玫瑰花瓣的風
-    shell: { x: 756, y: 606, r: 214 }, wind: { x0: 432, y0: 338, x1: 700, y1: 414 },
-    angels: [{ who: 0, x: 400, y: 372, h: 270, rot: -0.12 }, { who: 1, x: 756, y: 444, h: 304, rot: 0 }],
-    clouds: [[120, 600, 330, 200, 1], [1160, 600, 330, 200, 1], [330, 662, 420, 150, 1], [960, 668, 420, 150, 1], [140, 330, 230, 120, 0], [1150, 320, 230, 120, 0]],
-    coins: 24, bills: 0 },
-  { name: '創世紀', prop: 'genesis',                                 // 黑髮天使躺在雲上懶洋洋伸一根手指，金髮天使披紅布飛來，指尖相碰迸出閃光、大量金幣與鈔票
-    touch: { x: 606, y: 450 }, reach: { dx: -46, dy: 20 },    // reach：金髮天使伸手的起點（相對人物中心；手臂畫在人物後面，起點被身體蓋住）
-    angels: [{ who: 0, x: 440, y: 478, h: 300, rot: 0.42 }, { who: 1, x: 862, y: 418, h: 290, rot: -0.3 }],
-    clouds: [[400, 596, 480, 170, 1], [190, 636, 340, 160, 1], [1070, 616, 400, 170, 1], [870, 664, 330, 120, 1], [640, 690, 600, 110, 1],
-      [110, 360, 230, 130, 0], [1170, 350, 230, 130, 0], [130, 190, 210, 110, 0], [1150, 180, 210, 110, 0]],
-    piles: [[230, 566], [1080, 560], [620, 650]], coins: 40, bills: 14 },
+    shell: { x: 752, y: 412, r: 130 }, wind: { x0: 562, y0: 305, x1: 704, y1: 328 },
+    angels: [{ who: 0, x: 500, y: 352, h: 238, rot: -0.12 }, { who: 1, x: 752, y: 330, h: 252, rot: 0 }],
+    clouds: BIG_CLOUDS, coins: 24, bills: 0 },
+  { name: '創世紀', prop: 'genesis',                                 // 黑髮天使在雲上懶洋洋伸一根手指，金髮天使披紅布飛來，指尖相碰迸出閃光、大量金幣與鈔票
+    touch: { x: 640, y: 330 }, reach: { dx: -44, dy: 18 },    // reach：金髮天使伸手的起點（相對人物中心；手臂畫在人物後面，起點被身體蓋住）
+    angels: [{ who: 0, x: 504, y: 358, h: 242, rot: 0.14 }, { who: 1, x: 784, y: 334, h: 238, rot: -0.16 }],
+    clouds: BIG_CLOUDS, piles: [[430, 452], [850, 452]], coins: 40, bills: 14 },
 ];
 // V14 試版：天使換到名畫位置的秒數照美術需求角色秒數 BIG 2.00／SUPER 1.67／MEGA 3.33／EPIC 3.33（H98～H101；EPIC＝飛 2.33＋指尖相碰 bigTouch 1.0）；原四階都 0.7
 const BIG_ANGEL_MOVE_TIER = [0, 2.00, 1.67, 3.33, 2.33];
@@ -6701,22 +6742,29 @@ function bigScene(tier) {
   const s = BIG_SCENES[tier];
   return s && s.alt && FX.bigPandora >= 0.5 ? Object.assign({}, s, s.alt) : s;
 }
-function bigAngelSide(who) {
-  const rc = charRect(who ? LAYOUT.charR : LAYOUT.charL, who ? ART_GEO.cupidR : ART_GEO.cupidL);
-  return { x: rc.x + rc.w / 2, y: rc.y + rc.h / 2, h: rc.h, rot: 0 };
+function bigAngelSide(who) {                       // 兩側原位（換算成大獎畫面的預設佈局座標，扣掉 bigOffset）
+  const rc = charRect(who ? LAYOUT.charR : LAYOUT.charL, who ? ART_GEO.cupidR : ART_GEO.cupidL), o = bigOffset();
+  return { x: rc.x + rc.w / 2 - o.x, y: rc.y + rc.h / 2 - o.y, h: rc.h, rot: 0 };
 }
 function bigAngelTarget(tier, who) {
   const a = bigScene(tier).angels.filter(q => q.who === who)[0];
   if (tier === 4 && who === 1) {                   // 創世紀：金髮天使從右邊飛近，到指尖相碰
     const k = cl01((stateTimer - epicTouchFrame() + TF(TIMING.bigTouch)) / TF(TIMING.bigTouch));
-    return Object.assign({}, a, { x: a.x + (1 - easeOut3(k)) * 120, y: a.y - (1 - easeOut3(k)) * 30 });
+    return Object.assign({}, a, { x: a.x + (1 - easeOut3(k)) * 60, y: a.y - (1 - easeOut3(k)) * 16 });
   }
   return a;
 }
-function bigAngelNow(tier, who) {                  // 從上一幅（BIG＝兩側原位）飛到這一幅的位置，路徑往上拱
-  const to = bigAngelTarget(tier, who), from = tier > 1 ? bigAngelTarget(tier - 1, who) : bigAngelSide(who);
+// BIG：兩側天使飛到雲朵上趴下（企劃書 V19 I98，路徑往上拱）；SUPER／MEGA 在花瓣遮住的那一幀直接就位（holy-137：換階不飛）；
+// EPIC 金髮天使披紅布從右上方飛來（I101），黑髮天使直接就位。k＝角色演繹進度（BIG 2.00／SUPER 1.67／MEGA 3.33／EPIC 飛 2.33＋相碰 1.0）
+function bigAngelNow(tier, who) {
+  const to = bigAngelTarget(tier, who);
   const k = cl01((stateTimer - bigTierStartFrame(tier)) / TF(bigAngelMove(tier))), e = easeInOut(k);
-  return { x: lerp(from.x, to.x, e), y: lerp(from.y, to.y, e) - Math.sin(Math.PI * e) * 70, h: lerp(from.h, to.h, e), rot: lerp(from.rot, to.rot, e), k: k, peek: to.peek };
+  let from = null;
+  if (tier === 1) from = bigAngelSide(who);
+  else if (tier === 4 && who === 1) from = { x: to.x + 300, y: to.y - 90, h: to.h, rot: to.rot - 0.2 };
+  if (!from) return { x: to.x, y: to.y, h: to.h, rot: to.rot, k: k, peek: to.peek };
+  const arc = tier === 1 ? 70 : 30;
+  return { x: lerp(from.x, to.x, e), y: lerp(from.y, to.y, e) - Math.sin(Math.PI * e) * arc, h: lerp(from.h, to.h, e), rot: lerp(from.rot, to.rot, e), k: k, peek: to.peek };
 }
 function epicTouchFrame() { return bigTierStartFrame(4) + TF(bigAngelMove(4)) + TF(TIMING.bigTouch); }   // 創世紀指尖相碰那一幀
 function drawBigHolyLight(tier, a) {               // 四階聖光：同一個光源，只用強度分級
@@ -6746,7 +6794,7 @@ function drawBigHolyLight(tier, a) {               // 四階聖光：同一個�
 let _bigTitleCanvas = null;
 function drawBigTitle(tier, scaleMul, alpha, val, dropY) {   // 大獎標題：一整排、同字型只換色（深棕描邊＋三色漸層，不疊厚度）＋掃光；下方贏分數字
   if (alpha <= 0 || scaleMul <= 0.02) return;
-  const C = BIG_COLORS[tier] || BIG_COLORS[1], name = BIG_NAMES[tier], t = nowT(), px = 94;
+  const C = BIG_COLORS[tier] || BIG_COLORS[1], name = BIG_NAMES[tier], t = nowT(), px = 88;   // holy-137：88px（原 94；四階同構圖，標題壓在天使頭上方）
   const font = 'bold ' + px + 'px "Arial Black", Arial, sans-serif';
   ctx.save(); ctx.globalAlpha *= Math.min(1, alpha);
   if (dropY) ctx.translate(0, dropY);              // 從天而降
@@ -6764,8 +6812,8 @@ function drawBigTitle(tier, scaleMul, alpha, val, dropY) {   // 大獎標題：�
   const sg = o.createLinearGradient(gx - 70, 0, gx + 70, ch * 0.4);
   sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, 'rgba(255,255,255,.7)'); sg.addColorStop(1, 'rgba(255,255,255,0)');
   o.globalCompositeOperation = 'source-atop'; o.fillStyle = sg; o.fillRect(0, 0, cw, ch);
-  const sc = (1 + 0.04 * Math.sin(t / 160)) * scaleMul;
-  ctx.save(); ctx.translate(640, BIG_TITLE_Y); ctx.scale(sc, sc); ctx.drawImage(oc, -cw / 2, -ch / 2);
+  const sc = (1 + 0.04 * Math.sin(t / 160)) * scaleMul, bo = bigOffset();
+  ctx.save(); ctx.translate(640 + bo.x, BIG_TITLE_Y + bo.y); ctx.scale(sc, sc); ctx.drawImage(oc, -cw / 2, -ch / 2);
   for (let i = 0; i < 4; i++) {                    // 標題旁的閃光
     const tw2 = 0.5 + 0.5 * Math.sin(t / 220 + i * 1.9);
     drawSparkle((i < 2 ? -1 : 1) * (tw / 2 + 10 - (i % 2) * 40), (i % 2 ? 1 : -1) * px * 0.42, 16 + 10 * tw2, tw2);
@@ -6774,52 +6822,26 @@ function drawBigTitle(tier, scaleMul, alpha, val, dropY) {   // 大獎標題：�
   if (val !== null) drawBigScore(val);             // 舊呼叫方式（分數跟著標題的透明度與掉落）；drawBigWin 改成分數另外畫（V10）
   ctx.restore();
 }
-// 大獎分數（9 位數＋千分位，超過用 K/M/B/T，fmtNum）：畫在大獎分數的位置 (640, BIG_SCORE_Y)。
-// V10（使用者 2026-10-29）：不跟標題掉落、不跟標題淡入——只有連線第 0 幀就在這裡；有轉盤由銜接演繹在 BIG 跳出那一幀交棒；換版時也不動
-function drawBigScore(val) {
-  ctx.save();
+// 大獎分數（9 位數＋千分位，超過用 K/M/B/T，fmtNum）：畫在大獎分數的位置 bigScorePos()＝中央跑分數字的位置（holy-137，企劃書 V19 I54；大雲的下半部）。
+// V10（使用者 2026-10-29）：不跟標題掉落、不跟標題淡入——只有連線第 0 幀就在這裡；有轉盤在 BIG 跳出那一幀交棒、彈跳縮放一次（bigLinkBounce）；換階時也不動
+function drawBigScore(val, scaleMul) {
+  const P = bigScorePos(), s = scaleMul || 1;
+  ctx.save(); ctx.translate(P.x, P.y); if (s !== 1) ctx.scale(s, s);
   ctx.font = 'bold ' + BIG_SCORE_PX + 'px Arial, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
-  ctx.strokeStyle = '#3a1a05'; ctx.lineWidth = 11; ctx.strokeText(fmtNum(val), 640, BIG_SCORE_Y);
-  const ng = ctx.createLinearGradient(0, BIG_SCORE_Y - 30, 0, BIG_SCORE_Y + 30); ng.addColorStop(0, '#fff6c0'); ng.addColorStop(0.5, '#ffd23c'); ng.addColorStop(1, '#e88a12');
-  ctx.fillStyle = ng; ctx.fillText(fmtNum(val), 640, BIG_SCORE_Y);
+  ctx.strokeStyle = '#3a1a05'; ctx.lineWidth = 11; ctx.strokeText(fmtNum(val), 0, 0);
+  const ng = ctx.createLinearGradient(0, -BIG_SCORE_PX / 2, 0, BIG_SCORE_PX / 2); ng.addColorStop(0, '#fff6c0'); ng.addColorStop(0.5, '#ffd23c'); ng.addColorStop(1, '#e88a12');
+  ctx.fillStyle = ng; ctx.fillText(fmtNum(val), 0, 0);
   ctx.restore();
 }
-// 名畫道具（程式畫）：layer 'back'＝天使後面、'front'＝天使前面
+// 名畫道具（程式畫）：layer 'back'＝天使後面、'front'＝天使前面（被大雲前層蓋住下緣）、'top'＝擺在大雲上（畫在大雲前層之後）
+// holy-137：西斯汀聖母的金色畫框＋綠色帷幕拿掉（企劃書 V19 E98：天使趴在雲的上緣），BIG 沒有道具
 function drawBigProp(tier, sc, a, layer, tt) {
   if (a <= 0) return;
   ctx.save(); ctx.globalAlpha *= Math.min(1, a);
-  if (sc.prop === 'ledge') drawPropSistine(layer, tt);
-  else if (sc.prop === 'box') drawPropPandora(sc, layer, tt);
+  if (sc.prop === 'box') drawPropPandora(sc, layer, tt);
   else if (sc.prop === 'shell') drawPropVenus(sc, layer, tt);
   else if (sc.prop === 'genesis') drawPropGenesis(sc, layer, tt);
   ctx.restore();
-}
-function drawPropSistine(layer, tt) {              // 西斯汀聖母：畫框下緣（兩位天使趴的那條金框）＋上方兩側的綠色帷幕
-  if (layer === 'back') {
-    [-1, 1].forEach(s => {                         // 綠色帷幕（名畫上方兩側拉開的布幕）
-      const x0 = s < 0 ? 0 : W;
-      ctx.save(); ctx.beginPath();
-      ctx.moveTo(x0, 0); ctx.lineTo(x0 - s * 250, 0);
-      ctx.quadraticCurveTo(x0 - s * 150, 170, x0 - s * 60, 400); ctx.quadraticCurveTo(x0 - s * 30, 430, x0, 440); ctx.closePath();
-      const g = ctx.createLinearGradient(x0, 0, x0 - s * 250, 0); g.addColorStop(0, '#1d5a3a'); g.addColorStop(0.6, '#2f8a58'); g.addColorStop(1, '#5fbf86');
-      ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = '#123a24'; ctx.lineWidth = 3; ctx.stroke();
-      ctx.strokeStyle = 'rgba(15,50,30,.55)'; ctx.lineWidth = 3;
-      for (let k = 1; k <= 4; k++) { ctx.beginPath(); ctx.moveTo(x0 - s * k * 48, 0); ctx.quadraticCurveTo(x0 - s * k * 30, 200, x0 - s * k * 9, 410); ctx.stroke(); }
-      ctx.restore();
-    });
-    ['#c9952e', '#c9952e'].forEach((c, i) => {    // 畫框兩側直邊（往上淡出，只露下段，不畫滿版的畫）
-      const x = i ? 922 : 330, g = ctx.createLinearGradient(0, 470, 0, 250);
-      g.addColorStop(0, '#d9a53a'); g.addColorStop(1, 'rgba(217,165,58,0)');
-      ctx.fillStyle = g; ctx.fillRect(x, 250, 28, 222);
-    });
-    return;
-  }
-  const x0 = 318, x1 = 962, y0 = 474, h = 46;      // 畫框下緣：金色雕花框條（天使趴在上面）
-  const g = ctx.createLinearGradient(0, y0, 0, y0 + h);
-  g.addColorStop(0, '#fff1b0'); g.addColorStop(0.35, '#e8b445'); g.addColorStop(1, '#8a5a12');
-  roundRect(x0, y0, x1 - x0, h, 10, g, '#3b2207', 3);
-  ctx.strokeStyle = '#7a4f12'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0 + 12, y0 + 14); ctx.lineTo(x1 - 12, y0 + 14); ctx.stroke();
-  for (let i = 0; i < 16; i++) { ctx.beginPath(); ctx.arc(x0 + 26 + i * (x1 - x0 - 52) / 15, y0 + 30, 4, 0, Math.PI * 2); ctx.fillStyle = '#fff3c4'; ctx.fill(); ctx.strokeStyle = '#6b4410'; ctx.lineWidth = 1.2; ctx.stroke(); }
 }
 function drawTreasureBox(x, by, open, tt) {        // 華麗金色寶盒：盒身＋往後掀開的拱形蓋，盒口迸出金光
   const w = 214, h = 118, top = by - h;
@@ -6849,9 +6871,10 @@ function drawTreasureBox(x, by, open, tt) {        // 華麗金色寶盒：盒�
   ctx.strokeStyle = '#fff4c8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x - w / 2 + 10, top + 10); ctx.lineTo(x + w / 2 - 10, top + 10); ctx.stroke();
   ctx.restore();
 }
-function drawPropPandora(sc, layer, tt) {          // 潘朵拉的盒子：盒子在兩位天使中間；躲著偷看的那位頭上冒驚嘆號
-  if (layer === 'back') return;
-  drawTreasureBox(sc.box.x, sc.box.y, 1, tt);
+function drawPropPandora(sc, layer, tt) {          // 潘朵拉的盒子：盒子擺在大雲上、兩位天使中間（縮小 box.s）；蓋子在角色秒數（1.67s）前段掀開；躲著偷看的那位頭上冒驚嘆號
+  if (layer !== 'top') return;
+  const open = 0.15 + 0.85 * easeOut3(cl01(bigAngelNow(2, 0).k / 0.4)), s = sc.box.s || 1;
+  ctx.save(); ctx.translate(sc.box.x, sc.box.y); ctx.scale(s, s); drawTreasureBox(0, 0, open, tt); ctx.restore();
 }
 function drawScallop(x, by, r, part) {             // 粉紅扇貝：扇面朝上張開、放射狀肋紋；part 'fan'＝背後扇面、'lip'＝前面的下緣
   ctx.save(); ctx.lineJoin = 'round';
@@ -6879,7 +6902,7 @@ function drawScallop(x, by, r, part) {             // 粉紅扇貝：扇面朝�
 function drawPropVenus(sc, layer, tt) {            // 維納斯的誕生：扇貝（背後扇面＋前緣）；風與花瓣畫在粒子層
   const S = sc.shell;
   if (layer === 'back') drawScallop(S.x, S.y, S.r, 'fan');
-  else drawScallop(S.x, S.y - S.r * 0.12, S.r, 'lip');
+  else if (layer === 'top') drawScallop(S.x, S.y - S.r * 0.12, S.r, 'lip');   // 前緣擺在大雲上（蓋住金髮天使腳下）
 }
 function drawRedCape(x, y, h, tt) {                // 紅色披布：從金髮天使背後往右後方飄
   ctx.save(); ctx.lineJoin = 'round';
@@ -6920,7 +6943,7 @@ function drawPropGenesis(sc, layer, tt) {          // 創世紀：金髮天使�
     drawRedCape(r.x, r.y, r.h, tt);
     return;
   }
-  sc.piles.forEach(p => drawCoinPile(p[0], p[1], 14));
+  if (layer === 'top') sc.piles.forEach(p => drawCoinPile(p[0], p[1], 12));   // 雲上的金幣堆
 }
 function drawBigCoin(img, x, y, sz, rot, a) {
   if (a <= 0) return;
@@ -6934,28 +6957,28 @@ function drawBigParticles(tier, sc, a, tt) {      // 金幣／鈔票／花瓣／
   const coin = artImg('coin'), bill = artImg('bill'), n = Math.round(sc.coins * FX.bigCoins), nb = Math.round(sc.bills * FX.bigCoins);
   if (bigDrawTrace) bigDrawTrace.push('coins:' + tier + ':' + n, 'bills:' + tier + ':' + nb);
   ctx.save(); ctx.globalAlpha *= Math.min(1, a);
-  if (tier === 1) {                                // 頭上飄下少量金幣（一半在空中飄、一半落在畫框上）
-    const nf = Math.ceil(n / 2), FX0 = [372, 640, 908, 300, 980, 560];
+  if (tier === 1) {                                // 雲朵上彈出幾顆金幣（企劃書 V19 I98）：一半從雲上彈起再落回、一半散落在雲上
+    const nf = Math.ceil(n / 2), FX0 = [440, 840, 640, 520, 760, 590];
     for (let i = 0; i < n; i++) {
       if (i < nf) {
-        const ph = (tt * 0.28 + i / Math.max(1, nf)) % 1, x = FX0[i % FX0.length] + Math.sin(tt * 2 + i) * 16, y = 230 + ph * 236;
-        drawBigCoin(coin, x, y, 30, Math.sin(tt * 3 + i) * 0.8, ph < 0.8 ? cl01(ph / 0.15) : (1 - ph) / 0.2);
+        const ph = (tt * 0.45 + i / Math.max(1, nf)) % 1, x = FX0[i % FX0.length] + (ph - 0.5) * 40 * (i % 2 ? 1 : -1), y = 268 + Math.abs(FX0[i % FX0.length] - 640) * 0.08 - Math.sin(Math.PI * ph) * 120;
+        drawBigCoin(coin, x, y, 28, Math.sin(tt * 3 + i) * 0.8, ph < 0.9 ? 1 : (1 - ph) / 0.1);
       } else {
-        const j = i - nf, x = 372 + (j * 268) % 600, y = 466 + Math.sin(tt * 2.5 + j) * 2;
-        drawBigCoin(coin, x, y, 28, -0.2 + j * 0.25, 1);
+        const j = i - nf, x = 470 + (j * 157) % 340, y = 262 + Math.abs(470 + (j * 157) % 340 - 640) * 0.1 + Math.sin(tt * 2.5 + j) * 2;
+        drawBigCoin(coin, x, y, 26, -0.2 + j * 0.25, 1);
       }
     }
   } else if (tier === 2) {                         // 盒子裡噴出金光與少量金幣
-    const M = sc.mouth;
+    const M = sc.mouth, op = cl01((bigAngelNow(2, 0).k - 0.2) / 0.2);   // 蓋子掀開後才噴
     for (let i = 0; i < n; i++) {
-      const ph = (tt * 0.6 + i / Math.max(1, n)) % 1, vx = ((i * 41) % 11 - 5) * 46, vy = -520 - (i % 4) * 50;
-      drawBigCoin(coin, M.x + vx * ph, M.y + vy * ph + 700 * ph * ph, 32, ph * 10 + i, 1 - ph * 0.9);
+      const ph = (tt * 0.6 + i / Math.max(1, n)) % 1, vx = ((i * 41) % 11 - 5) * 30, vy = -420 - (i % 4) * 40;
+      drawBigCoin(coin, M.x + vx * ph, M.y + vy * ph + 620 * ph * ph, 26, ph * 10 + i, (1 - ph * 0.9) * op);
     }
     const peek = sc.angels.filter(q => q.peek)[0];
-    if (peek) {                                    // 躲著偷看的那位：驚嘆號＋汗滴（嚇到）
+    if (peek) {                                    // 探頭偷看的那位：挑眉驚訝（驚嘆號）；FX.bigPandora＝0 舊版另加汗滴（嚇到）
       const r = bigAngelNow(2, peek.who);
-      if (r.k >= 1) { textCenter('!', r.x + (peek.who ? -60 : 62), r.y - r.h * 0.52, 'bold 44px "Arial Black", Arial, sans-serif', '#ef4444', '#ffffff', 6);
-        ctx.fillStyle = '#9fd3ff'; ctx.beginPath(); ctx.ellipse(r.x + (peek.who ? 52 : -50), r.y - r.h * 0.28, 7, 11, 0, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 2; ctx.stroke(); }
+      if (r.k >= 0.5) { textCenter('!', r.x + (peek.who ? 48 : -48), r.y - r.h * 0.5, 'bold 36px "Arial Black", Arial, sans-serif', '#ef4444', '#ffffff', 5);
+        if (!peek.who) { ctx.fillStyle = '#9fd3ff'; ctx.beginPath(); ctx.ellipse(r.x - 44, r.y - r.h * 0.28, 6, 9, 0, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 2; ctx.stroke(); } }
     }
   } else if (tier === 3) {                         // 吹出帶玫瑰花瓣的風、金幣與花瓣飛散
     const Wd = sc.wind;
@@ -6963,17 +6986,17 @@ function drawBigParticles(tier, sc, a, tt) {      // 金幣／鈔票／花瓣／
     for (let k = 0; k < 4; k++) {
       const off = (k - 1.5) * 26, dash = (tt * 160 + k * 40) % 60;
       ctx.setLineDash([34, 26]); ctx.lineDashOffset = -dash; ctx.lineWidth = 5 - k * 0.6;
-      ctx.beginPath(); ctx.moveTo(Wd.x0, Wd.y0 + off * 0.4); ctx.bezierCurveTo(Wd.x0 + 80, Wd.y0 - 40 + off, Wd.x1 - 90, Wd.y1 - 50 + off, Wd.x1, Wd.y1 + off * 0.6); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(Wd.x0, Wd.y0 + off * 0.25); ctx.bezierCurveTo(Wd.x0 + 45, Wd.y0 - 25 + off * 0.5, Wd.x1 - 45, Wd.y1 - 30 + off * 0.5, Wd.x1, Wd.y1 + off * 0.4); ctx.stroke();
     }
     ctx.setLineDash([]); ctx.restore();
-    for (let i = 0; i < 18; i++) {                 // 玫瑰花瓣
-      const ph = (tt * 0.45 + i / 18) % 1, u = ph, x = lerp(Wd.x0, Wd.x1 + 120, u) + Math.sin(i * 2.1 + tt * 3) * 26, y = lerp(Wd.y0, Wd.y1 + 30, u) + Math.sin(u * Math.PI) * -40 + ((i * 29) % 9 - 4) * 9;
+    for (let i = 0; i < 18; i++) {                 // 玫瑰花瓣（花瓣風）
+      const ph = (tt * 0.45 + i / 18) % 1, u = ph, x = lerp(Wd.x0, Wd.x1 + 80, u) + Math.sin(i * 2.1 + tt * 3) * 18, y = lerp(Wd.y0, Wd.y1 + 20, u) + Math.sin(u * Math.PI) * -26 + ((i * 29) % 9 - 4) * 6;
       ctx.save(); ctx.translate(x, y); ctx.rotate(tt * 3 + i); ctx.globalAlpha *= 1 - Math.max(0, (u - 0.8) / 0.2);
       ctx.beginPath(); ctx.moveTo(0, -9); ctx.quadraticCurveTo(10, -2, 0, 9); ctx.quadraticCurveTo(-10, -2, 0, -9); ctx.fillStyle = i % 3 ? '#ff7aa2' : '#ffb3c8'; ctx.fill(); ctx.strokeStyle = '#9b1c4b'; ctx.lineWidth = 1.2; ctx.stroke();
       ctx.restore();
     }
     for (let i = 0; i < n; i++) {                  // 大量金幣從扇貝兩側往外飛散（不擋住維納斯的臉）
-      const side = i % 2 ? 1 : -1, ph = (tt * 0.5 + i / Math.max(1, n)) % 1, ang = -Math.PI / 2 + side * (0.35 + ((i * 67) % 9) * 0.1), sp = 360 + (i % 5) * 60;
+      const side = i % 2 ? 1 : -1, ph = (tt * 0.5 + i / Math.max(1, n)) % 1, ang = -Math.PI / 2 + side * (0.35 + ((i * 67) % 9) * 0.1), sp = 260 + (i % 5) * 45;
       const ox = sc.shell.x + side * sc.shell.r * 0.8, oy = sc.shell.y - sc.shell.r * 0.45;
       drawBigCoin(coin, ox + Math.cos(ang) * sp * ph, oy + Math.sin(ang) * sp * ph + 560 * ph * ph, 30, ph * 9 + i, Math.min(1, ph * 6) * (1 - ph));
     }
@@ -7005,15 +7028,89 @@ function drawBigClouds(sc, a, dy, front) {
   if (a <= 0) return;
   sc.clouds.forEach(c => { if (!!c[4] === front) drawCloudPuff(c[0], c[1] + dy, c[2], c[3], a); });
 }
-function drawBigTableau(tier, k, fa) {             // 名畫：雲（後）→ 道具（後）→ 兩位天使 → 道具（前）→ 雲（前）→ 金幣等粒子；fa＝整體淡出（到值後收尾，競品 tier end）
+function drawRosePetal(x, y, s, rot, col) {        // 一片粉紅玫瑰花瓣（s＝倍率；1＝18px 長）
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(s, s);
+  ctx.beginPath(); ctx.moveTo(0, -9); ctx.quadraticCurveTo(10, -2, 0, 9); ctx.quadraticCurveTo(-10, -2, 0, -9);
+  ctx.fillStyle = col; ctx.fill(); ctx.strokeStyle = '#9b1c4b'; ctx.lineWidth = 1.2 / s; ctx.stroke();
+  ctx.restore();
+}
+const ROSE_COLS = ['#ff7aa2', '#ffb3c8', '#ff8fb1', '#ffc9d8'];
+function drawBigPetals(tier, a, tt) {              // 常駐飄落的玫瑰花瓣（企劃書 V19 E97／I97／I98：BIG 零星幾片 → 每升一階變多 → EPIC 最多）
+  const n = BIG_PETALS[tier] || 0;
+  if (bigDrawTrace) bigDrawTrace.push('petals:' + tier + ':' + n);
+  if (a <= 0 || n <= 0) return;
+  ctx.save(); ctx.globalAlpha *= Math.min(1, a);
+  for (let i = 0; i < n; i++) {                    // 大獎畫面範圍內（x 290～990、y 40～460）由上往下飄、左右擺動
+    const sp = 0.10 + (i % 5) * 0.022, ph = (tt * sp + i * 0.618) % 1;
+    const x = 290 + ((i * 137) % 700) + Math.sin(tt * 1.6 + i * 1.3) * 26, y = 40 + ph * 420;
+    const fa = ph < 0.1 ? ph / 0.1 : ph > 0.85 ? (1 - ph) / 0.15 : 1;
+    ctx.save(); ctx.globalAlpha *= fa; drawRosePetal(x, y, 0.9 + (i % 3) * 0.25, tt * (1.5 + (i % 4) * 0.4) + i, ROSE_COLS[i % 4]); ctx.restore();
+  }
+  ctx.restore();
+}
+// 換階花瓣（企劃書 V19 I97【大獎銜接演繹】約 0.5 秒；holy-142 使用者 11-06 晚：一大片花瓣飛過畫面前面做轉場）：
+//   下一階的事件後，上一階原樣不動；holy-143 起是「一片」巨大的玫瑰花瓣由左往右飛過畫面最前方（標題、天使、雲朵、數字前面；使用者：只有一片花瓣）。
+//   花瓣在下一階登場那一幀（S[k]）前後經過畫面中央，S[k]−2～S[k]+1 這幾幀整個大獎畫面都在花瓣後面，這時切換成下一階；
+//   之後花瓣繼續往右飛出畫面（BIG_PETAL_CLEAR 秒）。c＝遮擋程度（in 0→1、full 1、out 1→0），給截圖預設與測試用。分數字畫在花瓣上面（跑分不中斷）
+function bigPetalCover() {                          // 0～1：換階花瓣遮蓋程度；phase 'in'＝湧上、'out'＝散去
+  if (currentState !== STATE.BIGWIN || bigTier < 2) return { c: 0, phase: '' };
+  const L = bigTimeline(), OF = Math.max(3, TF(TIMING.bigTierOut)), CF = Math.max(1, TF(BIG_PETAL_CLEAR));
+  for (let k = 2; k <= bigTier; k++) {
+    const d = stateTimer - L.S[k];
+    if (d >= -OF && d < -2) return { c: easeOut3((d + OF) / (OF - 2)), phase: 'in', tier: k };
+    if (d >= -2 && d <= 1) return { c: 1, phase: 'full', tier: k };
+    if (d > 1 && d < 1 + CF) return { c: 1 - (d - 1) / CF, phase: 'out', tier: k };
+  }
+  return { c: 0, phase: '' };
+}
+const BIG_COVER = { x0: 200, x1: 1080, y0: 60, y1: 610, step: 64 };   // 必須被擋住的大獎畫面範圍（預設佈局；標題、天使、雲朵；面板之上）
+const PETAL_SWEEP = { from: -1000, to: 2300, rx: 760, ry: 520, y: 335 };   // 一片巨大花瓣：中心 x 由 from 經畫面中央（640）飛到 to；rx／ry＝花瓣半寬／半高（擋住整個大獎畫面）
+function petalSweepX(P) {                          // 巨大花瓣中心 x：in 段由 from 飛到畫面中央，out 段由中央飛到 to
+  const S = PETAL_SWEEP, mid = 640;
+  if (P.phase === 'in') return S.from + (mid - S.from) * P.c;
+  if (P.phase === 'out') return mid + (S.to - mid) * (1 - P.c);
+  return mid;
+}
+function drawBigPetalCover(tt) {
+  const P = bigPetalCover();
+  if (bigDrawTrace && P.c > 0) bigDrawTrace.push('petalCover:' + P.phase + ':' + P.c.toFixed(3));
+  if (P.c <= 0) return;
+  const S = PETAL_SWEEP, cx = petalSweepX(P);
+  if (cx + S.rx * 1.1 < -40 || cx - S.rx * 1.1 > W + 40) return;
+  const u = (cx - 640) / 1500, cy = S.y - 50 * u * u + 30 * u, rot = 0.1 - 0.35 * u;   // 走微弧線、邊飛邊轉
+  drawGiantPetal(cx, cy, S.rx, S.ry, rot);
+}
+function drawGiantPetal(cx, cy, rx, ry, rot) {     // 一片巨大的玫瑰花瓣：上緣圓、中央微凹，下端收成花瓣根部；粉紅漸層＋深桃紅描邊＋淡淡的紋路與高光
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  ctx.beginPath();
+  ctx.moveTo(0, ry);
+  ctx.bezierCurveTo(-rx * 0.62, ry * 0.95, -rx * 1.08, ry * 0.2, -rx * 0.97, -ry * 0.45);
+  ctx.bezierCurveTo(-rx * 0.86, -ry * 0.97, -rx * 0.25, -ry * 1.05, 0, -ry * 0.84);
+  ctx.bezierCurveTo(rx * 0.25, -ry * 1.05, rx * 0.86, -ry * 0.97, rx * 0.97, -ry * 0.45);
+  ctx.bezierCurveTo(rx * 1.08, ry * 0.2, rx * 0.62, ry * 0.95, 0, ry);
+  ctx.closePath();
+  const g = ctx.createRadialGradient(-rx * 0.18, -ry * 0.25, rx * 0.08, 0, 0, rx * 1.1);
+  g.addColorStop(0, '#ffdbe6'); g.addColorStop(0.55, '#ffa3bf'); g.addColorStop(1, '#ec5b84');
+  ctx.fillStyle = g; ctx.fill();
+  ctx.lineWidth = 10; ctx.strokeStyle = '#9b1c4b'; ctx.stroke();
+  ctx.save(); ctx.clip();
+  ctx.strokeStyle = 'rgba(205,70,115,.28)'; ctx.lineWidth = 7;   // 花瓣紋路：從根部往上緣散開
+  for (let k = -3; k <= 3; k++) { ctx.beginPath(); ctx.moveTo(0, ry * 0.95); ctx.quadraticCurveTo(k * rx * 0.2, ry * 0.1, k * rx * 0.3, -ry * 0.9); ctx.stroke(); }
+  ctx.fillStyle = 'rgba(255,255,255,.32)'; ctx.beginPath(); ctx.ellipse(-rx * 0.38, -ry * 0.4, rx * 0.24, ry * 0.12, -0.5, 0, Math.PI * 2); ctx.fill();   // 高光
+  ctx.restore();
+  ctx.restore();
+}
+// 名畫：雲（後）→ 道具（後）→ 兩位天使 → 道具（前）→ 大雲前層 → 擺在雲上的道具 → 金幣等粒子 → 常駐花瓣；fa＝整體淡出（到值後收尾，競品 tier end）
+// holy-137：換階不交叉淡入淡出（花瓣遮住的那一幀直接換），只有 BIG 登場時大雲從下方升起、整幅淡入（k＝bigSwapK(1)）
+function drawBigTableau(tier, k, fa) {
   fa = fa === undefined ? 1 : Math.max(0, Math.min(1, fa));
-  const sc = bigScene(tier), tt = nowT() / 1000, L = artImg('cupidL'), Rr = artImg('cupidR');
+  const sc = bigScene(tier), tt = nowT() / 1000, L = artImg('cupidL'), Rr = artImg('cupidR'), bo = bigOffset();
   if (bigDrawTrace) bigDrawTrace.push('scene:' + tier + ':' + sc.prop, 'clouds:' + tier + ':' + sc.clouds.length);
-  const pv = tier > 1 && k < 1 ? bigScene(tier - 1) : null;
+  const a = (tier === 1 ? k : 1) * fa;
   const rise = tier === 1 ? (1 - easeOut3(k)) * 240 : 0;   // BIG：雲朵從下方升起
-  if (pv) { drawBigClouds(pv, (1 - k) * fa, 0, false); drawBigProp(tier - 1, pv, (1 - k) * fa, 'back', tt); }
-  drawBigClouds(sc, k * fa, rise, false);
-  drawBigProp(tier, sc, k * fa, 'back', tt);
+  ctx.save(); ctx.translate(bo.x, bo.y);
+  drawBigClouds(sc, a, rise, false);
+  drawBigProp(tier, sc, a, 'back', tt);
   [0, 1].forEach(who => {
     const img = who ? Rr : L;
     if (!img) return;
@@ -7022,24 +7119,25 @@ function drawBigTableau(tier, k, fa) {             // 名畫：雲（後）→ �
     if (tier === 4 && who === 1 && r.k >= 1) {     // 創世紀：金髮天使就定位後伸手指向黑髮天使（手臂起點在身體後面）
       const A = sc.angels[1], s = r.h / A.h, bx = A.x + sc.reach.dx, by = A.y + sc.reach.dy;
       const ext = 0.35 + 0.65 * easeOut3(cl01((stateTimer - bigTierStartFrame(4) - TF(bigAngelMove(4))) / TF(0.3)));
-      drawPointingArm(r.x + sc.reach.dx * s, r.y + sc.reach.dy * s, r.x + sc.reach.dx * s + (sc.touch.x + 30 - bx) * ext, r.y + sc.reach.dy * s + (sc.touch.y - by) * ext, s);
+      drawPointingArm(r.x + sc.reach.dx * s, r.y + sc.reach.dy * s, r.x + sc.reach.dx * s + (sc.touch.x + 22 - bx) * ext, r.y + sc.reach.dy * s + (sc.touch.y - by) * ext, s * 0.75);
     }
-    drawAngelImg(img, who ? ART_GEO.cupidR : ART_GEO.cupidL, r.x, r.y, r.h, r.rot, false, fa < 1 ? fa : undefined);   // 天使姿勢待美術（只用現有兩張天使圖排位置）
+    drawAngelImg(img, who ? ART_GEO.cupidR : ART_GEO.cupidL, r.x, r.y, r.h, r.rot, false, a < 1 ? a : undefined);   // 天使姿勢待美術（只用現有兩張天使圖排位置）
   });
-  if (pv) { drawBigProp(tier - 1, pv, (1 - k) * fa, 'front', tt); drawBigClouds(pv, (1 - k) * fa, 0, true); }
-  drawBigProp(tier, sc, k * fa, 'front', tt);
-  drawBigClouds(sc, k * fa, rise, true);
-  if (pv) drawBigParticles(tier - 1, pv, (1 - k) * fa, tt);
-  drawBigParticles(tier, sc, k * fa, tt);
+  drawBigProp(tier, sc, a, 'front', tt);
+  drawBigClouds(sc, a, rise, true);
+  drawBigProp(tier, sc, a, 'top', tt);
+  drawBigParticles(tier, sc, a, tt);
+  drawBigPetals(tier, a, tt);
+  ctx.restore();
 }
-// 公版大獎：逐級跑分（SUPER 門檻時 BIG 版縮小淡出、SUPER 版從天而降取代 …），標題縮放＋掃光；
-// 大獎在下方公版面板之下；盤面不震動 [企劃 §美術 H56～H60、§得分層級演繹；使用者 2026-10-19]
+// 公版大獎：逐級跑分，標題縮放＋掃光；大獎在下方公版面板之上（企劃書 V19 B96「大獎畫面不做滿版」）；盤面不震動
 // V10 流程（使用者 2026-10-29）：只有連線（bigDirect）＝BIG 版第 0 幀直接跳出、分數在大獎畫面裡跑分；
-//   有轉盤＝中央倍數得分跑分、最後 bigLinkMove 秒銜接上移（bigLinkPose），BIG 跳出那一幀交棒成大獎分數（拿掉舊的「原地放大淡出」）。
+//   有轉盤＝中央倍數得分跑分，BIG 跳出那一幀原地交棒成大獎分數並彈跳縮放一次（holy-137，企劃書 V19 I54：不位移）。
 //   兩種的分數都是第 0～13 幀 0、第 14 幀從 2 倍起跑（使用者 2026-10-30 要求照競品，原本從 1）。
-//   大獎分數全程固定在大獎分數位置、不透明（drawBigScore：不跟標題掉落、不跟標題淡入）
+//   大獎分數全程固定在中央跑分數字的位置（bigScorePos）、不透明（drawBigScore：不跟標題掉落、不跟標題淡入、換階不動、畫在換階花瓣上面）
 // 競品（使用者 2026-10-29 要求照競品，第二部分 2a）：BIG 事件起場景壓暗（ambient 1→0.3，30 幀）、到值時恢復；字樣在事件後 1 幀登場（bigTierIn），
-// 換階時上一階先收尾 16 幀再接下一階登場；到值後第 101 幀這一階收尾（字樣縮小淡出，名畫、聖光、分數一起淡掉），第 113 幀大獎結束
+// 換階：holy-137 起照企劃書 V19 I97，事件後上一階原樣不動、花瓣湧上 bigTierOut（0.5 秒）遮住 → 下一階登場那一幀切換 → 花瓣散去（BIG_PETAL_CLEAR）；
+// 到值後第 101 幀這一階收尾（字樣縮小淡出，名畫、聖光、分數一起淡掉），第 113 幀大獎結束
 function drawBigWin() {
   if (currentState !== STATE.BIGWIN) { drawBigTail(); return; }
   const dim = bigDimA();
@@ -7048,13 +7146,14 @@ function drawBigWin() {
   if (tier === 0) { const p = bigLinkPose(); drawBigPreRun(val, 1, p.s * scoreNumScale(stateTimer), p); return; }   // 有轉盤：中央數字出現 0→1.3→1（同中央跑分）、第 14 幀從 2 倍起跑
   const k = bigSwapK(tier), out = bigTierOutK(tier), fin = tier === bigTier && out >= 0;
   const fade = fin ? 1 - out : 1;                  // 到值後收尾：名畫、聖光、分數跟字樣一起淡掉
-  if (tier > 1 && k < 1) drawBigHolyLight(tier - 1, (1 - k) * fade);
-  drawBigHolyLight(tier, k * fade);
+  drawBigHolyLight(tier, (tier === 1 ? k : 1) * fade);
   drawBigTableau(tier, k, fade);
-  const drop = k < 1 ? -(1 - easeOutBounce(k)) * 460 : 0;            // 這一級從天而降（字樣登場 bigTierIn）
-  const os = out >= 0 ? 1 - 0.45 * out : 1, oa = out >= 0 ? 1 - out : 1;   // 收尾：縮小淡出（bigTierOut）
-  drawBigTitle(tier, os, Math.min(1, 0.25 + k * 1.6) * oa, null, drop);
-  ctx.save(); ctx.globalAlpha *= fade; drawBigScore(val); ctx.restore();
+  const drop = tier === 1 && k < 1 ? -(1 - easeOutBounce(k)) * 460 : 0;   // BIG 從天而降（字樣登場 bigTierIn）；SUPER 起在花瓣下登場、散去時已在位（掃光照常）
+  const pop = tier > 1 && k < 1 ? 1 + 0.18 * (1 - easeOut3(k)) : 1;
+  const os = fin ? 1 - 0.45 * out : 1, oa = fin ? 1 - out : 1;   // 到值後收尾：縮小淡出（bigTierOut）
+  drawBigTitle(tier, os * pop, (tier === 1 ? Math.min(1, 0.25 + k * 1.6) : 1) * oa, null, drop);
+  ctx.save(); const bo = bigOffset(); ctx.translate(bo.x, bo.y); drawBigPetalCover(nowT() / 1000); ctx.restore();   // 換階花瓣：蓋在標題、天使、雲與物件上面
+  ctx.save(); ctx.globalAlpha *= fade; drawBigScore(val, bigLinkBounce()); ctx.restore();
 }
 function drawBigTail() {                           // 大獎結束（第 113 幀）後，字樣收尾剩下的幾幀（競品 tier end 16 幀）疊在下一段
   if (!bigTail) return;
@@ -7417,7 +7516,7 @@ function buildPayTable() {
  * 區塊 7：調校面板（換遊戲原則上不用動）
  * ========================================================== */
 const TUNE_KEY = 'olympia_tuning';
-const TUNE_VERSION = 41;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（40：最高分預設圖示改聖杯 chaliceLaurel，2026-11-05；39：TURBO nxFlip 0.33／wheelSlow3 0.5／scoreOut 0.4 跟一般速度相同，2026-11-02；38：V14 9 項（第 3 盤減速 0.5、新增 scoreRun／angelHi1／angelHi2／upgAngel／nudgeAngel、循環週期），2026-10-30；37：挑戰轉盤停頓 dealHold 0.5 → 0.6，2026-10-30；36：新增節奏鍵 dealHold 挑戰轉盤停頓，2026-10-30；35：局間停頓 autoSpinDelay 0.13 → 0.15，2026-10-30；34：演繹秒數改成企劃書 V14 美術需求說明、新增節奏鍵 idleActTimeR／wheelNoRunGap、中獎局間停頓 0.2、落定回彈 0.18，2026-10-30；33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
+const TUNE_VERSION = 42;   // 改動 DEFAULT_LAYOUT/參數表就要 +1，否則瀏覽器舊保存值會蓋掉新預設（42：FX winZoomLo 1.2→1.1、新增 winScaleHi 1.12、bigPandora 0→1（企劃書 V19，holy-137），2026-11-06；40：最高分預設圖示改聖杯 chaliceLaurel，2026-11-05；39：TURBO nxFlip 0.33／wheelSlow3 0.5／scoreOut 0.4 跟一般速度相同，2026-11-02；38：V14 9 項（第 3 盤減速 0.5、新增 scoreRun／angelHi1／angelHi2／upgAngel／nudgeAngel、循環週期），2026-10-30；37：挑戰轉盤停頓 dealHold 0.5 → 0.6，2026-10-30；36：新增節奏鍵 dealHold 挑戰轉盤停頓，2026-10-30；35：局間停頓 autoSpinDelay 0.13 → 0.15，2026-10-30；34：演繹秒數改成企劃書 V14 美術需求說明、新增節奏鍵 idleActTimeR／wheelNoRunGap、中獎局間停頓 0.2、落定回彈 0.18，2026-10-30；33：FX winLine 預設 0（使用者 2026-10-30 不要畫白線）、wheelGray 改成「其他格最後剩幾成」預設 0.267（照競品），2026-10-30；32：FG 整段／連線演出／idle 輪播照競品（第二部分 2b），節奏鍵改結構、拿掉 FX winPartTime／winZoomHi，2026-10-30；29：新增節奏鍵 bigLinkMove，V10 銜接演繹 2026-10-29；30：滾輪／連線／聖心落地／局間照競品、新增 autoWinDelay／fgSpinDelay／winLine，2026-10-29；31：轉盤／NX／中央跑分／大獎照競品（第二部分 2a），節奏鍵改結構，2026-10-30）
 let tunePanelOpen = false, tuneTab = 'timing';
 let layoutSelected = null, layoutDrag = null;
 let layoutFieldRefs = {}, layoutRangeRefs = {};
@@ -8503,7 +8602,7 @@ function rhythmFGIntro(T, W, segs, marks) {
   marks.push({ t: F(h + HH + A), text: '可以選擇（10 次免費／挑戰）' });
   return F(h + HH + A);
 }
-// 連線型的時間軸：停輪 →（轉盤）→ 中獎停頓 → 圖示中獎演繹（不畫得分線）→ 中央輪盤彩金（≥10 倍才出、跑分）→ 停留 →（大獎）→ 局間
+// 連線型的時間軸：停輪 →（轉盤）→ 中獎停頓 → 圖示中獎演繹（不畫得分線）→ 中央輪盤彩金（有彩金就出，≥10 倍才跑分）→ 停留 →（大獎）→ 局間
 // （只有連線得分：逐組演完直接到局間；輪盤 <10 倍：只有停留，使用者 2026-10-29）
 function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
   const afterHeart = kind === 'heart';             // holy-130：合體演完才接連線中獎演出（原本被下面的 t＝ready 蓋掉、兩段畫在同一時間）
@@ -8536,8 +8635,8 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
   }
   const nW = kind === 'wheel3' ? 3 : (kind === 'wheel2' || kind === 'antic') ? 2 : (kind === 'wheel' || kind === 'wheelZoom') ? 1 : 0;   // antic：第 1 個停紅心格、第 2 個藍輪預報 1   // wheel3：第 3 個停乘號；wheelZoom：紅輪停 250
   const zoomSc = kind === 'wheelZoom';
-  // 盤面中央只顯示輪盤彩金、≥10 倍才出（使用者 2026-10-29）：轉盤情境都沒有連線 → 輪盤彩金＝情境倍數；只有連線得分的情境不出中央數字
-  const centerX = nW > 0 && !!tier && tier[0] >= CENTER_RUN_XC_RATIO && tier[0] < 25;
+  // 盤面中央只顯示輪盤彩金、有輪盤彩金就出（企劃書 V19 G53，holy-137；原 ≥10 倍才出）：轉盤情境都沒有連線 → 輪盤彩金＝情境倍數；只有連線得分的情境不出中央數字
+  const centerX = nW > 0 && !!tier && tier[1] > 0 && tier[0] < 25;   // <10 倍級距（0～10）代表 5 倍也出
   if (nW) {
     // 轉盤段（競品引擎值，使用者 2026-10-29 要求照競品，第二部分 2a）：用幀算（跟遊戲同一套 wheelAppearAt／wheelNxAt），從結算 R 起算
     const R0 = rhythmDropTimes(T).resultF, S = TF(T.wheelWait), nxAt = wheelNxAt(T), F = f => f / 60;
@@ -8607,7 +8706,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       if (i > 0) marks.push({ t: F(o.L), text: '換' + tag + '中獎圖示（前一組金額字開始退場那一幀）' });
       segs.push({ t0: F(o.L), dur: (winSegAt(WIN_FX.segN - 1) + 5) / 60, text: tag + (FX.winLine > 0 ? '連線 4 段(每段 0.08s)' : '連線時段(預設不畫白線，面板「中獎連線」可開)'), fill: 'line' });   // 使用者 2026-10-30 不要畫白線
       segs.push({ t0: F(o.L + winAnimAt(0, m)), dur: (winAnimAt(2, m) - winAnimAt(0, m) + (hi ? TF(T.winHiAnim) : WIN_FX.pulseF)) / 60,
-        text: tag + (hi ? '高分局部動作(' + R1(T.winHiAnim) + 's，不脈動)' : '低分縮放亮度脈動(0.3s)'), fill: 'symbol' });
+        text: tag + (hi ? '高分整體縮放＋局部動作(' + R1(T.winHiAnim) + 's)' : '低分整體放大10%(0.27s)'), fill: 'symbol' });
       segs.push({ t0: F(o.L + o.popAt), dur: Math.max(0.02, (o.X - o.popAt) / 60), text: tag + '金額字彈出＋停留(數字直接到位)', fill: 'score' });
     });
     const lastG = plan.groups[plan.groups.length - 1];
@@ -8627,14 +8726,14 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
       segs.push({ t0: t0 + (plan.done + TF(T.scoreStay)) / 60, dur: T.scoreOut, text: '數字收掉(' + R1(T.scoreOut) + 's)', fill: 'lineEnd' });
       t = t0 + (plan.done + TF(T.scoreStay) + TF(T.scoreOut) + 1) / 60;
     } else {
-      marks.push({ t: t, text: '輪盤彩金 <10 倍：不出中央數字，停下後 ' + R1((TF(T.wheelWait) - 1) / 60) + 's 就結束（競品）' });
+      marks.push({ t: t, text: '輪盤沒有彩金：不出中央數字，停下後 ' + R1((TF(T.wheelWait) - 1) / 60) + 's 就結束（競品）' });
     }
     marks.push({ t: t, text: '公版分數切換' });
   } else if (!isBig) {
     marks.push({ t: t, text: '公版分數切換（只有連線得分：不出中央數字）' });
   } else {
     // 大獎（競品跑分速度；使用者 2026-10-30 門檻維持 25／51／101／200）：換階＝跑分越過門檻那一幀；字樣事件後 1 幀登場、換階時上一階先收尾 16 幀；
-    // V10 流程（使用者 2026-10-29）：只有連線（沒有轉盤）＝四階大獎直接跳出、在大獎畫面裡跑分；有轉盤＝中央倍數得分跑分，BIG 登場前 bigLinkMove 秒銜接上移（我們加的）；
+    // V10 流程（使用者 2026-10-29）：只有連線（沒有轉盤）＝四階大獎直接跳出、在大獎畫面裡跑分；有轉盤＝中央倍數得分跑分，BIG 登場那一刻數字原地彈跳縮放 bigLinkMove 秒（holy-137，企劃書 V19 I54：不位移）；
     //   兩種都是第 14 幀從 2 倍起跑（使用者 2026-10-30 要求照競品，原本從 1）
     const direct = !nW, thr = [0, ODDS.bigWinRatio, ODDS.superRatio, ODDS.megaRatio, ODDS.epicRatio];
     let ti = 0; for (let k = 1; k <= 4; k++) if (repX >= thr[k]) ti = k;
@@ -8642,22 +8741,22 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
     notes.push('大獎跑分（競品分段等速）：' + R1(repX) + ' 倍的局，跑分越過 25／51／101／200 倍那一幀換階，到值 ' + R1(L.F / 60) + 's；到值後 ' + R1(T.bigEndAt) + 's 收尾、' + R1(T.bigDone) + 's 結束。');
     if (direct) notes.push('只有連線的大獎（V10）：四階大獎第 0 秒直接跳出 BIG 版，分數在大獎畫面裡第 ' + TF(T.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑（競品），沒有盤面中央的前置跑分。');
     else {
-      const link = Math.min(L.S[1], FR(T.bigLinkMove)) / 60;
+      const link = FR(T.bigLinkMove) / 60;
       marks.push({ t: t0, text: '中央倍數得分出現（0→1.3→1），第 ' + TF(T.scoreCountDelay) + ' 幀起從 ' + SSS_COUNT_FROM + ' 倍跑' });
       segs.push({ t0: t0, dur: L.S[1] / 60, text: '中央倍數得分 ' + SSS_COUNT_FROM + ' 倍→越過 BIG 門檻(' + R1(L.S[1] / 60) + 's)', fill: 'score' });
       if (link > 0) {
-        segs.push({ t0: F(L.S[1]) - link, dur: link, text: '銜接：邊跑分邊上移到大獎分數位置(' + R1(link) + 's)', fill: 'gap' });
-        marks.push({ t: F(L.S[1]) - link, text: '銜接演繹開始（數字往上移、放大）' });
+        segs.push({ t0: F(L.S[1]), dur: link, text: '銜接：數字原地彈跳縮放一次(' + R1(link) + 's)', fill: 'gap' });
+        marks.push({ t: F(L.S[1]), text: '銜接演繹（數字不位移，整體彈跳縮放一次）' });
       }
-      notes.push('有轉盤的大獎（V10 美術需求 H54【銜接演繹】，我們加的）：中央倍數得分第 ' + TF(T.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑（競品），BIG 字樣登場前最後 ' + R1(link) + 's 邊跑分邊往上移到大獎分數的位置、字級放大成大獎分數，BIG 登場那一刻直接交棒（不淡出）。');
+      notes.push('有轉盤的大獎（企劃書 V19 I54【銜接演繹】）：中央倍數得分第 ' + TF(T.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑（競品），數字不另外位移——四階大獎的分數就在跑分數字的位置（大獎雲朵的下半部），BIG 登場那一刻直接交棒、數字整體彈跳縮放一次（' + R1(link) + 's）。');
     }
     skips.push(t0);
     segs.push({ t0: F(L.E[1]), dur: T.bigDim, text: '場景壓暗 1→0.3(' + R1(T.bigDim) + 's)', fill: 'pause' });
     for (let k = 1; k <= ti; k++) {
       const a = L.S[k], b = k < ti ? L.E[k + 1] + 1 : L.endAt;
       if (k > 1) {
-        marks.push({ t: F(L.E[k]), text: '跑分越過 ' + thr[k] + ' 倍：' + BIG_NAMES[k - 1] + ' 收尾→' + BIG_NAMES[k] + ' 登場' });
-        segs.push({ t0: F(L.E[k] + 1), dur: TF(T.bigTierOut) / 60, text: BIG_NAMES[k - 1] + ' 收尾(' + R1(T.bigTierOut) + 's)', fill: 'lineEnd' });
+        marks.push({ t: F(L.E[k]), text: '跑分越過 ' + thr[k] + ' 倍：玫瑰花瓣湧上遮住 ' + BIG_NAMES[k - 1] + '→遮住那一刻切換成 ' + BIG_NAMES[k] });
+        segs.push({ t0: F(L.E[k] + 1), dur: TF(T.bigTierOut) / 60 + BIG_PETAL_CLEAR, text: '巨大花瓣飛過換階：飛到中央 ' + R1(T.bigTierOut) + 's＋飛出 ' + R1(BIG_PETAL_CLEAR) + 's', fill: 'lineEnd' });
       } else marks.push({ t: F(a), text: direct ? '四階大獎直接跳出 BIG 版（在大獎畫面裡第 ' + TF(T.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑）' : 'BIG 版登場（數字交棒成大獎分數）' });
       segs.push({ t0: F(a), dur: TF(k === 4 ? T.bigEpicIn : T.bigTierIn) / 60, text: BIG_NAMES[k] + ' 登場(' + R1(k === 4 ? T.bigEpicIn : T.bigTierIn) + 's)', fill: 'gap' });
       segs.push({ t0: F(a), dur: Math.max(0.1, (b - a) / 60), text: BIG_NAMES[k] + ' 版(' + R1((b - a) / 60) + 's' + (k === 1 && direct ? '；第 ' + TF(T.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑' : '') + ')', fill: 'big' });
@@ -8676,9 +8775,9 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
   marks.push({ t: t, text: '下局自動啟動', red: true });
   notes.push('依序啟動、依序停輪（每輪 ' + R1(T.reelStartDelay) + 's／' + R1(T.reelStopInterval) + 's，競品）、按 STOP 同時停止。');
   notes.push('中獎逐組演繹（競品）：全部壓暗 ×' + R1(FX.dimAlpha) + '、全部中獎圖示 0.1s 回亮；同一圖示的中獎線併成一組、不同圖示照中獎結果的順序（線號由小到大，不依分數）一組接一組，每組：'
-    + (FX.winLine > 0 ? '連線 4 段（白線不透明、沒中獎段深灰）' : '連線時段（預設不畫白線，面板「中獎連線」可開＝競品白線）') + ' → 低分縮放亮度脈動 0.3s／高分局部動作 ' + R1(T.winHiAnim) + 's（不脈動）→ 金額字 ' + R1(T.winTextDelay) + 's 後彈出、數字直接到位；每組長度＝max（金額字 delay＋' + R1(T.winTextStay) + 's，圖示動作），前一組金額字退場那一幀換下一組；低分組 ' + R1(winLowGroupSec(T)) + 's、高分 3 連 ' + R1(winHiGroupSec(T, 3)) + 's 可再按。沒中獎的圖示壓暗到下一次 SPIN；有輪盤時線獎逐組演完才展開輪盤（購買觸發局也是）。大獎期間盤面不震動。');
+    + (FX.winLine > 0 ? '連線 4 段（白線不透明、沒中獎段深灰）' : '連線時段（預設不畫白線，面板「中獎連線」可開＝競品白線）') + ' → 低分整體放大 10%（0.27s）／高分整體縮放一次＋局部動作 ' + R1(T.winHiAnim) + 's→ 金額字 ' + R1(T.winTextDelay) + 's 後彈出、數字直接到位；每組長度＝max（金額字 delay＋' + R1(T.winTextStay) + 's，圖示動作），前一組金額字退場那一幀換下一組；低分組 ' + R1(winLowGroupSec(T)) + 's、高分 3 連 ' + R1(winHiGroupSec(T, 3)) + 's 可再按。沒中獎的圖示壓暗到下一次 SPIN；有輪盤時線獎逐組演完才展開輪盤（購買觸發局也是）。大獎期間盤面不震動。');
   notes.push('中獎後待機（競品 idle 輪播）：可再按後一條一條輪播中獎線' + (FX.winLine > 0 ? '' : '的金額字（預設不畫白線）') + '（每條 ' + R1(T.idleLineTime) + 's、全部播完停 ' + R1(T.idleLoopGap) + 's 再重來；同圖示的線也分開、各顯示自己的金額；自動玩不出金額字），圖示不脈動。');
-  notes.push('盤面中央只顯示輪盤彩金：≥10 倍才出現（' + centerRunMode()[3] + '；競品：數字出現後第 ' + TF(T.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑（之前顯示 0）、分段等速跑分、到值停 ' + R1(T.scoreStay) + 's、收掉 ' + R1(T.scoreOut) + 's）；只有連線得分的局逐組演完就結束；輪盤彩金 <10 倍不出中央數字、停下後就結束（整局總贏分 10～25 倍時多留一段給天使播高倍，我們加的）。');
+  notes.push('盤面中央只顯示輪盤彩金：有彩金就出現，≥10 倍才跑分（' + centerRunMode()[3] + '；競品：數字出現後第 ' + TF(T.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑（之前顯示 0）、分段等速跑分、到值停 ' + R1(T.scoreStay) + 's、收掉 ' + R1(T.scoreOut) + 's）；只有連線得分的局逐組演完就結束；輪盤彩金 <10 倍直接顯示最終值、不跑分，停留後收掉（整局總贏分 10～25 倍時多留一段給天使播高倍，我們加的）。');
   notes.push('點擊跳過：滾輪齊停、轉盤直接停在結果、得分直接顯示最終分數。');
   return { segs: segs, marks: marks, skips: skips, notes: notes, total: t };
 }
@@ -8702,11 +8801,11 @@ function sheetGantt() {
         title: m[0] + ' 一般/FG：中獎 (多種圖示)' + tier[2] });
     });
     scenarios.push({ T: m[1], kind: 'wheel', tier: RHYTHM_TIERS[0],
-      title: m[0] + ' 一般：1 個藍輪（停加法格、無連線；輪盤彩金 <10 倍不出中央數字）' });
+      title: m[0] + ' 一般：1 個藍輪（停加法格、無連線；輪盤彩金 <10 倍：中央數字直接顯示、不跑分）' });
     scenarios.push({ T: m[1], kind: 'wheel', tier: RHYTHM_TIERS[1],
       title: m[0] + ' 一般：1 個藍輪停 15 倍（無連線；輪盤彩金 ≥10 倍：中央數字跑分）' });
     scenarios.push({ T: m[1], kind: 'wheel', tier: RHYTHM_TIERS[3],   // V10（使用者 2026-10-29）：有轉盤的大獎＝中央跑分→銜接演繹→BIG 版（2026-10-30 起點照競品：第 14 幀從 2 倍起跑）
-      title: m[0] + ' 一般：1 個藍輪 25～51 倍（無連線；有轉盤的大獎：中央倍數得分從 2 倍跑→銜接上移→BIG 版）' });
+      title: m[0] + ' 一般：1 個藍輪 25～51 倍（無連線；有轉盤的大獎：中央倍數得分從 1 倍跑→原地交棒彈跳→BIG 版）' });
     scenarios.push({ T: m[1], kind: 'wheel2', tier: RHYTHM_TIERS[0],
       title: m[0] + ' 一般：2 個藍輪（第 1 個停轉維持放大→開第 2 個→下一局按下時一起收起）' });
     scenarios.push({ T: m[1], kind: 'wheel3', tier: RHYTHM_TIERS[0],
@@ -8780,7 +8879,7 @@ function sheetToolParams() {
   put(sh, r++, 1, '註：本表由 ' + GAME_NAME + ' demo（' + APP_BUILD + '）匯出，為設計值，非真機實測值。', XF.plain);
   put(sh, r++, 1, '註：滾輪掉落／回彈、連線中獎演出、愛心落地、局間照競品引擎逐幀值（2026-10-29）；轉盤整段、倍數欄位 NX、中央跑分、大獎跑分也照競品引擎值（2026-10-30，第二部分 2a；大獎門檻維持 25／51／101／200）；FG 整段（觸發→進入介面、挑戰轉盤、升級、羽毛轉場、FG 每局、收場、TOTAL）、連線演出、中獎後輪播也照競品引擎值（2026-10-30，第二部分 2b；升級演繹競品 TURBO 沒量到，用一般速度值）；'
     + '2026-10-30（olympia-holy-121，使用者要求照競品）：中獎白線預設不畫（特效面板「中獎連線」可開）、不同圖示照中獎結果順序一組接一組（不依分數）、轉盤停下其他格淡到 26.7%、跑分在數字出現後第 14 幀從 2 倍起跑（中央跑分與大獎都一樣）；其餘預設值取競品實測（competitor-ref §3、§8.4）與企劃書節奏表，量不到的項目為公版預設，待節奏組用公用測試機實測覆蓋。', XF.plain);
-  put(sh, r++, 1, '註：盤面中央只顯示輪盤彩金，≥10 倍才出現，跑分規則＝' + centerRunMode()[1] + '（數字出現後第 ' + TF(TIMING.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑，之前顯示 0；競品）；只有連線得分、或輪盤彩金 <10 倍不出中央數字。', XF.plain);
+  put(sh, r++, 1, '註：盤面中央只顯示輪盤彩金，有彩金就出現；≥10 倍才跑分，跑分規則＝' + centerRunMode()[1] + '（數字出現後第 ' + TF(TIMING.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑，之前顯示 0；競品）；輪盤彩金 <10 倍直接顯示最終值不跑分；只有連線得分的局不出中央數字。', XF.plain);
   return sh;
 }
 
@@ -9208,7 +9307,7 @@ const SHOT_PRESETS = {
   // 競品 tween 模型（使用者 2026-10-29 要求照競品）：AUTO 掉落中（第 45 幀：第 1 輪回彈最低、第 2／3 輪掉入中、第 4 輪空白、第 5 輪舊圖示掉出中）
   dropMid:       () => spinPlanted([], [], () => dropT === 45),
   dipLow:        () => spinPlanted([], [], () => !!dropPlan && dropT === dropPlan.dipAt[COLS - 1][ROWS - 1] + 4),   // 沒中獎局：第 5 輪回彈最低點（下沉 0.1235 格；已可再按 SPIN）
-  winPulse:      () => { forceSpinType = 'small'; startSpin(); runUntil(() => currentState === STATE.WIN_SHOW && winGroupFrame() === WIN_FX.pulseAt.auto + 5); },   // 連線演出中：第 1 輪中獎圖示脈動最大（1.4213）
+  winPulse:      () => { forceSpinType = 'small'; startSpin(); runUntil(() => currentState === STATE.WIN_SHOW && winGroupFrame() === WIN_FX.pulseAt.auto + Math.round(WIN_FX.pulseF / 2)); },   // 連線演出中：第 1 輪低分中獎圖示放大最大（1.1，企劃書 V19 I9；holy-137）
   winAmount:     () => { forceSpinType = 'small'; startSpin(); runUntil(() => currentState === STATE.WIN_SHOW && winGroupFrame() === WIN_FX.lineAt + FR(TIMING.winTextDelay) + SSS_LINE.popLead + WIN_FX.textInF + 2); },   // 連線畫滿、金額字彈出完（第二部分 2b：數字直接到位）
   sixLand:   () => spinWith('ng1add', () => currentState === STATE.POSTSTOP && stateTimer >= 10),
   wheelIntro:    () => spinWith('ng1add', atWheel(0, 'intro', 0.6)),
@@ -9257,6 +9356,7 @@ const SHOT_PRESETS = {
   // 第 2 批（美術需求 V3，使用者 2026-10-29）：圖示中獎依圖示分流、聖心待機呼吸、轉盤登場殘影、高倍金色聖光、升級漩渦、額外轉動星環
   winCross:      () => spinWith('big1', atHiAnim(0.27)),   // 十字架：紅寶石閃光最亮（局部動作 27%；第二部分 2b：高分局部動作＝競品 spine win 1.667s）
   winBird:       () => spinWith('ln2', atHiAnim(0.45)),    // 天堂鳥：冠羽張開最大
+  winHiScale:    () => spinWith('run', atHiAnim(0.5)),     // holy-137：高分圖示整體縮放到最大（企劃書 V19 I4～I8，FX.winScaleHi）
   winUnicorn:    () => spinWith('run', atHiAnim(0.2)),     // 獨角獸：鬃毛甩到最高
   winHarp:       () => spinWith('ln4', atHiAnim(0.15)),    // 銀豎琴：琴弦震動＋金光
   winWings:      () => spinWith('ln3', atHiAnim(0.22)),    // 天使之翼：往下拍到底
@@ -9291,7 +9391,8 @@ const SHOT_PRESETS = {
   // V10 大獎流程（使用者 2026-10-29）：只有連線的大獎第 0 幀直接跳出 BIG 版，沒有中央前置跑分 → bigPreRun 改用有轉盤的大獎（藍輪 50 倍、沒有連線）
   bigPreRun:     () => spinPlanted([], ['50'], () => currentState === STATE.BIGWIN && stateTimer >= Math.round(bigTierStartFrame(1) * 0.6)),   // 有轉盤的大獎、還沒到 BIG 門檻：盤面中央倍數得分跑分中（第 14 幀從 2 倍起跑）
   bigLinkStart:  () => spinPlanted([], ['50'], () => currentState === STATE.BIGWIN && bigLinkK() >= 0),     // 銜接演繹開始（美術需求 H54）：數字還在盤面中央、原大
-  bigLinkMid:    () => spinPlanted([], ['50'], () => currentState === STATE.BIGWIN && bigLinkK() >= 0.5),   // 銜接中：邊跑分邊往上移、放大
+  bigLinkMid:    () => spinPlanted([], ['50'], () => currentState === STATE.BIGWIN && bigLinkK() >= 0.5),   // 銜接中：BIG 登場前（holy-137 起數字原地跑分、不位移）
+  bigLinkPop:    () => spinPlanted([], ['50'], () => currentState === STATE.BIGWIN && bigLinkK() >= 1 && stateTimer >= bigTierStartFrame(1) + Math.round(FR(TIMING.bigLinkMove) / 2)),   // holy-137：交棒 BIG 那一下彈跳縮放到最大
   bigLinkEnd:    () => spinPlanted([], ['50'], () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(1)),   // 銜接結束＝BIG 跳出那一幀：數字到大獎分數位置與字級、交棒成大獎分數
   bigDirect0:    () => spinWith('big1', () => currentState === STATE.BIGWIN),   // 只有連線的大獎：進大獎第 0 幀＝BIG 版開始跳出、分數 1 已在大獎分數位置
   bigDirectRun:  () => spinWith('big1', () => currentState === STATE.BIGWIN && stateTimer >= Math.round(bigRunFrames() / 2)),   // 只有連線的大獎：大獎畫面裡跑分到一半
@@ -9340,8 +9441,8 @@ const SHOT_PRESETS = {
   iconMax:       () => { Object.keys(ICON).forEach(k => { ICON[k] = 2.0; }); SHOT_PRESETS.promoBoard(); },   // 圖示大小五組都 2.0
   iconMaxWin:    () => { Object.keys(ICON).forEach(k => { ICON[k] = 2.0; }); spinWith('big1', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20); },
   topLineWin:    () => spinWith('big1', () => currentState === STATE.WIN_SHOW && stateTimer >= FR(TIMING.winPause) + 20),   // 最高分（金十字架）5 連中獎演出（大獎版出現前）
-  // 中央數字只顯示輪盤彩金、≥10 倍才出（使用者 2026-10-29）：scoreRun＝沒有連線、輪盤停 15 倍 → 中央跑分中；
-  // scoreAngelOnly＝連線 15 倍＋輪盤 5 倍＝20 倍 → 不出中央數字，只留得分停留給天使高倍 2（舊的 scoreSmall：<10 倍連線的中央數字已拿掉）
+  // 中央數字只顯示輪盤彩金，有彩金就出、≥10 倍才跑分（holy-137）：scoreRun＝沒有連線、輪盤停 15 倍 → 中央跑分中；
+  // scoreAngelOnly＝連線 15 倍＋輪盤 5 倍＝20 倍 → holy-137 起中央數字直接顯示 5 倍（不跑分），得分停留時天使播高倍 2
   scoreRun:      () => spinPlanted([], ['15'], () => currentState === STATE.SCORE && stateTimer >= 30),
   scoreAngelOnly: () => spinPlanted(LINE_FORCES.run, ['5'], () => currentState === STATE.SCORE && linesPaid && stateTimer >= 20),
   bigWin:        () => spinWith('big1', () => currentState === STATE.BIGWIN && stateTimer >= bigRunFrames()),
@@ -9376,7 +9477,8 @@ const SHOT_PRESETS = {
   dealStop5:     () => { toFGIntro(1); forceDeal = 'deal5'; chooseDeal(); runUntil(() => dealPhase === 'result' && stateTimer >= 14); },    // 停定 <10 局：只亮底板
   dealFade:      () => { toFGIntro(1); forceDeal = 'deal8'; chooseDeal(); runUntil(() => currentState === STATE.FG_TRANS && transFrom === 'deal' && stateTimer >= Math.round(TF(TIMING.dealOut) * 0.5)); },   // 局數演繹：轉盤淡出中（疊在轉場下面）
   promoteFlash:  () => { toFGIntro(1); forceDeal = 'dealP'; chooseDeal(); runUntil(() => currentState === STATE.PROMOTE && promoteStage().light >= 0.8); },   // 升級：強光蓋滿畫面
-  promoteRise:   () => { toFGIntro(1); forceDeal = 'dealP'; chooseDeal(); runUntil(() => currentState === STATE.PROMOTE && promoteStage().lift >= 0.5); },    // 升級：背景往上換到下一段山
+  promoteRise:   () => { toFGIntro(1); forceDeal = 'dealP'; chooseDeal(); runUntil(() => currentState === STATE.PROMOTE && promoteStage().lift >= 0.5); },    // 升級：背景換場中途
+  promoteSfgUfg: () => { toFGIntro(2); forceDeal = 'dealP'; chooseDeal(); runUntil(() => currentState === STATE.PROMOTE && promoteStage().lift >= 0.5); },    // holy-137：SFG→UFG 往上到雲端（滑動）中途（FG→SFG＝藍天與金黃天空各半 crossfade；holy-137）
   promoteHalo:   () => { toFGIntro(1); forceDeal = 'dealP'; chooseDeal(); runUntil(() => currentState === STATE.FG_INTRO && fgIntroStage().halo >= 0.6); },  // 升級：下一階光環從上方降下
   totalRise:     () => { toFG(1, 'small'); fgLeft = 1; runUntil(() => currentState === STATE.FG_TOTAL && fgTotalStage().rise >= 0.6); },   // 結算：天國之門從雲上升起
   totalOpen:     () => { toFG(1, 'small'); fgLeft = 1; runUntil(() => currentState === STATE.FG_TOTAL && fgTotalStage().open >= 0.62); },  // 結算：門由中間打開、光透出、分數浮出
@@ -9386,6 +9488,9 @@ const SHOT_PRESETS = {
   bigSistine:    () => spinWith('big1', () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(1) + 90),   // BIG《西斯汀聖母》下緣兩個小天使
   superPandora:  () => spinWith('big2', () => currentState === STATE.BIGWIN && bigShownTier() === 2 && stateTimer >= bigTierStartFrame(2) + 90),   // SUPER《潘朵拉的盒子》
   superPandoraV8: () => { FX.bigPandora = 1; spinWith('big2', () => currentState === STATE.BIGWIN && bigShownTier() === 2 && stateTimer >= bigTierStartFrame(2) + 90); },   // SUPER：V8 寫法（黑髮天使掀盒）
+  bigPetalIn:    () => spinWith('big2', () => currentState === STATE.BIGWIN && bigPetalCover().phase === 'in' && bigPetalCover().c >= 0.5),   // holy-137：BIG→SUPER 花瓣湧上一半
+  bigPetalFull:  () => spinWith('big2', () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(2)),   // holy-137：花瓣完全遮住、切換成 SUPER 那一幀
+  bigPetalOut:   () => spinWith('big2', () => currentState === STATE.BIGWIN && bigPetalCover().phase === 'out' && bigPetalCover().c <= 0.5),   // holy-137：花瓣散去一半、露出 SUPER
   megaVenus:     () => spinWith('big3', () => currentState === STATE.BIGWIN && bigShownTier() === 3 && stateTimer >= bigTierStartFrame(3) + 90),   // MEGA《維納斯的誕生》
   epicReach:     () => spinWith('big4', () => currentState === STATE.BIGWIN && bigShownTier() === 4 && stateTimer >= epicTouchFrame() - 25),   // EPIC《創世紀》：指尖靠近
   epicTouch:     () => spinWith('big4', () => currentState === STATE.BIGWIN && bigShownTier() === 4 && stateTimer >= epicTouchFrame() + 5),    // EPIC：指尖相碰迸出閃光
