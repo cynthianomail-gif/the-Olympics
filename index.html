@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-135';   // 驗證用識別值：測到的是不是最新版，看這個（holy-135：調校面板「背景待機演繹」說明改成新背景的演繹（企劃書 V18）；holy-134：天使升級／額外旋轉演繹改成掏棒 → 揮棒 → 握著魔法棒等輪盤演完 → 收棒，拿掉比讚／原地跳（企劃書 V18 11-06）；holy-133：FG／SFG 換成共用的新山腰背景（FG 藍天、SFG 金黃天空）、UFG 換成雲端（金色＋紅色天空光），待機特效座標照新圖（企劃書 V18 11-06）；holy-132：FG 局數欄移到盤面左側、左天使降低、右天使提高（2026-11-06 美術意見：AW 公版右側有押注按鈕）；holy-131：最高分預設圖示改聖杯（金杯＋中央紅寶石＋橫帶桂冠葉），中獎播晃動＋紅寶石閃光；holy-130：天使 FG 中獎演繹後補羽毛轉場再進進入介面；TURBO 數字收掉／NX 翻出／第 3 輪盤減速跟一般相同；節奏表匯出修 500 倍合體先播、FG 250 倍有大獎；holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
+const APP_BUILD = 'olympia-holy-136';   // 驗證用識別值：測到的是不是最新版，看這個（holy-136：挑戰演繹改成光環下移＋變形，變形到一半時爆出閃光遮住光環 → 閃光中挑戰輪盤出現，不再由光環完整變形成輪盤（使用者 11-06：避免要用 3D 才能自然轉換）；holy-135：調校面板「背景待機演繹」說明改成新背景的演繹（企劃書 V18）；holy-134：天使升級／額外旋轉演繹改成掏棒 → 揮棒 → 握著魔法棒等輪盤演完 → 收棒，拿掉比讚／原地跳（企劃書 V18 11-06）；holy-133：FG／SFG 換成共用的新山腰背景（FG 藍天、SFG 金黃天空）、UFG 換成雲端（金色＋紅色天空光），待機特效座標照新圖（企劃書 V18 11-06）；holy-132：FG 局數欄移到盤面左側、左天使降低、右天使提高（2026-11-06 美術意見：AW 公版右側有押注按鈕）；holy-131：最高分預設圖示改聖杯（金杯＋中央紅寶石＋橫帶桂冠葉），中獎播晃動＋紅寶石閃光；holy-130：天使 FG 中獎演繹後補羽毛轉場再進進入介面；TURBO 數字收掉／NX 翻出／第 3 輪盤減速跟一般相同；節奏表匯出修 500 倍合體先播、FG 250 倍有大獎；holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -823,7 +823,7 @@ const TIMING_META = [
     ['fgIntroScene', '進入介面①場景', 0, 3, 0.01, { hint: '天使 FG 中獎演繹結束後：畫面壓暗震動、後方場景淡出淡入到 FG／SFG／UFG 場景，同時雲朵從下方湧上（第 79 列 ①）；結束下一幀光環開始降。預設＝競品變黑 0.50s' }],
     ['fgIntroHalo', '進入介面②光環', 0.05, 3, 0.01, { hint: '天使光環從上方降下；落定後祝福資訊與選項淡入（fgIntroAnim）才能選（第 79 列 ②）。②＋③＝競品合約淡入 0.5s；預設＝0.30s' }],
     ['fgIntroOut', '進入介面退場', 0.05, 2, 0.05, { hint: '按「10次免費遊戲」或 UFG 點擊任意處後，整體物件淡出（第 81 列）；2b 起淡出疊在羽毛轉場下面，轉場照競品按下後第 2 幀開始' }],
-    ['dealIntro', '挑戰演繹', 0.05, 3, 0.001, { hint: '按「挑戰」→挑戰轉盤長到全尺寸、開始轉：前段文字資訊淡出、天使光環轉成正圓發光（第 82～83 列），最後 24 幀轉盤照競品 APPEAR 長出（八芒星先出、外圈前 8 幀不出現）。預設＝競品 1.15s（69 幀；TURBO 0.867s＝52 幀）' }],
+    ['dealIntro', '挑戰演繹', 0.05, 3, 0.001, { hint: '按「挑戰」→挑戰轉盤長到全尺寸、開始轉：前段文字資訊淡出、天使光環一邊下移一邊變形發光，變形到一半時爆出閃光遮住光環（第 82～83 列）；最後 24 幀挑戰轉盤在閃光中照競品 APPEAR 長出（八芒星先出、外圈前 8 幀不出現），閃光散去。光環不直接變形成轉盤（holy-136）。預設＝競品 1.15s（69 幀；TURBO 0.867s＝52 幀）' }],
     ['dealHold', '挑戰轉盤停頓', 0, 3, 0.01, { hint: '挑戰轉盤長到全尺寸後，停在這個畫面等這麼久才開始轉（使用者 2026-10-30）；0＝長好下一幀就轉（原本）。預設 0.60s（TURBO 0.30s）' }],
     ['dealOut', '局數演繹淡出', 0.05, 2, 0.05, { hint: '挑戰轉盤停在局數格：整個轉盤淡出（第 85 列）；2b 起淡出疊在羽毛轉場下面（停下後第 15 幀轉場就開始）' }],
     ['totalDoorOpen', '結算開門', 0.05, 3, 0.01, { hint: '天國之門由中間往兩邊慢慢打開、強光透出，分數與資訊從門後的光裡浮出（第 88 列）；門升起結束下一幀開始，結束＝全亮（收場開始後第 61 幀）。預設＝競品結算畫面淡入 0.50s' }],
@@ -1032,7 +1032,7 @@ const RHYTHM_MAP = [
   ['fgIntroScene', 'FG進入介面登場①', '天使 FG 中獎演繹結束後：畫面壓暗震動、場景淡出淡入到 FG 場景、雲從下方湧上（美術需求 V8 第 79 列；＝競品變黑 0.5s）', 'FG/BG宣告框'],   // 副本B
   ['fgIntroHalo',  'FG進入介面登場②', '天使光環從上方降下的持續時間（之後資訊淡入；變黑結束下一幀開始）', null],
   ['fgIntroOut',   'FG進入介面退場', '按「10次免費遊戲」／UFG 點任意處後整體淡出的時間（第 81 列）；淡出疊在轉場下面，轉場按下後第 2 幀就開始', null],
-  ['dealIntro',    '挑戰演繹', '按「挑戰」→挑戰轉盤長到全尺寸開始轉：文字淡出、光環轉成正圓發光，最後 24 幀轉盤照競品 APPEAR 長出（第 82～83 列）', null],
+  ['dealIntro',    '挑戰演繹', '按「挑戰」→挑戰轉盤長到全尺寸開始轉：文字淡出、光環下移變形，變形到一半爆出閃光遮住光環，最後 24 幀轉盤在閃光中照競品 APPEAR 長出、閃光散去（第 82～83 列；holy-136）', null],
   ['dealHold',     '挑戰轉盤停頓', '挑戰轉盤長到全尺寸後，停頓多久才開始轉', null],
   ['dealOut',      '挑戰局數演繹', '挑戰轉盤停在局數格：整個轉盤淡出的時間（第 85 列）；淡出疊在轉場下面', null],
   ['totalDoorOpen', 'FG結算開門', '天國之門由中間往兩邊打開、分數與資訊從光裡浮出的時間（第 88 列；＝競品結算畫面淡入 0.5s）', null],
@@ -6415,12 +6415,29 @@ function drawChallengeWheel(cx, cy, R, angleDeg, o) {
   ctx.restore();
 }
 // 挑戰演繹（第 82～83 列；第二部分 2b 壓進競品時間窗：按「挑戰」→轉盤長到全尺寸 dealIntro＝競品 69 幀／TURBO 52 幀）：
-//   前段 pre＝dealIntro−24 幀：文字資訊淡出、光環（扁圓、在上方）移到轉盤中心並變正圓發光；最後 24 幀＝轉盤照競品 APPEAR 長出（跟藍紅轉盤同一張表），光環淡掉
+//   前段 pre＝dealIntro−24 幀：文字資訊淡出、光環（扁圓、在上方）移到轉盤中心並變正圓發光；最後 24 幀＝轉盤照競品 APPEAR 長出（跟藍紅轉盤同一張表）
+//   holy-136（使用者 2026-11-06：光環直接變形成轉盤可能要 3D 才自然）：光環下移到轉盤中心、只變形到一半（DEAL_MORPH_AT_FLASH）；
+//   前段最後 35% 閃光漸強，轉盤開始長出那一刻最亮、光環就此消失（被閃光遮住），
+//   轉盤在閃光中長出，閃光在 apF×0.6 內散去 → 看起來是「光環爆閃 → 轉盤出現」，不是光環變形
 function dealIntroPhase() { const T = TF(TIMING.dealIntro), apF = Math.min(SSS_DEAL_APPEAR_F, T); return { T: T, apF: apF, pre: T - apF }; }
-function dealIntroGeom(m) {                        // 前段進度 m（0～1）
-  const Wd = DEAL_WHEEL, e = easeInOut(cl01((m - 0.15) / 0.85));
-  return { cx: Wd.cx, cy: lerp(FGUI.haloY, Wd.cy, e), rx: lerp(FGUI.haloRx, Wd.R, e), ry: lerp(FGUI.haloRy, Wd.R, e),
+const DEAL_MORPH_AT_FLASH = 0.5;                   // 閃光最亮時光環變形到哪裡（0＝原本扁圓、1＝轉盤大小的正圓；使用者 11-06：變形到一半就閃光）
+function dealIntroGeom(m) {                        // 前段進度 m（0～1）：光環下移到轉盤中心，同時變形到 DEAL_MORPH_AT_FLASH
+  const Wd = DEAL_WHEEL, e = easeInOut(cl01((m - 0.15) / 0.85)), d = e * DEAL_MORPH_AT_FLASH;
+  return { cx: Wd.cx, cy: lerp(FGUI.haloY, Wd.cy, e), rx: lerp(FGUI.haloRx, Wd.R, d), ry: lerp(FGUI.haloRy, Wd.R, d),
     glow: 0.55 + 1.1 * Math.sin(Math.PI / 2 * cl01((m - 0.3) / 0.7)), text: 1 - cl01(m / 0.45) };
+}
+function dealFlash(a, P) {                         // 挑戰演繹閃光強度 0～1（a＝轉盤長出的第幾幀，負值＝前段）
+  if (a < 0) return P.pre > 0 ? Math.pow(cl01(1 - (-a) / Math.max(1, P.pre * 0.35)), 2) : 1;
+  return 1 - cl01(a / Math.max(1, P.apF * 0.6));
+}
+function drawDealFlash(cx, cy, R, f) {             // 白金色閃光：放射狀光暈＋中央四芒星
+  if (f <= 0) return;
+  ctx.save(); ctx.globalAlpha = Math.min(1, f);
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.7);
+  g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.4, 'rgba(255,248,220,.96)'); g.addColorStop(1, 'rgba(255,226,150,0)');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R * 1.7, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+  drawSparkle(cx, cy, R * (0.9 + 0.4 * f), f);
 }
 function dealAppearLook(a, F) {                    // 轉盤長出第 a 幀（競品 APPEAR：外圈盤面前 1/3 不出現再長到全尺寸、五芒星 alpha 8 幀、2→1 倍 10 幀、由下往上升 135 單位）
   const A = SSS_APPEAR;
@@ -6438,7 +6455,8 @@ function drawDealScreen() {                        // 挑戰畫面；轉場（tr
     const P = dealIntroPhase(), a = stateTimer - P.pre, g = dealIntroGeom(P.pre > 0 ? cl01(stateTimer / P.pre) : 1);
     drawFGIntroInfo(g.text, 1);
     if (a >= 0) { const L = dealAppearLook(a, P.apF); drawChallengeWheel(Wd.cx, Wd.cy, Wd.R, dealAngle, { scale: L.ws, hub: { s: L.ps, a: L.pa, dy: L.py }, glow: g.glow * L.ws }); }
-    drawHalo(pendingLevel, g.cx, g.cy, g.rx, g.ry, g.glow, a < 0 ? 1 : 1 - cl01(a / (P.apF * 0.6)));
+    if (a < 0) drawHalo(pendingLevel, g.cx, g.cy, g.rx, g.ry, g.glow, 1);   // 光環只畫到閃光最亮那一刻（holy-136：不跟轉盤疊著淡出）
+    drawDealFlash(Wd.cx, Wd.cy, Wd.R, dealFlash(a, P));
     return;
   }
   const out = currentState === STATE.FG_TRANS ? cl01(stateTimer / TF(TIMING.dealOut)) : 0;
