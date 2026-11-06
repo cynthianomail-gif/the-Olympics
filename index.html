@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-133';   // 驗證用識別值：測到的是不是最新版，看這個（holy-133：FG／SFG 換成共用的新山腰背景（FG 藍天、SFG 金黃天空）、UFG 換成雲端（金色＋紅色天空光），待機特效座標照新圖（企劃書 V18 11-06）；holy-132：FG 局數欄移到盤面左側、左天使降低、右天使提高（2026-11-06 美術意見：AW 公版右側有押注按鈕）；holy-131：最高分預設圖示改聖杯（金杯＋中央紅寶石＋橫帶桂冠葉），中獎播晃動＋紅寶石閃光；holy-130：天使 FG 中獎演繹後補羽毛轉場再進進入介面；TURBO 數字收掉／NX 翻出／第 3 輪盤減速跟一般相同；節奏表匯出修 500 倍合體先播、FG 250 倍有大獎；holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
+const APP_BUILD = 'olympia-holy-134';   // 驗證用識別值：測到的是不是最新版，看這個（holy-134：天使升級／額外旋轉演繹改成掏棒 → 揮棒 → 握著魔法棒等輪盤演完 → 收棒，拿掉比讚／原地跳（企劃書 V18 11-06）；holy-133：FG／SFG 換成共用的新山腰背景（FG 藍天、SFG 金黃天空）、UFG 換成雲端（金色＋紅色天空光），待機特效座標照新圖（企劃書 V18 11-06）；holy-132：FG 局數欄移到盤面左側、左天使降低、右天使提高（2026-11-06 美術意見：AW 公版右側有押注按鈕）；holy-131：最高分預設圖示改聖杯（金杯＋中央紅寶石＋橫帶桂冠葉），中獎播晃動＋紅寶石閃光；holy-130：天使 FG 中獎演繹後補羽毛轉場再進進入介面；TURBO 數字收掉／NX 翻出／第 3 輪盤減速跟一般相同；節奏表匯出修 500 倍合體先播、FG 250 倍有大獎；holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -1232,11 +1232,11 @@ const DEFAULT_FX = {
   reelJitter: 0.5,
   upgP:       0.01,   // 升級輪盤機率：每個輪盤出現時各自判定（藍輪、紅輪都會；使用者 2026-10-28 占設 1%）
   upgAngel:   1.7,    // V14 H75：升級段前面的右天使【升級轉盤演繹】秒數；之後才是轉盤【倍數升級演繹】（upgTime−本值＝1.5，H26／H33「銜接於天使之後」）
-  upgTime:    3.2,    // V14 試版：右天使升級轉盤約 1.7（H75）＋轉盤倍數升級約 1.5（H26／H33）；原 1.8。升級輪盤演出秒數（2026-10-29 V8 第 73 列：右天使原地掏魔法棒揮棒 → 倍數格依序翻牌升一階 → 收棒挑眉比讚）
+  upgTime:    3.2,    // V14 試版：右天使升級轉盤約 1.7（H75）＋轉盤倍數升級約 1.5（H26／H33）；原 1.8。升級輪盤演出秒數（2026-10-29 V8 第 73 列：右天使原地掏魔法棒揮棒 → 倍數格依序翻牌升一階 → 收棒；holy-134 起天使握棒等翻牌演完才收、不比讚）
   nudgeP:     0.01,   // 轉動輪盤機率：NG 藍輪停在聖火格前一格／FG 推一格輪盤累計就到 nudgeX 時判定（使用者 2026-10-28 占設 1%）
   nudgeX:     51,     // FG 轉動輪盤門檻：本局輪盤累計倍數（不含連線）推一格後 ≥ 此值（使用者 2026-10-28「改成51倍以上」）
   nudgeAngel: 1.7,    // V14 H64：額外轉動段前面的左天使【額外旋轉演繹】秒數；之後才是轉盤【額外轉動演繹】（nudgeTime−本值＝1.3，H27／H34）
-  nudgeTime:  3.0,    // V14 試版：左天使額外旋轉約 1.7（H64）＋轉盤額外轉動約 1.3（H27／H34）；原 1.6。轉動輪盤演出秒數（2026-10-29 V8 第 62 列：左天使原地掏魔法棒揮棒 → 多轉一格 → 收棒舉手跳一下）
+  nudgeTime:  3.0,    // V14 試版：左天使額外旋轉約 1.7（H64）＋轉盤額外轉動約 1.3（H27／H34）；原 1.6。轉動輪盤演出秒數（2026-10-29 V8 第 62 列：左天使原地掏魔法棒揮棒 → 多轉一格 → 收棒；holy-134 起天使握棒等多轉一格演完才收、不跳）
   bgLoop:     1.0,    // 背景待機演繹強度（V8 第 41～44 列：雲飄、樹葉晃、山頂微光、瀑布、陽光、聖光、紅寶石、旗幟；0＝關）
   featherN:   36,     // 進退場轉場：飄落羽毛片數（V8 第 92 列；蓋滿那一刻由整張羽毛圖 feather_A 蓋住）
   wandSize:   0.42,   // 天使魔法棒／喇叭道具大小（天使身高的倍數）
@@ -1310,12 +1310,12 @@ const FX_META = [
     ['bgFx', '大獎聖光強度', 0, 1, 0.05, { hint: '大獎聖光：四階都從畫面上方中央同一點灑落，只用強度分級（BIG 一道聚光燈 → EPIC 最多光束＋大量光點；美術需求 V8 第 95～98 列）；0＝關' }] ] },
   { group: '角色影響輪盤', items: [
     ['upgP', '升級輪盤機率', 0, 1, 0.005, { hint: '每個輪盤出現時各自判定（藍輪、紅輪都會）：右天使揮魔法棒把所有倍數格升一階（5→10→15→20→25→50→100→250→500、×2→×3→×4→×5→×10→×15→×20，紅心格不變）；0.01＝1%' }],
-    ['upgAngel', '升級：天使段秒數', 0.1, 4, 0.05, { hint: '右天使【升級轉盤演繹】整段秒數；揮完魔法棒（本段 66% 處）就接轉盤【倍數升級演繹】，長度＝升級演出秒數−本值；天使收棒後等升級演完才比讚（V15 視覺流程圖、holy-129；V14 H75 1.7 秒、H26 1.5 秒）' }],
-    ['upgTime', '升級演出秒數', 0.6, 4, 0.1, { hint: '升級輪盤：天使段＋轉盤段的秒數和（揮棒與轉盤段不重疊、收棒與轉盤段重疊，實際整段較短）。右天使原地掏出星星魔法棒揮棒 → 揮完就接倍數升級漩渦、格子由正上方順時針依序翻牌（天使收棒）→ 升級演完天使挑眉慵懶比讚 → 輪盤才開轉（V15 視覺流程圖、holy-129）' }],
+    ['upgAngel', '升級：天使段秒數', 0.1, 4, 0.05, { hint: '右天使【升級輪盤演繹】秒數（掏棒＋揮棒＋收棒）；揮完魔法棒（本段 85% 處）就接轉盤【倍數升級演繹】，長度＝升級演出秒數−本值；天使握著魔法棒等升級演完才收棒（企劃書 V18 11-06、holy-134；V14 H75 1.7 秒、H26 1.5 秒）' }],
+    ['upgTime', '升級演出秒數', 0.6, 4, 0.1, { hint: '升級輪盤整段秒數＝天使段＋轉盤段。右天使原地掏出星星魔法棒揮棒 → 揮完就接倍數升級漩渦、格子由正上方順時針依序翻牌（天使握著魔法棒）→ 升級演完天使收起魔法棒 → 輪盤才開轉（企劃書 V18 11-06、holy-134）' }],
     ['nudgeP', '轉動輪盤機率', 0, 1, 0.005, { hint: 'NG：藍輪停在紅心格前一格時判定，推一格進紅心格（觸發 FG）；FG：本局輪盤累計原本不到門檻、推一格就到門檻時判定（紅、藍輪都算）；0.01＝1%' }],
     ['nudgeX', 'FG 轉動門檻≥', 2, 1000, 1, { hint: 'FG 轉動輪盤：本局輪盤累計倍數（不含連線）推一格後 ≥ 此值才可能觸發（使用者：51）' }],
-    ['nudgeAngel', '轉動：天使段秒數', 0.1, 4, 0.05, { hint: '左天使【額外旋轉演繹】整段秒數；揮完魔法棒（本段 60% 處）就接轉盤【額外轉動演繹】，長度＝轉動演出秒數−本值；天使收棒後等轉動演完才原地跳一下（V15 視覺流程圖、holy-129；V14 H64 1.7 秒、H27 1.3 秒）' }],
-    ['nudgeTime', '轉動演出秒數', 0.6, 4, 0.1, { hint: '轉動輪盤：天使段＋轉盤段的秒數和（揮棒與轉盤段不重疊、收棒與轉盤段重疊，實際整段較短）。輪盤停下 → 左天使原地掏出星星魔法棒揮棒 → 揮完就接額外轉動星環、多轉一格（天使收棒）→ 轉動演完天使雙手高舉原地跳一下 → 才出結果（V15 視覺流程圖、holy-129）' }],
+    ['nudgeAngel', '轉動：天使段秒數', 0.1, 4, 0.05, { hint: '左天使【額外旋轉演繹】秒數（掏棒＋揮棒＋收棒）；揮完魔法棒（本段 83% 處）就接轉盤【額外轉動演繹】，長度＝轉動演出秒數−本值；天使握著魔法棒等轉動演完才收棒（企劃書 V18 11-06、holy-134；V14 H64 1.7 秒、H27 1.3 秒）' }],
+    ['nudgeTime', '轉動演出秒數', 0.6, 4, 0.1, { hint: '轉動輪盤整段秒數＝天使段＋轉盤段。輪盤停下 → 左天使原地掏出星星魔法棒揮棒 → 揮完就接額外轉動星環、多轉一格（天使握著魔法棒）→ 轉動演完天使收起魔法棒 → 才出結果（企劃書 V18 11-06、holy-134）' }],
     ['upgStars', '升級漩渦星數', 0, 80, 1, { hint: '倍數升級演繹：大小不一的金黃色星星以漩渦方式旋轉覆蓋轉盤（美術需求 V3 第 27／34 列）；0＝關' }],
     ['upgGlow', '升級轉盤發光', 0, 2, 0.05, { hint: '倍數升級演繹：星星蓋住轉盤時轉盤發光的強度（倍數照舊逐格翻牌換成更高倍數）；0＝關' }],
     ['nudgeStars', '額外轉動星環', 0, 80, 1, { hint: '額外轉動演繹：金色星星包圍轉盤外圍、帶著轉盤順時鐘多轉一格、停下後散開（V3 第 28／35 列）；0＝關' }] ] },
@@ -4024,14 +4024,15 @@ const ANGEL_PTS = [
 ];
 const WAND_GEO = { grip: [0.33, 0.80], tip: [0.66, 0.338] };      // magic_wand.png：握點（握把下段）、星星中心（比例）
 const TRUMPET_GEO = { grip: [0.06, 0.80], tip: [0.675, 0.40] };   // trumpet.png：吹嘴、喇叭口（比例）
-// 魔法棒時間軸（k＝該段進度 0～1）：[掏出結束, 揮棒結束, 收棒結束]，收棒後＝升級：挑眉慵懶比讚／額外轉動：雙手高舉原地跳一下
-const WAND_SEG = { upg: [0.10, 0.66, 0.78], nudge: [0.10, 0.60, 0.72] };
+// 魔法棒時間軸（k＝天使段進度 0～1）：[掏出結束, 揮棒結束]；揮棒結束後握著魔法棒停在這個刻度，等轉盤演繹演完才走完最後一段（收棒）
+// holy-134（企劃書 V18 11-06）：輪盤演完才收棒；拿掉收棒後的比讚（右）／原地跳（左）。刻度照舊版比例放大，讓掏棒＋揮棒＋收棒＝整個天使段
+const WAND_SEG = { upg: [0.13, 0.85], nudge: [0.14, 0.83] };
 const WAND_WAVES = 3;                              // 揮 3 下
 function wandState(kind, k) {
   const s = WAND_SEG[kind], kk = Math.max(0, Math.min(1, k));
-  const out = kk < s[0] ? kk / s[0] : kk < s[1] ? 1 : kk < s[2] ? 1 - (kk - s[1]) / (s[2] - s[1]) : 0;   // 道具在手上的程度（0＝在背後、1＝在手上）
+  const out = kk < s[0] ? kk / s[0] : kk <= s[1] ? 1 : 1 - (kk - s[1]) / (1 - s[1]);   // 道具在手上的程度（0＝在背後、1＝在手上）
   const wp = kk >= s[0] && kk < s[1] ? (kk - s[0]) / (s[1] - s[0]) : -1;                               // 揮棒段進度
-  return { out: out, wp: wp, wave: wp >= 0 ? Math.sin(wp * Math.PI * 2 * WAND_WAVES) : 0, after: kk >= s[2] ? (kk - s[2]) / (1 - s[2]) : -1 };
+  return { out: out, wp: wp, wave: wp >= 0 ? Math.sin(wp * Math.PI * 2 * WAND_WAVES) : 0 };
 }
 const FGWIN_TRUMPET = [0.38, 0.18];                // FG 中獎：喇叭開始掏出的時點（左先驚訝 0～0.36 再掏；右 0.18 起掏）
 const IDLE_WAKE = 0.72;                            // 右1 打瞌睡：段內這個時點驚醒（泡泡破掉）
@@ -4075,15 +4076,7 @@ function helperPose(hp, side, p) {                // 魔法棒演繹的身體動
   const ws = wandState(hp.kind, hp.k);
   if (hp.k < WAND_SEG[hp.kind][0]) { p.rot = side * 0.07 * ws.out; p.dy -= 8 * Math.sin(Math.PI * ws.out); }   // 掏棒：調皮地往盤面一傾＋小彈
   else if (ws.wp >= 0) { p.rot = side * (0.05 + 0.05 * ws.wave); p.dy -= 5 * Math.abs(ws.wave); }            // 揮棒：身體跟著魔法棒擺
-  else if (ws.after < 0) p.rot = side * 0.05 * ws.out;                                                         // 收棒
-  else if (hp.kind === 'nudge') {                 // 左：收棒後雙手高舉、開心地原地跳一下（蹲 → 跳 → 落地）
-    const a = ws.after, j = a < 0.18 ? 0 : a < 0.8 ? Math.sin(Math.PI * (a - 0.18) / 0.62) : 0;
-    const crouch = a < 0.18 ? Math.sin(Math.PI * a / 0.18) : a >= 0.8 ? Math.sin(Math.PI * (a - 0.8) / 0.2) : 0;
-    p.dy -= 48 * j; p.sy = 1 + 0.06 * j - 0.06 * crouch; p.sx = 1 - 0.03 * j + 0.04 * crouch;
-  } else {                                        // 右：挑起一邊眉毛、慵懶地對玩家比讚（頭往後一仰＋小縮放；比讚手套畫在道具層）
-    const a = ws.after, back = a > 0.85 ? (1 - a) / 0.15 : 1;
-    p.rot = -side * 0.05 * easeOutBack(Math.min(1, a / 0.3)) * back; p.sc = 1 + 0.03 * Math.sin(Math.PI * Math.min(1, a / 0.35));
-  }
+  else p.rot = side * 0.05 * ws.out;                                                                          // 握著魔法棒等轉盤演繹、收棒
 }
 function angelGeom(i, mood, t) {                  // 天使目前畫在哪：drawCharactersArt 與道具層共用（中心、高寬、旋轉、腳底支點的伸展）
   const b = i ? ART_GEO.cupidR : ART_GEO.cupidL, rc = charRect(i ? LAYOUT.charR : LAYOUT.charL, b), p = angelPose(i, mood, t);
@@ -4184,26 +4177,26 @@ function drawCharactersArt() {
   return true;
 }
 // 角色影響輪盤（美術需求 V8 第 62／73 列；使用者 2026-10-29 推翻 10-28 的「左天使飛去升級／右天使飛去推一格」）：
-//   升級轉盤＝右天使（轉盤展開後、開轉前）原地從身後掏出星星魔法棒揮棒（銜接倍數升級金星漩渦）→ 收棒挑眉慵懶比讚
-//   額外轉動＝左天使（轉盤停止後）原地從身後掏出星星魔法棒揮棒（銜接額外轉動星環）→ 收棒雙手高舉原地跳一下
+//   升級轉盤＝右天使（轉盤展開後、開轉前）原地從身後掏出星星魔法棒揮棒（銜接倍數升級金星漩渦）→ 倍數升級演完才收棒
+//   額外轉動＝左天使（轉盤停止後）原地從身後掏出星星魔法棒揮棒（銜接額外轉動星環）→ 額外轉動演完才收棒
 //   天使都不飛；「倍數升級！」「再轉一格！」字樣 V8 沒寫 → 拿掉
 // 升級／額外轉動（V14：天使【升級轉盤】【額外旋轉】約 1.7 秒，轉盤【倍數升級】約 1.5／【額外轉動】約 1.3 秒）
 // V15 視覺流程圖（holy-128，2026-10-30）：天使揮完魔法棒（WAND_SEG 揮棒結束）就接轉盤演繹
 // holy-129（使用者 2026-10-30）：天使收棒後先停（回一般漂浮），升級／轉動演完才比讚／原地跳；都演完才開轉／出結果
-//   時間軸：0 掏棒 → 揮棒 → [揮棒結束] 轉盤段開始＋天使收棒 → 轉盤段結束 → 天使後段（比讚／跳，長度＝天使段×(1−收棒結束)）
+// holy-134（企劃書 V18 11-06）：拿掉比讚／原地跳，改成天使揮完後握著魔法棒，轉盤段演完才收棒
+//   時間軸：0 掏棒 → 揮棒 → [揮棒結束] 轉盤段開始（天使握棒）→ 轉盤段結束 → 天使收棒（長度＝天使段×(1−揮棒結束)）；整段＝演出秒數
 function helperAngelF(kind) { const tot = TF(kind === 'upg' ? FX.upgTime : FX.nudgeTime); return Math.max(1, Math.min(tot, TF(kind === 'upg' ? FX.upgAngel : FX.nudgeAngel))); }
 function helperWheelStartF(kind) { return Math.round(helperAngelF(kind) * WAND_SEG[kind][1]); }   // 轉盤段起點＝天使揮棒結束
 function helperWheelDurF(kind) { return Math.max(1, TF(kind === 'upg' ? FX.upgTime : FX.nudgeTime) - helperAngelF(kind)); }   // 轉盤段長度＝演出秒數−天使段秒數
-function helperPreEndF(kind) { return Math.round(helperAngelF(kind) * WAND_SEG[kind][2]); }   // 天使前段（掏棒→揮棒→收棒）結束
-function helperPostStartF(kind) { return Math.max(helperWheelStartF(kind) + helperWheelDurF(kind), helperPreEndF(kind)); }   // 天使後段起點＝轉盤段演完
-function helperPhaseF(kind) { return helperPostStartF(kind) + Math.max(1, helperAngelF(kind) - helperPreEndF(kind)); }   // 整段：天使後段演完
+function helperStowStartF(kind) { return helperWheelStartF(kind) + helperWheelDurF(kind); }   // 天使收棒起點＝轉盤段演完
+function helperPhaseF(kind) { return helperStowStartF(kind) + Math.max(1, helperAngelF(kind) - helperWheelStartF(kind)); }   // 整段：天使收棒演完
 function helperWheelK(kind) { return cl01((stateTimer - helperWheelStartF(kind)) / helperWheelDurF(kind)); }
-function helperAngelK(kind) {                      // 天使段進度 0～1（WAND_SEG 刻度）；收棒後等轉盤段的空檔回 -1（天使回一般漂浮）
-  const A = helperAngelF(kind), pre = helperPreEndF(kind), t = stateTimer;
-  if (t < pre) return t / A;
-  const ps = helperPostStartF(kind);
-  if (t < ps) return -1;
-  const k = WAND_SEG[kind][2] + (t - ps) / A;
+function helperAngelK(kind) {                      // 天使段進度 0～1（WAND_SEG 刻度）；揮棒結束後停在揮棒結束（握著魔法棒）等轉盤段演完，再走完收棒
+  const A = helperAngelF(kind), ws = helperWheelStartF(kind), t = stateTimer;
+  if (t < ws) return Math.min(WAND_SEG[kind][1], t / A);
+  const ss = helperStowStartF(kind);
+  if (t < ss) return WAND_SEG[kind][1];
+  const k = WAND_SEG[kind][1] + (t - ss) / A;
   return k < 1 ? k : -1;
 }
 function wheelHelperNow() {
@@ -4259,17 +4252,6 @@ function drawSweat(x, y, s, a, rot) {             // 汗珠（淺藍水滴＋白
   ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.beginPath(); ctx.ellipse(-s * 0.18, s * 0.12, s * 0.12, s * 0.22, -0.3, 0, Math.PI * 2); ctx.fill();
   ctx.restore();
 }
-function drawThumbsUp(x, y, s, a, flip) {         // 比讚的白手套（橡皮管卡通風：白手套＋深棕粗外框；s＝高）
-  if (a <= 0) return;
-  ctx.save(); ctx.globalAlpha *= Math.min(1, a); ctx.translate(x, y); if (flip) ctx.scale(-1, 1);
-  ctx.lineWidth = Math.max(2, s * 0.07); ctx.strokeStyle = '#2a1308'; ctx.fillStyle = '#ffffff'; ctx.lineJoin = 'round';
-  roundRectPath(-s * 0.30, s * 0.30, s * 0.62, s * 0.24, s * 0.06); ctx.fill(); ctx.stroke();            // 袖口
-  roundRectPath(-s * 0.40, -s * 0.18, s * 0.80, s * 0.52, s * 0.18); ctx.fill(); ctx.stroke();            // 拳頭
-  roundRectPath(-s * 0.36, -s * 0.62, s * 0.24, s * 0.56, s * 0.12); ctx.fill(); ctx.stroke();            // 大拇指（朝上）
-  ctx.lineWidth = Math.max(1.5, s * 0.05); ctx.beginPath();                                               // 握起來的手指
-  [-0.04, 0.10, 0.22].forEach(v => { ctx.moveTo(s * 0.06, s * v); ctx.lineTo(s * 0.38, s * v); });
-  ctx.stroke(); ctx.restore();
-}
 function roundRectPath(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
 function drawClapBurst(x, y, r, a) {               // 拍手的小光（短放射線＋小星）
   if (a <= 0) return;
@@ -4294,7 +4276,7 @@ function drawWandStream(from, w, k, t) {           // 魔法棒頭灑出的金�
     drawStar(x, y + Math.sin(ph * 9 + q) * 6, 6 + 5 * (1 - ph), '#fde047', k * (1 - 0.5 * ph));
   }
 }
-// 天使道具＋粒子層（畫在盤面、轉盤之上，柱子不會擋到；V8 第 55～76 列）：魔法棒與金星、比讚手套、跳一下的小星、
+// 天使道具＋粒子層（畫在盤面、轉盤之上，柱子不會擋到；V8 第 55～76 列）：魔法棒與金星、
 // FG 中獎喇叭＋音符＋汗珠、待機（音符／泡泡 Zz 驚醒線／伸懶腰小星／哈欠氣泡）、高倍（臉紅／小星星／拍手光）、FG 預報星芒眼
 function drawWheelHelper() {
   if (!artImg('cupidL') || !artImg('cupidR')) return;
@@ -4318,17 +4300,7 @@ function drawWheelHelper() {
 function drawAngelFx(i, g, mood, hp, t) {
   const P = ANGEL_PTS[i], side = i ? -1 : 1, head = angelPt(g, P.head);
   if (hp) {
-    const ws = wandState(hp.kind, hp.k);
     if (hp.k < WAND_SEG[hp.kind][0] + 0.05) { const e = angelPt(g, P.eyes[i ? 0 : 1]); drawSparkle(e[0] + side * 6, e[1] - 4, 16, 1 - hp.k / (WAND_SEG[hp.kind][0] + 0.05)); }   // 調皮（眨眼閃一下）
-    if (ws.after >= 0 && hp.kind === 'nudge') {   // 雙手高舉跳一下：頭上冒小星星
-      const a = ws.after;
-      for (let q = 0; q < 5; q++) { const an = -Math.PI / 2 + (q - 2) * 0.45, rr = 30 + 50 * Math.min(1, a * 1.5); drawStar(head[0] + Math.cos(an) * rr, head[1] - 10 + Math.sin(an) * rr, 8, '#fde047', Math.max(0, 1 - a) * 0.95); }
-    }
-    if (ws.after >= 0 && hp.kind === 'upg') {     // 挑眉慵懶比讚：拇指朝上的白手套從托腮的手旁彈出＋眉眼閃一下
-      const a = ws.after, s = easeOutBack(Math.min(1, a / 0.3)), h0 = angelPt(g, P.hand), e = angelPt(g, P.eyes[1]);
-      drawThumbsUp(h0[0] + side * g.w * 0.16, h0[1] + g.h * 0.04, g.h * 0.2 * s, a > 0.9 ? (1 - a) / 0.1 : 1, i === 1);
-      drawSparkle(e[0] + 4, e[1] - g.h * 0.05, 14, a < 0.4 ? Math.sin(Math.PI * a / 0.4) : 0);
-    }
     return;
   }
   if (mood.m === 'hi1' && i === 0) {             // 臉頰泛紅、一臉得意
@@ -9328,9 +9300,9 @@ const SHOT_PRESETS = {
   totalCount:    () => { toFG(1, 'small'); fgLeft = 1; runUntil(() => currentState === STATE.FG_TOTAL && stateTimer >= fgTotalCountAt() + Math.round(TF(TIMING.totalCount) * 0.6)); },   // 結算全亮、TOTAL 線性跑分到 60%
   // 副本A（天使／轉場／卷軸／背景）：美術需求 V8 第 41～44、55～77、92 列（使用者 2026-10-29）
   angelUpgWave:    () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= Math.round(helperAngelF('upg') * 0.42)),     // 升級：右天使原地揮魔法棒，金星飛向轉盤漩渦
-  angelUpgThumb:   () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= helperPostStartF('upg') + Math.round((helperPhaseF('upg') - helperPostStartF('upg')) * 0.45)),     // 升級：倍數升級演完後挑眉慵懶比讚（holy-129）
+  angelUpgStow:    () => spinWith('upg', () => currentState === STATE.WHEEL && wheelPhase === 'upgrade' && stateTimer >= helperStowStartF('upg') + Math.round((helperPhaseF('upg') - helperStowStartF('upg')) * 0.5)),     // 升級：倍數升級演完後右天使收起魔法棒（holy-134）
   angelNudgeWave:  () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= Math.round(helperAngelF('nudge') * 0.30)), // 額外轉動：左天使原地揮魔法棒，金星飛向轉盤外圈
-  angelNudgeJump:  () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= helperPostStartF('nudge') + Math.round((helperPhaseF('nudge') - helperPostStartF('nudge')) * 0.5)), // 額外轉動：多轉一格演完後雙手高舉跳一下（holy-129）
+  angelNudgeStow:  () => spinWith('nudge', () => currentState === STATE.WHEEL && wheelPhase === 'nudge' && stateTimer >= helperStowStartF('nudge') + Math.round((helperPhaseF('nudge') - helperStowStartF('nudge')) * 0.5)), // 額外轉動：多轉一格演完後左天使收起魔法棒（holy-134）
   angelIdleL1:     () => idleShot(0, 0.5),       // 待機動態：左1 張嘴哼歌（音符）
   angelIdleR1:     () => idleShot(1, 0.4),       // 待機動態：右1 打瞌睡（泡泡＋Zz）
   angelIdleWake:   () => idleShot(1, 0.8),       // 待機動態：右1 驚醒（泡泡破掉＋驚醒線）
