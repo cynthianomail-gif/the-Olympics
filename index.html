@@ -253,7 +253,7 @@ canvas { display: block; width: 100%; height: 100%; }
  * 美術：使用者核可卡通素材；2026-10-22 最高分換白鴿、低分換暖色圖示（olympia-holy-2）；羽毛、大地色卷軸、簡化聖盾（olympia-holy-3）；其餘高分沿用既有素材。
  * ========================================================== */
 
-const APP_BUILD = 'olympia-holy-143';   // 驗證用識別值：測到的是不是最新版，看這個（holy-143：換階轉場改成「一片」巨大的玫瑰花瓣由左往右飛過畫面最前方，擋住大獎畫面時切換下一階（使用者 11-06 晚：只有一片花瓣）；holy-142：大獎換階花瓣改成一大片玫瑰花瓣由左往右橫掃過畫面最前方做轉場，擋住畫面的那幾幀切換下一階（企劃書 V19 I97，使用者 11-06 晚）；holy-141：中央跑分＝大獎分數下移到畫面約 3/4 高（照競品），大獎照競品比例重排；跑分改從 1 倍起跑（企劃書 V19）；EPIC 一定演完指尖相碰才收尾（使用者 11-06 晚）；holy-140：大獎版面修正——標題下移不再被切到、天使縮小排在標題與數字之間、大雲下移（數字在雲上半部、可超出雲；使用者 11-06）；holy-139：FG／SFG／UFG 換成企劃書 V19 新背景（FG 山腰夜景、SFG 同一張夜景＋神聖光、UFG 金色為主＋淡紅氛圍），待機演繹配合新圖；holy-138：四階大獎常駐花瓣減少成 3／5／8／12 片（企劃書 V19：不用過多，逐階少量增加即可）；holy-137：6 項演繹照企劃書 V19——高分圖示中獎加整體縮放一次、低分放大改 10%；SUPER 預設黑髮天使掀盒；有輪盤彩金就出中央數字；大獎分數放在中央跑分數字的位置、交棒 BIG 時彈跳縮放一次（不上移放大）；四階大獎同一個雲朵構圖、換階改玫瑰花瓣遮住瞬間切換、花瓣逐階變多；升級背景在強光退掉後才換，FG→SFG 天空藍轉金黃 crossfade；holy-136：挑戰演繹改成光環下移＋變形，變形到一半時爆出閃光遮住光環 → 閃光中挑戰輪盤出現，不再由光環完整變形成輪盤（使用者 11-06：避免要用 3D 才能自然轉換）；holy-135：調校面板「背景待機演繹」說明改成新背景的演繹（企劃書 V18）；holy-134：天使升級／額外旋轉演繹改成掏棒 → 揮棒 → 握著魔法棒等輪盤演完 → 收棒，拿掉比讚／原地跳（企劃書 V18 11-06）；holy-133：FG／SFG 換成共用的新山腰背景（FG 藍天、SFG 金黃天空）、UFG 換成雲端（金色＋紅色天空光），待機特效座標照新圖（企劃書 V18 11-06）；holy-132：FG 局數欄移到盤面左側、左天使降低、右天使提高（2026-11-06 美術意見：AW 公版右側有押注按鈕）；holy-131：最高分預設圖示改聖杯（金杯＋中央紅寶石＋橫帶桂冠葉），中獎播晃動＋紅寶石閃光；holy-130：天使 FG 中獎演繹後補羽毛轉場再進進入介面；TURBO 數字收掉／NX 翻出／第 3 輪盤減速跟一般相同；節奏表匯出修 500 倍合體先播、FG 250 倍有大獎；holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
+const APP_BUILD = 'olympia-holy-144';   // 驗證用識別值：測到的是不是最新版，看這個（holy-144：節奏表匯出的大獎換階說明改成「一片巨大花瓣飛過畫面前方」，註解同步；holy-143：換階轉場改成「一片」巨大的玫瑰花瓣由左往右飛過畫面最前方，擋住大獎畫面時切換下一階（使用者 11-06 晚：只有一片花瓣）；holy-142：大獎換階花瓣改成一大片玫瑰花瓣由左往右橫掃過畫面最前方做轉場，擋住畫面的那幾幀切換下一階（企劃書 V19 I97，使用者 11-06 晚）；holy-141：中央跑分＝大獎分數下移到畫面約 3/4 高（照競品），大獎照競品比例重排；跑分改從 1 倍起跑（企劃書 V19）；EPIC 一定演完指尖相碰才收尾（使用者 11-06 晚）；holy-140：大獎版面修正——標題下移不再被切到、天使縮小排在標題與數字之間、大雲下移（數字在雲上半部、可超出雲；使用者 11-06）；holy-139：FG／SFG／UFG 換成企劃書 V19 新背景（FG 山腰夜景、SFG 同一張夜景＋神聖光、UFG 金色為主＋淡紅氛圍），待機演繹配合新圖；holy-138：四階大獎常駐花瓣減少成 3／5／8／12 片（企劃書 V19：不用過多，逐階少量增加即可）；holy-137：6 項演繹照企劃書 V19——高分圖示中獎加整體縮放一次、低分放大改 10%；SUPER 預設黑髮天使掀盒；有輪盤彩金就出中央數字；大獎分數放在中央跑分數字的位置、交棒 BIG 時彈跳縮放一次（不上移放大）；四階大獎同一個雲朵構圖、換階改玫瑰花瓣遮住瞬間切換、花瓣逐階變多；升級背景在強光退掉後才換，FG→SFG 天空藍轉金黃 crossfade；holy-136：挑戰演繹改成光環下移＋變形，變形到一半時爆出閃光遮住光環 → 閃光中挑戰輪盤出現，不再由光環完整變形成輪盤（使用者 11-06：避免要用 3D 才能自然轉換）；holy-135：調校面板「背景待機演繹」說明改成新背景的演繹（企劃書 V18）；holy-134：天使升級／額外旋轉演繹改成掏棒 → 揮棒 → 握著魔法棒等輪盤演完 → 收棒，拿掉比讚／原地跳（企劃書 V18 11-06）；holy-133：FG／SFG 換成共用的新山腰背景（FG 藍天、SFG 金黃天空）、UFG 換成雲端（金色＋紅色天空光），待機特效座標照新圖（企劃書 V18 11-06）；holy-132：FG 局數欄移到盤面左側、左天使降低、右天使提高（2026-11-06 美術意見：AW 公版右側有押注按鈕）；holy-131：最高分預設圖示改聖杯（金杯＋中央紅寶石＋橫帶桂冠葉），中獎播晃動＋紅寶石閃光；holy-130：天使 FG 中獎演繹後補羽毛轉場再進進入介面；TURBO 數字收掉／NX 翻出／第 3 輪盤減速跟一般相同；節奏表匯出修 500 倍合體先播、FG 250 倍有大獎；holy-129：升級演完才比讚、轉動演完才原地跳；holy-128：照 V15 視覺流程圖，天使揮完魔法棒就接輪盤額外轉動／倍數升級、天使接著演後段；holy-127：V14 美術需求說明不一致的 9 項改成企劃書秒數；holy-126：挑戰轉盤停頓 0.6；holy-125：新增挑戰轉盤停頓 dealHold；holy-124：局間停頓 0.15；holy-123：一般速度預設的演繹秒數改成企劃書 V14 美術需求說明、新增沒跑分輪盤局間停頓、預報拉近改成跟轉中彈跳同時退回，2026-10-30）
 const GAME_NAME = '天使之心';   // 使用者 2026-10-28 改名（原「奧林匹亞」；存檔 key 仍是 olympia_tuning）
 const LOGO_TEXT = '天使之心', LOGO_SUB = 'ANGEL HEART';
 
@@ -6703,7 +6703,7 @@ const BIG_TITLE_Y = 175;                           // 標題中心（預設佈�
 function bigOffset() { const p = bigScorePos(); return { x: p.x - BIG_BASE.x, y: p.y - BIG_BASE.y }; }
 const BIG_CLOUDS = [[640, 440, 720, 130, 0], [640, 505, 860, 170, 1]];   // holy-141：照競品比例下移，數字 547 在前層雲中間偏下（雲約 400～590，面板 640 之上）；   // 四階共用的大雲：後層（天使後面）＋前層（天使趴在它上緣）。holy-140：雲下移到約 310～500，數字（362）在雲的上半部，不必完全在雲內（使用者 11-06）
 const BIG_PETALS = [0, 3, 5, 8, 12];                // 常駐飄落的玫瑰花瓣片數（企劃書 V19 E97／I97：BIG 零星幾片、每升一階少量增加即可、不用過多（使用者 11-06 傍晚，原 5／12／20／50）；MEGA 另有黑髮天使吹出的花瓣風 18 片）
-const BIG_PETAL_CLEAR = 0.30;                       // 換階花瓣散去秒數（湧上＝bigTierOut 0.5 秒；企劃書 H97「約0.5秒」只寫整段，散去長度我們決定）
+const BIG_PETAL_CLEAR = 0.30;                       // 換階花瓣飛出秒數（飛到中央＝bigTierOut 0.5 秒；企劃書 H97「約0.5秒」只寫整段，散去長度我們決定）
 const BIG_HOLY_SRC = { x: 640, y: -40 };           // 四階聖光的光源：畫面上方中央同一點（第 95 列 E 欄）
 const BIG_HOLY = [null,                            // 只用強度分級 BIG＜SUPER＜MEGA＜EPIC；a 再乘 FX.bgFx
   { beams: 1, spread: 0, half: 0.11, a: 0.75, dots: 0, glow: 110 },     // BIG：一道小小的聚光燈
@@ -6754,7 +6754,7 @@ function bigAngelTarget(tier, who) {
   }
   return a;
 }
-// BIG：兩側天使飛到雲朵上趴下（企劃書 V19 I98，路徑往上拱）；SUPER／MEGA 在花瓣遮住的那一幀直接就位（holy-137：換階不飛）；
+// BIG：兩側天使飛到雲朵上趴下（企劃書 V19 I98，路徑往上拱）；SUPER／MEGA 在巨大花瓣擋住的那一幀直接就位（holy-137：換階不飛）；
 // EPIC 金髮天使披紅布從右上方飛來（I101），黑髮天使直接就位。k＝角色演繹進度（BIG 2.00／SUPER 1.67／MEGA 3.33／EPIC 飛 2.33＋相碰 1.0）
 function bigAngelNow(tier, who) {
   const to = bigAngelTarget(tier, who);
@@ -7052,7 +7052,7 @@ function drawBigPetals(tier, a, tt) {              // 常駐飄落的玫瑰花�
 //   下一階的事件後，上一階原樣不動；holy-143 起是「一片」巨大的玫瑰花瓣由左往右飛過畫面最前方（標題、天使、雲朵、數字前面；使用者：只有一片花瓣）。
 //   花瓣在下一階登場那一幀（S[k]）前後經過畫面中央，S[k]−2～S[k]+1 這幾幀整個大獎畫面都在花瓣後面，這時切換成下一階；
 //   之後花瓣繼續往右飛出畫面（BIG_PETAL_CLEAR 秒）。c＝遮擋程度（in 0→1、full 1、out 1→0），給截圖預設與測試用。分數字畫在花瓣上面（跑分不中斷）
-function bigPetalCover() {                          // 0～1：換階花瓣遮蓋程度；phase 'in'＝湧上、'out'＝散去
+function bigPetalCover() {                          // 0～1：換階巨大花瓣擋住大獎畫面的程度；phase 'in'＝飛向中央、'out'＝飛出畫面
   if (currentState !== STATE.BIGWIN || bigTier < 2) return { c: 0, phase: '' };
   const L = bigTimeline(), OF = Math.max(3, TF(TIMING.bigTierOut)), CF = Math.max(1, TF(BIG_PETAL_CLEAR));
   for (let k = 2; k <= bigTier; k++) {
@@ -7101,7 +7101,7 @@ function drawGiantPetal(cx, cy, rx, ry, rot) {     // 一片巨大的玫瑰花�
   ctx.restore();
 }
 // 名畫：雲（後）→ 道具（後）→ 兩位天使 → 道具（前）→ 大雲前層 → 擺在雲上的道具 → 金幣等粒子 → 常駐花瓣；fa＝整體淡出（到值後收尾，競品 tier end）
-// holy-137：換階不交叉淡入淡出（花瓣遮住的那一幀直接換），只有 BIG 登場時大雲從下方升起、整幅淡入（k＝bigSwapK(1)）
+// holy-137：換階不交叉淡入淡出（巨大花瓣擋住的那一幀直接換），只有 BIG 登場時大雲從下方升起、整幅淡入（k＝bigSwapK(1)）
 function drawBigTableau(tier, k, fa) {
   fa = fa === undefined ? 1 : Math.max(0, Math.min(1, fa));
   const sc = bigScene(tier), tt = nowT() / 1000, L = artImg('cupidL'), Rr = artImg('cupidR'), bo = bigOffset();
@@ -7136,7 +7136,7 @@ function drawBigTableau(tier, k, fa) {
 //   兩種的分數都是第 0～13 幀 0、第 14 幀從 2 倍起跑（使用者 2026-10-30 要求照競品，原本從 1）。
 //   大獎分數全程固定在中央跑分數字的位置（bigScorePos）、不透明（drawBigScore：不跟標題掉落、不跟標題淡入、換階不動、畫在換階花瓣上面）
 // 競品（使用者 2026-10-29 要求照競品，第二部分 2a）：BIG 事件起場景壓暗（ambient 1→0.3，30 幀）、到值時恢復；字樣在事件後 1 幀登場（bigTierIn），
-// 換階：holy-137 起照企劃書 V19 I97，事件後上一階原樣不動、花瓣湧上 bigTierOut（0.5 秒）遮住 → 下一階登場那一幀切換 → 花瓣散去（BIG_PETAL_CLEAR）；
+// 換階：holy-137 起照企劃書 V19 I97，事件後上一階原樣不動、一片巨大花瓣 bigTierOut（0.5 秒）飛到畫面中央擋住 → 下一階登場那一幀切換 → 花瓣飛出畫面（BIG_PETAL_CLEAR；holy-143）；
 // 到值後第 101 幀這一階收尾（字樣縮小淡出，名畫、聖光、分數一起淡掉），第 113 幀大獎結束
 function drawBigWin() {
   if (currentState !== STATE.BIGWIN) { drawBigTail(); return; }
@@ -8755,7 +8755,7 @@ function rhythmTimelineLine(T, kind, tier, segs, marks, skips, notes, t) {
     for (let k = 1; k <= ti; k++) {
       const a = L.S[k], b = k < ti ? L.E[k + 1] + 1 : L.endAt;
       if (k > 1) {
-        marks.push({ t: F(L.E[k]), text: '跑分越過 ' + thr[k] + ' 倍：玫瑰花瓣湧上遮住 ' + BIG_NAMES[k - 1] + '→遮住那一刻切換成 ' + BIG_NAMES[k] });
+        marks.push({ t: F(L.E[k]), text: '跑分越過 ' + thr[k] + ' 倍：一片巨大花瓣飛過畫面前方，擋住 ' + BIG_NAMES[k - 1] + ' 的那一刻切換成 ' + BIG_NAMES[k] });
         segs.push({ t0: F(L.E[k] + 1), dur: TF(T.bigTierOut) / 60 + BIG_PETAL_CLEAR, text: '巨大花瓣飛過換階：飛到中央 ' + R1(T.bigTierOut) + 's＋飛出 ' + R1(BIG_PETAL_CLEAR) + 's', fill: 'lineEnd' });
       } else marks.push({ t: F(a), text: direct ? '四階大獎直接跳出 BIG 版（在大獎畫面裡第 ' + TF(T.scoreCountDelay) + ' 幀從 ' + SSS_COUNT_FROM + ' 倍起跑）' : 'BIG 版登場（數字交棒成大獎分數）' });
       segs.push({ t0: F(a), dur: TF(k === 4 ? T.bigEpicIn : T.bigTierIn) / 60, text: BIG_NAMES[k] + ' 登場(' + R1(k === 4 ? T.bigEpicIn : T.bigTierIn) + 's)', fill: 'gap' });
@@ -9488,7 +9488,7 @@ const SHOT_PRESETS = {
   bigSistine:    () => spinWith('big1', () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(1) + 90),   // BIG《西斯汀聖母》下緣兩個小天使
   superPandora:  () => spinWith('big2', () => currentState === STATE.BIGWIN && bigShownTier() === 2 && stateTimer >= bigTierStartFrame(2) + 90),   // SUPER《潘朵拉的盒子》
   superPandoraV8: () => { FX.bigPandora = 1; spinWith('big2', () => currentState === STATE.BIGWIN && bigShownTier() === 2 && stateTimer >= bigTierStartFrame(2) + 90); },   // SUPER：V8 寫法（黑髮天使掀盒）
-  bigPetalIn:    () => spinWith('big2', () => currentState === STATE.BIGWIN && bigPetalCover().phase === 'in' && bigPetalCover().c >= 0.5),   // holy-137：BIG→SUPER 花瓣湧上一半
+  bigPetalIn:    () => spinWith('big2', () => currentState === STATE.BIGWIN && bigPetalCover().phase === 'in' && bigPetalCover().c >= 0.5),   // holy-137：BIG→SUPER 巨大花瓣飛到一半
   bigPetalFull:  () => spinWith('big2', () => currentState === STATE.BIGWIN && stateTimer >= bigTierStartFrame(2)),   // holy-137：花瓣完全遮住、切換成 SUPER 那一幀
   bigPetalOut:   () => spinWith('big2', () => currentState === STATE.BIGWIN && bigPetalCover().phase === 'out' && bigPetalCover().c <= 0.5),   // holy-137：花瓣散去一半、露出 SUPER
   megaVenus:     () => spinWith('big3', () => currentState === STATE.BIGWIN && bigShownTier() === 3 && stateTimer >= bigTierStartFrame(3) + 90),   // MEGA《維納斯的誕生》
